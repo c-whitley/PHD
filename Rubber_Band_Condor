@@ -1,0 +1,17 @@
+import shelve
+import numpy.linalg
+import EMSC
+
+filename = 'input.dat'
+my_shelf = shelve.open(filename)
+globals()['A']=my_shelf['A']
+globals()['B']=my_shelf['B']
+my_shelf.close()
+del my_shelf
+
+C=numpy.matmul(A,B)
+
+filename = 'output.dat'
+my_shelf = shelve.open(filename,'n')
+my_shelf['C'] = globals()['C']
+my_shelf.close()
