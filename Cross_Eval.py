@@ -168,7 +168,7 @@ def patient_score(clf, X_valid, y_true, patient_column="Patient_Number"):
 
     y_pred = clf.predict_proba(X_valid)[:,0]
 
-    if roc_auc_score(y_true, clf.predict_proba(X_valid)[:,0]) < 0.5:
+    if roc_auc_score(y_true, clf.predict_proba(X_valid)[:,0]) > 0.5:
 
         y_prob = clf.predict_proba(X_valid)[:,0]
 
