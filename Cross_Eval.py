@@ -175,7 +175,7 @@ def patient_score(clf, X_valid, y_true, patient_column="Patient_Number"):
     else:
         y_prob = clf.predict_proba(X_valid)[:,1]
 
-    y_prob = clf.predict_proba(X_valid)[:,1]
+    #y_prob = clf.predict_proba(X_valid)[:,1]
 
     patient_preds = pd.DataFrame({"predictions": y_prob}, index = X_valid.index)
     patient_preds["true"] = y_true.values
