@@ -135,7 +135,8 @@ Plots/
 SNOM_Data/
 Nathan's Plots/
 Ignore/
-Work_For_Caroline/
+#Work_For_Caroline/
 Output/
+Work_For_Caroline/Tissue FTIR images.mat
 
 .vscode*
