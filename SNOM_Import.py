@@ -8,10 +8,8 @@ class SNOM_File:
 		self.fileName = filename
 
 		# Header
-
 		self.HEADR_RAW = import_Header(self.fileName)
 		self.HEADR = self
-
 
 		#try: self.HEADR = import_Header(self.fileName) + "-HEADR.txt")
 		#except: self.HEADR = import_Header(self.fileName + "-HEADR.txt.txt")
@@ -61,7 +59,6 @@ def import_Header(image_file_name):
 	with open(image_file_name, mode = "r", errors='ignore') as file:
 
 		return file.read()
-
 
 	try:
 
