@@ -13,8 +13,6 @@ from sklearn.metrics import accuracy_score
 from sklearn.metrics import precision_recall_curve
 from sklearn.metrics import plot_precision_recall_curve
 
-from skopt import BayesSearchCV
-
 from mlxtend.evaluate import scoring
 
 from itertools import product
