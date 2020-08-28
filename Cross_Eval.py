@@ -139,10 +139,11 @@ def score_func(y_true, y_prob, opt=True):
 
     scores["opt"] = scores["Thresholds"][threshi]
 
+
     if opt:
         scores["y_pred"] = np.array([0 if score < scores["opt"] else 1 for score in y_prob])
     else:
-        scores["y_pred"] = np.argmax(y_prob)
+        scores["y_pred"] = np.array([0 if score < 0.5 else 1 for score in y_prob])
 
     scores["y_true"] = y_true
     scores["y_prob"] = y_prob
