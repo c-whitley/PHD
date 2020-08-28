@@ -113,7 +113,7 @@ def plotCM(y_true, y_pred, display_labels, include_values=True, cmap='viridis',
     return fig
 
 
-def score(clf, X_valid, y_true):
+def score(clf, X_valid, y_true, opt=True):
 
     if roc_auc_score(y_true, clf.predict_proba(X_valid)[:,0]) > 0.5:
 
@@ -123,10 +123,10 @@ def score(clf, X_valid, y_true):
 
         y_prob = clf.predict_proba(X_valid)[:,1]
 
-    return score_func(y_true, y_prob)
+    return score_func(y_true, y_prob, opt=opt)
 
 
-def score_func(y_true, y_prob):
+def score_func(y_true, y_prob, opt=True):
 
     scores = dict()
 
@@ -139,7 +139,11 @@ def score_func(y_true, y_prob):
 
     scores["opt"] = scores["Thresholds"][threshi]
 
-    scores["y_pred"] = np.array([0 if score < scores["opt"] else 1 for score in y_prob])
+    if opt:
+        scores["y_pred"] = np.array([0 if score < scores["opt"] else 1 for score in y_prob])
+    else:
+        scores["y_pred"] = np.argmax(y_prob)
+
     scores["y_true"] = y_true
     scores["y_prob"] = y_prob
     scores["prec_curve"], scores["rec_curve"], _ = precision_recall_curve(y_true.squeeze(), y_prob)

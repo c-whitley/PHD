@@ -8,7 +8,8 @@ class SNOM_File:
 		self.fileName = filename
 
 		# Header
-		self.HEADR_RAW = import_Header(self.fileName)
+		self.HEADR_RAW = import_Header(self.fileName+'-HEADR.txt.txt')
+
 		self.HEADR = self
 
 		#try: self.HEADR = import_Header(self.fileName) + "-HEADR.txt")
@@ -16,8 +17,6 @@ class SNOM_File:
 
 		#self.sensitivity = float(re.search(r"[Ss]ensitivity =\s*([^\n\r\t\s]{1,5})" , self.HEADR)[1])
 		#self.wavenumber = float(re.search(r"[Ww]avenumber =\s*([^\n\r\t\s]{1,5})" , self.HEADR)[1])
-
-		print(self.fileName)
 
 		#try: self.pH = float(re.search(r"p[Hh]([\d])" , self.HEADR)[1])	
 		#except: pass
@@ -29,16 +28,8 @@ class SNOM_File:
 
 		for im_name in ["-FTOPO.AFM","-FSNOM.AFM","-FZERO.AFM", "-BTOPO.AFM","-BSNOM.AFM","-BZERO.AFM"]:
 
-			try: 
-
-				self.images[im_name[1:-4]] = SNOM_Image(self.fileName + im_name).image
-
-			except:
-
-				#print("Failed to load: {}".format(self.fileName + im_name))
-
-
-				continue
+			try: self.images[im_name[1:-4]] = SNOM_Image(self.fileName + im_name).image
+			except: continue
 
 
 class SNOM_Image:
@@ -52,6 +43,7 @@ class SNOM_Image:
 		self.dimensions = (data[0],data[0])
 
 		self.image = np.reshape(data[3:-2], (self.dimensions[0], self.dimensions[1]))
+		self.image = np.rot90(self.image)
 
 
 def import_Header(image_file_name):
@@ -73,4 +65,3 @@ def import_Header(image_file_name):
 
 
 			return file.read()
-
