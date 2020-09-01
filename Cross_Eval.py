@@ -30,7 +30,7 @@ def get_weights(column):
     """
     
     counts = column.value_counts()
-    weight_dict = dict(zip(counts.index, [(counts.values.sum()/n) for n in counts.values]))
+    weight_dict = dict(zip(counts.index, [1/(counts.values.sum()/n) for n in counts.values]))
     
     return column.map(weight_dict).values
 
