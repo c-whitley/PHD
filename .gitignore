@@ -139,5 +139,8 @@ Ignore/
 Output/
 Work_For_Caroline/Tissue FTIR images.mat
 CRUK Grant/
+Tilt_Corrected_Images/
+Tilt_Corrected_Images.zip
+
 
 .vscode*
