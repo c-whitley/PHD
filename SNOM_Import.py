@@ -8,28 +8,39 @@ class SNOM_File:
 		self.fileName = filename
 
 		# Header
-		self.HEADR_RAW = import_Header(self.fileName+'-HEADR.txt.txt')
+		self.__HEADR_RAW__ = import_Header(self.fileName+'-HEADR.txt.txt')
 
-		self.HEADR = self
+		# regex matches for each row of the header
+		regex = [re.findall(r'([\w\s-]+)[=\s]+([-.:/\w\d\s\µ]+)', line) for line in self.__HEADR_RAW__.split('\n')]
 
-		#try: self.HEADR = import_Header(self.fileName) + "-HEADR.txt")
-		#except: self.HEADR = import_Header(self.fileName + "-HEADR.txt.txt")
+		# Avoid certain lines in the header
+		avoid = [('Pre Scan',' '),('Laser','Parameters'),('Lock-in','settings'),('Post Scan',' ')]
 
-		#self.sensitivity = float(re.search(r"[Ss]ensitivity =\s*([^\n\r\t\s]{1,5})" , self.HEADR)[1])
-		#self.wavenumber = float(re.search(r"[Ww]avenumber =\s*([^\n\r\t\s]{1,5})" , self.HEADR)[1])
+		# Do a bit of processing to the labels and filter avoided lines before storing them
+		parsed_header={match[0][0].strip().replace(' ','_') : match[0][1].strip() 
+		for match in regex if len(match)>0 and match[0] not in avoid}
 
-		#try: self.pH = float(re.search(r"p[Hh]([\d])" , self.HEADR)[1])	
-		#except: pass
+		# Create an attribute for each of the parsed headings
+		[self.__setattr__(k,v) for k,v in parsed_header.items()]
 
-		
-		#self.substrate = re.search(r"[Oo]n\s*([^\s]{1,6})" , self.HEADR)[1]
+		images = dict()
 
-		self.images = dict()
-
+		# Cycle through each image type, creating an image for each one
 		for im_name in ["-FTOPO.AFM","-FSNOM.AFM","-FZERO.AFM", "-BTOPO.AFM","-BSNOM.AFM","-BZERO.AFM"]:
 
-			try: self.images[im_name[1:-4]] = SNOM_Image(self.fileName + im_name).image
+			try: 
+				
+				if 'TOPO' in im_name:
+
+					# Invert TOPO
+					images[im_name[1:-4]] = np.abs(SNOM_Image(self.fileName + im_name).image)
+
+				else:
+					images[im_name[1:-4]] = SNOM_Image(self.fileName + im_name).image
+					
 			except: continue
+
+		[self.__setattr__(k,v) for k,v in images.items()]
 
 
 class SNOM_Image:
@@ -62,6 +73,5 @@ def import_Header(image_file_name):
 	except:
 
 		with open(image_file_name + ".txt", encoding = "cp1252", mode = "r") as file:
-
 
 			return file.read()
