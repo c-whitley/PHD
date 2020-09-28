@@ -44,20 +44,7 @@ class PCA_denoiser( BaseEstimator, TransformerMixin ):
         return self
 
 
-def rubberband_baseline(spectrum, wn):
 
-    points = np.column_stack([wn, spectrum])
-
-    verts = ConvexHull(points).vertices
-
-    # Rotate convex hull vertices until they start from the lowest one
-    verts = np.roll(verts, -verts.argmin())
-    # Leave only the ascending part
-    verts = verts[:verts.argmax()]
-
-    baseline = np.interp(wn, wn[verts], spectrum[verts])
-
-    return baseline
 
 
 class Rubber_Band( BaseEstimator, TransformerMixin ):
@@ -76,6 +63,22 @@ class Rubber_Band( BaseEstimator, TransformerMixin ):
         return self.x - self.baseline
 
 
+    def rubberband_baseline(spectrum, wn):
+
+        points = np.column_stack([wn, spectrum])
+
+        verts = ConvexHull(points).vertices
+
+        # Rotate convex hull vertices until they start from the lowest one
+        verts = np.roll(verts, -verts.argmin())
+        # Leave only the ascending part
+        verts = verts[:verts.argmax()]
+
+        baseline = np.interp(wn, wn[verts], spectrum[verts])
+
+        return baseline
+
+
     def fit(self, x, y):
 
         if isinstance(y, pd.DataFrame):
@@ -87,7 +90,7 @@ class Rubber_Band( BaseEstimator, TransformerMixin ):
 
         pool = mp.Pool(processes=self.n_jobs)
 
-        self.baseline = np.array([pool.apply(rubberband_baseline, args=(spectrum, self.wn)) 
+        self.baseline = np.array([pool.apply(self.rubberband_baseline, args=(spectrum, self.wn)) 
         for spectrum in np.apply_along_axis(lambda row: row, axis = 0, arr=self.y)])
 
         return self
