@@ -5,15 +5,14 @@ import random
 
 class StratifiedGroupKFold:
 
-    def __init__(self, random_state=1, k=3):
+    def __init__(self, seed=1, k=3):
 
-        self.random_state = random_state
+        self.seed = seed
         self.k = k
 
     def split(self, X, y, groups):
 
         k = self.k
-        seed = self.random_state
 
         labels_num = np.max(y) + 1
         y_counts_per_group = defaultdict(lambda: np.zeros(labels_num))
@@ -37,7 +36,7 @@ class StratifiedGroupKFold:
             return np.mean(std_per_label)
         
         groups_and_y_counts = list(y_counts_per_group.items())
-        random.Random(seed).shuffle(groups_and_y_counts)
+        random.Random(self.seed).shuffle(groups_and_y_counts)
 
         for g, y_counts in sorted(groups_and_y_counts, key=lambda x: -np.std(x[1])):
             best_fold = None
