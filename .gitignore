@@ -148,4 +148,5 @@ processed_images.zip
 processed_images/
 .vscode*
 /Work_For_Caroline
-
+*.hdf
+*.hdf5
