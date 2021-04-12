@@ -84,4 +84,4 @@ ax3.set_ylim(ax1.get_ylim())
 ax3.axvline(kx[1], color='k', linestyle='--', linewidth=0.8)
 ax3.axvline(np.max(k), color='k', linestyle='--', linewidth=0.8)
 
-plt.show()
+plt.show()w
