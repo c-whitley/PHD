@@ -44,9 +44,6 @@ class PCA_denoiser( BaseEstimator, TransformerMixin ):
         return self
 
 
-
-
-
 class Rubber_Band( BaseEstimator, TransformerMixin ):
     """
     Applies a rubber band correction to the input matrix of spectra.
