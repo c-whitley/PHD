@@ -152,3 +152,6 @@ processed_images/
 *.hdf5
 *.pickle
 /ADV_front_Outputs
+/HE_Images
+/Creating_Masks
+/masks_1805
