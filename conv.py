@@ -51,7 +51,8 @@ class FTIR_Dataset_C(Dataset):
     def __getitem__(self, idx):
 
         # Make X into tensor compatible with CONV1D layers
-        spectra = torch.tensor(self.X[idx,:], dtype=torch.float)#.unsqueeze(0)
+        spectra = torch.tensor(self.X[idx,:], dtype=torch.float)
+        spectra = torch.rot90(spectra)#, 1, 0)#.unsqueeze(0)
         #spectra = self.X[idx,:]
         
         # Make y compatible with binary cross entropy loss
@@ -112,6 +113,7 @@ def train_loop(dataloader, model, loss_fn, optimizer):
 
 
 def test_loop(dataloader, model, loss_fn):
+
     
     size = len(dataloader.dataset)
     num_batches = len(dataloader)

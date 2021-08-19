@@ -1,0 +1,29 @@
+\begin{tabular}{lllr}
+\toprule
+{} &    False &     True &   All \\
+\midrule
+(mean, age @ diag)   &  57.2105 &  64.5333 &   NaN \\
+(range\_, age @ diag) &  29 - 72 &  48 - 85 &   NaN \\
+(median, age @ diag) &       59 &       64 &   NaN \\
+f                    &        7 &        2 &   9.0 \\
+m                    &       12 &       12 &  24.0 \\
+All                  &       19 &       14 &  33.0 \\
+1                    &        1 &        0 &   1.0 \\
+2                    &       10 &        8 &  18.0 \\
+3                    &        0 &        2 &   2.0 \\
+4                    &        6 &        3 &   9.0 \\
+4a                   &        2 &        2 &   4.0 \\
+All                  &       19 &       15 &  34.0 \\
+0                    &        6 &        1 &   7.0 \\
+1                    &        5 &        2 &   7.0 \\
+2a                   &        0 &        1 &   1.0 \\
+2b                   &        8 &        8 &  16.0 \\
+2c                   &        0 &        3 &   3.0 \\
+All                  &       19 &       15 &  34.0 \\
+floor of mouth       &        5 &        4 &   9.0 \\
+oropharynx           &        3 &        0 &   3.0 \\
+other                &        8 &        5 &  13.0 \\
+tongue               &        3 &        6 &   9.0 \\
+All                  &       19 &       15 &  34.0 \\
+\bottomrule
+\end{tabular}
