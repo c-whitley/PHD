@@ -113,7 +113,7 @@ def km_calculateB(df, duration_col, pred_col, censored_col, thresh=0.5):
     return tsi, fsi
 
 
-def km_plots(tsi, fsi, axin=None):
+def km_plots(tsi, fsi, axin=None, ste=False, median=False):
 
     if axin:
         ax=axin
@@ -122,13 +122,21 @@ def km_plots(tsi, fsi, axin=None):
 
     for name, res, c in zip(['1yeardeath predicted true', '1yeardeath predicted false'], [tsi, fsi], colors.TABLEAU_COLORS.values()):
 
-        mean = np.mean(res, axis=0)
-        error = np.std(res,axis=0)
-        mean_error = sem(res, axis=0)
+        if median:
+            m = np.median(res, axis=0)
+        else:
+            m = np.mean(res, axis=0)
 
-        ax.plot(mean, ds='steps', c=c, label=name)
-        ax.plot(mean+error, ds='steps', ls='--', c=c)
-        ax.plot(mean-error, ds='steps', ls='--', c=c)
+        if ste:
+            error = sem(res, axis=0)
+
+        else:
+            error = np.std(res,axis=0)
+
+
+        ax.plot(m, ds='steps', c=c, label=name)
+        ax.plot(m+error, ds='steps', ls='--', c=c, alpha=0.5)
+        ax.plot(m-error, ds='steps', ls='--', c=c, alpha=0.5)
 
         ax.set_xlabel('Time (months)')
         ax.set_ylabel("Cumulative Survival")

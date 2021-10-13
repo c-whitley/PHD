@@ -16,6 +16,9 @@ class SpecConvNet(nn.Module):
         # Run init method from nn.Module
         super().__init__()
 
+
+    def build(self):
+
         self.stack = nn.Sequential(
                         nn.Conv1d(3, 8, 5),
                         nn.ReLU(),
@@ -120,7 +123,9 @@ def test_loop(dataloader, model, loss_fn):
     test_loss, correct = 0, 0
 
     with torch.no_grad():
+
         for X, y in dataloader:
+
             pred = model(X)
             test_loss += loss_fn(pred, y).item()
             correct += (pred.argmax(1) == y).type(torch.float).sum().item()
@@ -132,5 +137,5 @@ def test_loop(dataloader, model, loss_fn):
 
     test_loss /= num_batches
     correct /= size
-    print(auc)
+    print(f'ROC: {auc}')
     print(f"Test Error: \n Accuracy: {accuracy:>0.1f}%, Avg loss: {test_loss:>8f} \n")
