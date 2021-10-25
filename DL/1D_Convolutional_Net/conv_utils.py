@@ -1,44 +1,8 @@
-import os
-import pandas as pd
-import numpy as np
-
 import torch
-import torch.nn as nn
-import torch.nn.functional as F
 from torch.utils.data import Dataset
 
 from sklearn.metrics import roc_auc_score, accuracy_score
 
-class SpecConvNet(nn.Module):
-
-    def __init__(self):
-
-        # Run init method from nn.Module
-        super().__init__()
-
-
-    def build(self):
-
-        self.stack = nn.Sequential(
-                        nn.Conv1d(3, 8, 5),
-                        nn.ReLU(),
-                        nn.Dropout(0.25),
-                        nn.MaxPool1d(5),
-                        nn.Conv1d(8, 1, 3),
-                        nn.ReLU(),
-                        nn.Dropout(0.25),
-                        nn.MaxPool1d(3),
-                        nn.Linear(10, 8),
-                        nn.ReLU(),
-                        nn.Linear(8,2),
-                        nn.Softmax(2)
-                        )
-
-    def forward(self, x):
-
-        seq = self.stack(x)
-
-        return seq
 
 class FTIR_Dataset_C(Dataset):
 
@@ -68,6 +32,7 @@ class FTIR_Dataset_C(Dataset):
             label = self.target_transform(label)
         return spectra, label
 
+
 class FTIR_Dataset(Dataset):
 
     def __init__(self, dataframe, y_label, transform=None, target_transform=None):
@@ -86,8 +51,9 @@ class FTIR_Dataset(Dataset):
         #spectra = self.X[idx,:]
         
         # Make y compatible with binary cross entropy loss
-        label = torch.tensor(self.y[idx], dtype=torch.float).unsqueeze(0)#.unsqueeze(0)
-    
+        #label = torch.tensor(self.y[idx], dtype=torch.float).unsqueeze(0)#.unsqueeze(0)
+        label = torch.tensor(self.y[idx], dtype=torch.float)#.unsqueeze(0)#.unsqueeze(0)
+
 
         if self.transform:
             spectra = self.transform(spectra)
@@ -109,14 +75,13 @@ def train_loop(dataloader, model, loss_fn, optimizer):
         loss.backward()
         optimizer.step()
 
-        if batch % 100 == 0:
+        if batch % int(size/10) == 0:
             loss, current = loss.item(), batch * len(X)
             
             print(f"loss: {loss:>7f}  [{current:>5d}/{size:>5d}]")
 
 
 def test_loop(dataloader, model, loss_fn):
-
     
     size = len(dataloader.dataset)
     num_batches = len(dataloader)
@@ -130,12 +95,12 @@ def test_loop(dataloader, model, loss_fn):
             test_loss += loss_fn(pred, y).item()
             correct += (pred.argmax(1) == y).type(torch.float).sum().item()
 
-            probs = pred.numpy().squeeze()[:,1]
+            probs = pred.numpy().squeeze()#[:,1]
 
-            auc = roc_auc_score(y.numpy().squeeze()[:,1], probs)
-            accuracy = accuracy_score(y.numpy().squeeze()[:,1], (probs>0.5))
+            auc = roc_auc_score(y.numpy().squeeze(), probs)
+            #accuracy = accuracy_score(y.numpy().squeeze(), (probs>0.5))
 
     test_loss /= num_batches
     correct /= size
-    print(f'ROC: {auc}')
-    print(f"Test Error: \n Accuracy: {accuracy:>0.1f}%, Avg loss: {test_loss:>8f} \n")
+
+    return auc
