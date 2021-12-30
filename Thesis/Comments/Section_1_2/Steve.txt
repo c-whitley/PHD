@@ -1,0 +1,64 @@
+Some general comments:
+
+1. Some poor English, such as
+Statement A, statement B
+which should be either
+Statement A and statement B
+or
+Statement A, but statement B
+or
+Statement A; statement B
+
+It might be easier to get the physics and biology right and then, further down the line, we can have a Teams meeting in which things can be tidied up in real time.
+
+2. Tense. 'The objective of this chapter WAS to determine...'
+Does that mean it isn't any more? I suggest that references to the thesis should be in the present tense.
+
+3. I suggest you start compiling a list of things that will need to be checked, towards then end of thesis writing, for consistency. For instance,
+
+'Comprise' means 'consists of' and so you shouldn't say 'comprises of'. An easy search-and-replace.
+'IR' or 'infrared' or 'infra-red'. Something you can only really check when all writing is done.
+'Vice verse' should be 'vice versa'.
+Many hyphens (-) should be dashes (–).
+'tpr' or 'TPR', etc.
+
+
+Specific comments:
+
+Page23 Line9
+Does anybody use W for wavenumber (rather than Greek nu)?
+
+Figure 2.5
+Needs vertical axis and Red=imaginary, Blue=real.
+
+Page27 Line6
+'Transitions corresponding to either' should be 'transitions that are either'.
+
+Figure 2.8
+Caption should have something like
+'where Erot << Evib << Eelec'
+
+Page34 Line6
+'Are able to' should be 'can'
+
+Page36 Line19
+CaF should be CaF2 (subscript 2)
+
+Page36 Last line
+'Lens' should be 'mirror'
+
+Page38 Line14
+'Interface filter' should be 'interference filter'
+
+Figure 2.12
+'Position against electron energy' should be 'electron energy against position'
+
+Page44 Line1
+'Maximum' should be 'minimum'
+
+Equation 2.38
+n is not in the equation
+NA values > 1 can only be achieved in refracting media (n > 1).
+
+Page47 Line12
+Is FFT defined somewhere?

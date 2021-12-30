@@ -125,6 +125,6 @@ class Patient_opt:
             self.mutate_individuals()
             self.check_fitness()
 
-            self.results.append({'Individuals': self.population
-                                ,'Fitnesses': self.fitnesses})
+            self.results.append({'Individuals': np.array(self.population)
+                                ,'Fitnesses': np.array(self.fitnesses)})
 
