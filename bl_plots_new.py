@@ -1,6 +1,7 @@
 import os
 import string
 import copy
+from lifelines.fitters import coxph_fitter
 
 import statsmodels.api as sm
 import matplotlib.pyplot as plt
@@ -13,7 +14,11 @@ import seaborn as sns
 from scipy.stats import sem
 
 from lifelines import KaplanMeierFitter
-from sklearn.metrics import roc_auc_score, roc_curve, precision_recall_curve, f1_score, confusion_matrix
+from lifelines.statistics import logrank_test
+from lifelines import CoxPHFitter
+from lifelines.plotting import add_at_risk_counts
+
+from sklearn.metrics import roc_auc_score, roc_curve, precision_recall_curve, f1_score, confusion_matrix, matthews_corrcoef
 
 metadata = pd.read_excel('/mnt/c/Users/conor/Git_Projects/PHD/metadata_0206.xlsx')
 
@@ -156,7 +161,7 @@ def stats_plot(df, fig, axes=None):
         fig, axes = plt.subplots(ncols=3, nrows=2, figsize=(8,4), sharey=True)
         fig.subplots_adjust(wspace=0.1)
 
-    for col_name, ax, lab in zip(df, axes.flatten(), ['A','B','C','D','E','F']):
+    for col_name, ax, lab in zip(df, axes.flatten(), string.ascii_uppercase[2:]):
 
         ax.hist(df[col_name], edgecolor='black')
         ax.text(0.05, 0.8, lab, size='x-large', transform=ax.transAxes)
@@ -166,7 +171,7 @@ def stats_plot(df, fig, axes=None):
         if lab in ['D', 'E', 'F']:
             ax.set_xlabel('Score')
 
-    print(dict(zip(df.columns, ['A','B','C','D','E','F'])))
+    print(dict(zip(df.columns, string.ascii_uppercase)))
 
     return fig
 
@@ -175,8 +180,9 @@ def box_plot(stats):
 
     fig, axes = plt.subplots(ncols=3, nrows=2, figsize=(10,6))
     fig.subplots_adjust(wspace=0.2)
+    letters = string.ascii_uppercase[2:]
 
-    for ax, name, let in zip(axes.flatten(), stats.columns, string.ascii_uppercase):
+    for ax, name, let in zip(axes.flatten(), stats.columns, letters):
         ax = sns.boxplot(data=stats.reset_index()
         , x='Vars'
         , y=name
@@ -186,7 +192,7 @@ def box_plot(stats):
         ax.set_xticklabels(['ASMA', 'ASMA+FTIR','FTIR'])
         ax.set_xlabel(None)
 
-        if let in ['A', 'D']:
+        if let in ['C', 'F']:
             ax.set_ylabel('Score')
         else:
             ax.set_ylabel(None)
@@ -198,15 +204,14 @@ def box_plot(stats):
         else:
             ax.set_ylim(-0.1,1.1)
 
-        ax.text(-0.05, 1.05, let, size='large', transform=ax.transAxes)
+        ax.text(-0.05, 1.05, let, size='x-large', transform=ax.transAxes)
 
-    print(list(zip(stats.columns, string.ascii_uppercase)))
+    print(list(zip(stats.columns, letters)))
 
     return fig
 
 
-def calc_stats(datasets, weight=True, patient=False, best_threshold=0.5):
-
+def calc_stats(datasets, weight=True, patient=False, threshold='best'):
 
     output = {}
 
@@ -221,38 +226,48 @@ def calc_stats(datasets, weight=True, patient=False, best_threshold=0.5):
         ,'NPV':[]
         ,'Thresh':[]}
 
+        #dataset['Preds'] = 1-dataset['Preds']
+        best_threshold = get_opt_thresh(dataset)
         for split, split_df in dataset.groupby(level=0):
 
             if patient:
 
                 split_df = split_df.groupby('Patient_Number').median()
 
-            ts = np.linspace(0.2,0.9,10)
-            #f1 = pd.Series({t: f1_score(y_true=split_df['Y_true'], y_pred=split_df['Preds']>t) for t in ts})
-            #best_threshold = f1.idxmax()
-            best_threshold = 0.5
+            if threshold == 'best':
 
-            preds = np.array([1 if el > best_threshold else 0 for el in split_df['Preds']])
+                ts = np.linspace(0.01,0.99,30)
+                f1 = pd.Series({t: f1_score(y_true=split_df['Y_true'], y_pred=(split_df['Preds']>t), sample_weight=split_df['Weights'], average='weighted') for t in ts})
+                #m = pd.Series({t: matthews_corrcoef(y_true=split_df['Y_true'], y_pred=(split_df['Preds']>t), sample_weight=split_df['Weights']) for t in ts})
+                best_threshold = f1.idxmax()
+                preds = np.array([1 if el > best_threshold else 0 for el in split_df['Preds']])
+            
+            else: 
+                
+                preds = np.array([1 if el > best_threshold else 0 for el in split_df['Preds']])
+
 
             if weight:
-                cm = confusion_matrix(split_df['Y_true'], preds, sample_weight=split_df['Weights'])
+                cm = confusion_matrix(y_true=split_df['Y_true'], y_pred=preds, sample_weight=split_df['Weights'])
                 stats['AUC'].append(roc_auc_score(split_df['Y_true'], split_df['Preds'], sample_weight=split_df['Weights']))
-                stats['F1'].append(f1_score(y_true=split_df['Y_true'], y_pred=preds, sample_weight=split_df['Weights']))
+                stats['F1'].append(f1_score(y_true=split_df['Y_true'], y_pred=preds, sample_weight=split_df['Weights'], average='weighted'))
 
             else:
-                cm = confusion_matrix(split_df['Y_true'], preds)
+                cm = confusion_matrix(y_true=split_df['Y_true'], y_pred=preds)
                 stats['AUC'].append(roc_auc_score(split_df['Y_true'], split_df['Preds']))
                 stats['F1'].append(f1_score(y_true=split_df['Y_true'], y_pred=preds))
 
             #cm = confusion_matrix(split_df['Y_true'], preds)
-            tn, fp, fn, tp = cm.flatten()
+            tn, fp, fn, tp = cm.ravel()
 
-            stats['MCC'].append(((tp*tn)-(fp*fn))/np.sqrt((tp+fp)*(tp+fn)*(tn+fp)*(tn+fn)))
+            stats['MCC'].append(matthews_corrcoef(split_df['Y_true'], y_pred=preds, sample_weight=split_df['Weights']))
             stats['Specificity'].append(tn/(tn+fp))
             stats['Sensitivity'].append(tp/(tp+fn))
             stats['PPV'].append(tp/(tp+fp))
             stats['NPV'].append(tn/(tn+fn))
             stats['Thresh'].append(best_threshold)
+
+            del cm
         
         output[name] = pd.DataFrame(stats)
 
@@ -292,14 +307,16 @@ def data_plot(datasets, weight=True, patient=False):
         ax1.plot([0,1], [0,1], ls='--', c='black')
         ax1.plot(np.linspace(0,1,100), np.median(np.array(roc_curves), axis=0), c=colour, label=f'{name} - AUC:{np.median(aucs):0.2f}')
         ax1.plot(np.linspace(0,1,100), np.mean(np.array(roc_curves), axis=0),c=colour, ls='--', label=f'{name} - AUC:{np.mean(aucs):0.2f}')
-        ax1.set_title('ROC')
+        #ax1.set_title('ROC')
+        ax1.text(-0.05, 1.05, 'A', size='x-large', transform=ax1.transAxes)
         ax1.set_xlabel('False positive rate')
         ax1.set_ylabel('True positive rate')
         ax1.legend(bbox_to_anchor=(0.1, -0.35, 2, 0), loc="lower center", mode="expand", ncol=3)
 
         ax2.plot(np.linspace(0,1,100), np.median(np.array(prec_curves), axis=0),c=colour, label=f'{name}')
         ax2.plot(np.linspace(0,1,100), np.mean(np.array(prec_curves), axis=0),c=colour, ls='--', label=f'{name}')
-        ax2.set_title('PR')
+        #ax2.set_title('PR')
+        ax2.text(-0.05, 1.05, 'B', size='x-large', transform=ax2.transAxes)
         ax2.set_xlabel('Recall')
         ax2.set_ylabel('Precision')
         #ax2.legend()
@@ -307,31 +324,41 @@ def data_plot(datasets, weight=True, patient=False):
     return fig
 
 
-def km_curve(dataset, patient=False):
+def km_curve(dataset, patient=False, thresh=None):
 
     ps = []
     kmf = KaplanMeierFitter()
 
-    for t in np.linspace(0.2,0.9,30):
+    indf = dataset.reset_index(['DiedvsAlive', 'survival (months)'])
+    indf['DiedvsAlive'] = (indf['DiedvsAlive']=='Died')
 
-        indf = dataset.reset_index(['DiedvsAlive', 'survival (months)'])
-        indf['DiedvsAlive'] = (indf['DiedvsAlive']=='Died')
+    if patient:
+        indf = indf.groupby('Patient_Number').median()
 
-        if patient:
-            indf = indf.groupby('Patient_Number').mean()
+    if thresh: 
+        
+        pred = (indf['Preds'] > thresh)
 
-        pred = (indf['Preds'] > t)
+    else:     
+        
+        thrshs = np.linspace(0.01,0.9,40)
 
-        try:
-            st, p = sm.duration.survdiff(indf.loc[:, 'survival (months)'], indf.loc[:, 'DiedvsAlive'], pred)
+        for t in thrshs:
 
-        except:
-            continue
+            pred = (indf['Preds'] > t)
 
-        ps.append(p)
+            try:
+                st, p = sm.duration.survdiff(indf.loc[:, 'survival (months)']
+                                           , indf.loc[:, 'DiedvsAlive']
+                                           , pred)
 
-    thresh = np.linspace(0.2,0.9,30)[np.argmin(ps)]
-    pred = (indf['Preds'] > thresh)
+            except:
+                continue
+
+            ps.append(p)
+
+        thresh = thrshs[np.argmin(ps)]
+        pred = (indf['Preds'] > thresh)
 
     st, p = sm.duration.survdiff(indf.loc[:, 'survival (months)'], indf.loc[:, 'DiedvsAlive'], pred)
 
@@ -349,9 +376,159 @@ def plot_kcmo(kmco, ax=None, logp=True):
     if not ax:
         fig, ax = plt.subplots()
 
-    kmco['True_curve'].plot(legend=False, c='tab:green', ax=ax)
-    kmco['False_curve'].plot(legend=False, c='tab:red', xlabel='Timeline', ylabel='Survival Probability', ax=ax)
+    kmco['True_curve'].plot_survival_function(legend=False, c='tab:red', ax=ax)
+    kmco['False_curve'].plot_survival_function(legend=False, c='tab:green', xlabel='Timeline', ylabel='Survival Probability', ax=ax)
 
     if logp:
         p = kmco['P-value']
-        ax.text(0.7, 0.8, f'Log-rank p - {p:0.2f}', transform=ax.transAxes)
+        if p< 0.01: ax.text(0.6, 0.8, f'p - < 0.01', transform=ax.transAxes)
+        else: ax.text(0.6, 0.8, f'p - {p:0.3f}', transform=ax.transAxes)
+
+
+def lifelines_plots(dataset, patient=False, ax=None, thresh=0.5, add_risk=False):
+
+    if not ax:
+        fig, ax = plt.subplots(figsize=(7,6))
+
+    indf = dataset.reset_index(['DiedvsAlive', 'survival (months)'])
+    indf['DiedvsAlive'] = 1*(indf['DiedvsAlive']=='Died')
+    indf.index = indf.index.set_names('Split',level=0)
+
+    if patient:
+        indf = indf.groupby('Patient_Number').median()
+        #indf = indf.groupby(['Split', 'Patient_Number']).median()
+
+    T = indf['survival (months)']
+    E = indf['DiedvsAlive']
+    P = (indf['Preds']>thresh)
+
+    results = logrank_test(T[P], T[~P], E[P], E[~P], alpha=.99)
+    #results.print_summary(style="latex", decimals=0.2)
+    cph = CoxPHFitter()
+    cph.fit(indf[['DiedvsAlive', 'survival (months)', 'Preds']], duration_col='survival (months)', event_col='DiedvsAlive')
+
+
+    kmf = KaplanMeierFitter()
+    kmf_T=kmf.fit(T[P], event_observed=E[P], label='Death within one year')
+    ax = kmf.plot_survival_function(legend=False, c='tab:red', ax=ax, show_censors=True)
+
+    kmf = KaplanMeierFitter()
+    kmf_F=kmf.fit(T[~P], event_observed=E[~P], label='Lived beyond one year')
+    ax = kmf.plot_survival_function(legend=False, c='tab:green', ax=ax, show_censors=True)
+    
+    if add_risk:
+        add_at_risk_counts(kmf_T, kmf_F, ax=ax)
+    plt.tight_layout()
+    ax.set_ylabel('Survival probability')
+    ax.set_xlabel('Survival (months)')
+
+    return {'KM': {'True': kmf_T, 'False': kmf_F}, 'Logrank': results, 'Cox': cph}
+
+
+def lifelines_plots2(dataset, patient=False, ax=None, thresh=0.5, add_risk=False):
+
+    if not ax:
+        fig, ax = plt.subplots(figsize=(7,5))
+
+    indf = dataset.reset_index(['DiedvsAlive', 'survival (months)'])
+    indf['DiedvsAlive'] = 1*(indf['DiedvsAlive']=='Died')
+
+    all_folds = []
+    t = np.linspace(0, 120, 100)
+
+    sk = 0
+
+    for fold_i, fold_df in indf.groupby(level=0):
+
+        if patient:
+            fold_df = fold_df.groupby('Patient_Number').median()
+
+        fold_dict = {}
+
+        T = fold_df['survival (months)']
+        E = fold_df['DiedvsAlive']
+        P = (fold_df['Preds']>thresh)
+
+        if P.nunique() == 1: 
+            sk+=1
+            continue
+
+        results = logrank_test(T[P], T[~P], E[P], E[~P], alpha=.99)
+        fold_dict['Results'] = results
+
+        kmf = KaplanMeierFitter()
+        kmf_T=kmf.fit(T[P], event_observed=E[P], timeline=t, label='Death within one year')
+        fold_dict['Death'] = kmf_T
+
+        kmf = KaplanMeierFitter()
+        kmf_F=kmf.fit(T[~P], event_observed=E[~P], timeline=t, label='Lived beyond one year')
+        fold_dict['Alive'] = kmf_F
+
+        fold_dict['T_Curve'] = kmf_T.survival_function_
+        fold_dict['F_Curve'] = kmf_F.survival_function_
+        fold_dict['Timeline'] = kmf_T.survival_function_
+
+        cph = CoxPHFitter()
+        cph.fit(fold_df[['DiedvsAlive', 'survival (months)', 'Preds', 'Weights']]
+                       ,duration_col='survival (months)'
+                       ,event_col='DiedvsAlive'
+                       ,weights_col='Weights')
+
+        fold_dict['cox'] = cph
+
+        all_folds.append(fold_dict)
+
+
+    med_T = pd.concat([fold['T_Curve'] for fold in all_folds], axis=1)
+    med_F = pd.concat([fold['F_Curve'] for fold in all_folds], axis=1)
+    ps = [fold['Results'].p_value for fold in all_folds]
+    cs = [fold['cox'].summary['p'] for fold in all_folds]
+
+    print(np.median(cs))
+
+    for med in [med_T, med_F]:
+
+        median = med.median(axis=1)
+
+        quants = np.quantile(med, [0.25,0.75], axis=1).squeeze()#[0,:]
+        # return quants
+        #        u_quantile, l_quantile = np.quantile(med, [0.33,0.67], axis=0).squeeze()[0,:]
+        x = med.index
+        ax.plot(x, median)
+        ax.fill_between(x, quants[0,:], quants[1,:], alpha=0.3)
+
+    print(sk)
+    return all_folds
+
+
+def get_opt_thresh(dataset):
+
+    def thresh_test(dataset, patient=False, thresh=0.5, add_risk=False):
+
+        indf = dataset.reset_index(['DiedvsAlive', 'survival (months)'])
+        indf['DiedvsAlive'] = 1*(indf['DiedvsAlive']=='Died')
+
+        if patient:
+            indf = indf.groupby('Patient_Number').median()
+
+        T = indf['survival (months)']
+        E = indf['DiedvsAlive']
+        P = (indf['Preds']>thresh)
+
+        results = logrank_test(T[P], T[~P], E[P], E[~P], alpha=.99)
+        #results.print_summary(style="latex", decimals=0.2)
+        return results.p_value
+
+    ths = {}
+
+    for th in np.linspace(0.05,0.85, 20):
+
+        try:
+            p = thresh_test(dataset, patient=True, thresh=th)
+            ths[th] = p
+        except ValueError as error:
+            continue
+
+    ths = pd.Series(ths)
+
+    return ths.idxmin()
