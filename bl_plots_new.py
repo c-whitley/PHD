@@ -215,7 +215,7 @@ def calc_stats(datasets, weight=True, patient=False, threshold='best'):
 
     output = {}
 
-    for colour, (name, dataset) in zip(['tab:blue', 'tab:orange', 'tab:green'], datasets.items()):
+    for name, dataset in datasets.items():
 
         stats = {'AUC':[]
         ,'F1':[]
@@ -236,7 +236,7 @@ def calc_stats(datasets, weight=True, patient=False, threshold='best'):
 
             if threshold == 'best':
 
-                ts = np.linspace(0.01,0.99,30)
+                ts = np.linspace(split_df['Preds'].min(), split_df['Preds'].max(), 50)
                 f1 = pd.Series({t: f1_score(y_true=split_df['Y_true'], y_pred=(split_df['Preds']>t), sample_weight=split_df['Weights'], average='weighted') for t in ts})
                 #m = pd.Series({t: matthews_corrcoef(y_true=split_df['Y_true'], y_pred=(split_df['Preds']>t), sample_weight=split_df['Weights']) for t in ts})
                 best_threshold = f1.idxmax()
@@ -306,7 +306,7 @@ def data_plot(datasets, weight=True, patient=False):
         
         ax1.plot([0,1], [0,1], ls='--', c='black')
         ax1.plot(np.linspace(0,1,100), np.median(np.array(roc_curves), axis=0), c=colour, label=f'{name} - AUC:{np.median(aucs):0.2f}')
-        ax1.plot(np.linspace(0,1,100), np.mean(np.array(roc_curves), axis=0),c=colour, ls='--', label=f'{name} - AUC:{np.mean(aucs):0.2f}')
+        #ax1.plot(np.linspace(0,1,100), np.mean(np.array(roc_curves), axis=0),c=colour, ls='--', label=f'{name} - AUC:{np.mean(aucs):0.2f}')
         #ax1.set_title('ROC')
         ax1.text(-0.05, 1.05, 'A', size='x-large', transform=ax1.transAxes)
         ax1.set_xlabel('False positive rate')
@@ -314,7 +314,7 @@ def data_plot(datasets, weight=True, patient=False):
         ax1.legend(bbox_to_anchor=(0.1, -0.35, 2, 0), loc="lower center", mode="expand", ncol=3)
 
         ax2.plot(np.linspace(0,1,100), np.median(np.array(prec_curves), axis=0),c=colour, label=f'{name}')
-        ax2.plot(np.linspace(0,1,100), np.mean(np.array(prec_curves), axis=0),c=colour, ls='--', label=f'{name}')
+        #ax2.plot(np.linspace(0,1,100), np.mean(np.array(prec_curves), axis=0),c=colour, ls='--', label=f'{name}')
         #ax2.set_title('PR')
         ax2.text(-0.05, 1.05, 'B', size='x-large', transform=ax2.transAxes)
         ax2.set_xlabel('Recall')
