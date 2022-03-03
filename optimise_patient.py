@@ -7,8 +7,8 @@ import pandas as pd
 
 from tqdm import tqdm
 
-class Patient_opt:
 
+class Patient_opt:
 
     def __init__(self, patients, mutpb=0.05, copb=0.5, n_indviduals=100, n_gens=100):
         super().__init__()
@@ -21,7 +21,7 @@ class Patient_opt:
 
         self.toolbox = base.Toolbox()
 
-        creator.create("FitnessMax", base.Fitness, weights=(1.0,-1.0))
+        creator.create("FitnessMax", base.Fitness, weights=(1.0, -1.0))
         creator.create("solution", list, fitness=creator.FitnessMax)
 
         self.toolbox = base.Toolbox()
@@ -29,11 +29,13 @@ class Patient_opt:
         # Initialise each attribute of the member as either 0 or 1 - The grouping function
         self.toolbox.register('grouping', np.random.randint, 0, 2)
 
-        # Use the grouping function to fill each member of the population with 25 different 
-        self.toolbox.register('solution', tools.initRepeat, creator.solution, self.toolbox.grouping, n = self.patients.shape[0])
+        # Use the grouping function to fill each member of the population with 25 different
+        self.toolbox.register('solution', tools.initRepeat, creator.solution,
+                              self.toolbox.grouping, n=self.patients.shape[0])
 
         # Create a population container for a number of potential grouping sets (Solutions)
-        self.toolbox.register("population", tools.initRepeat, list, self.toolbox.solution)
+        self.toolbox.register("population", tools.initRepeat,
+                              list, self.toolbox.solution)
 
         # Register selection method
         self.toolbox.register("select", tools.selTournament, tournsize=5)
@@ -42,14 +44,12 @@ class Patient_opt:
         self.toolbox.register("mate", tools.cxTwoPoint)
 
         # Register mutate method
-        self.toolbox.register("mutate", tools.mutFlipBit, indpb = 0.2)
-
+        self.toolbox.register("mutate", tools.mutFlipBit, indpb=0.2)
 
     def create_population(self):
 
         # Fill with 100 different member of the population
         self.population = self.toolbox.population(n=self.n_indviduals)
-
 
     def evaluate_individual(self, individual):
 
@@ -61,11 +61,10 @@ class Patient_opt:
         stat, p = sm.duration.survdiff(duration, death_obs, groups)
 
         # Compute the balance between datasets
-        bal = np.abs((len(groups)/2) - np.sum(groups)) 
+        bal = np.abs((len(groups)/2) - np.sum(groups))
 
         # Return cost functions to maximise
         return (stat.astype(np.float16), bal)
-
 
     def select_individuals(self):
 
@@ -73,7 +72,6 @@ class Patient_opt:
 
         # Clone the selected individuals
         self.offspring = [self.toolbox.clone(child) for child in new_gen]
-
 
     def crossover_individuals(self):
 
@@ -85,7 +83,6 @@ class Patient_opt:
 
                 del child1.fitness.values
                 del child2.fitness.values
-    
 
     def mutate_individuals(self):
 
@@ -93,7 +90,6 @@ class Patient_opt:
             if random.random() < self.copb:
                 self.toolbox.mutate(mutant)
                 del mutant.fitness.values
-
 
     def check_fitness(self):
 
@@ -111,7 +107,6 @@ class Patient_opt:
 
         self.fitnesses = np.array([fitness[0] for fitness in fitnesses])
 
-
     def run_optimisation(self):
 
         self.create_population()
@@ -125,6 +120,5 @@ class Patient_opt:
             self.mutate_individuals()
             self.check_fitness()
 
-            self.results.append({'Individuals': np.array(self.population)
-                                ,'Fitnesses': np.array(self.fitnesses)})
-
+            self.results.append({'Individuals': np.array(
+                self.population), 'Fitnesses': np.array(self.fitnesses)})
