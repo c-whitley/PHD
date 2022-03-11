@@ -9,9 +9,18 @@ from tqdm import tqdm
 
 
 class Patient_opt:
-
+    """_summary_
+    """
     def __init__(self, patients, mutpb=0.05, copb=0.5, n_indviduals=100, n_gens=100):
-        super().__init__()
+        """_summary_
+
+        Args:
+            patients (_type_): _description_
+            mutpb (float, optional): _description_. Defaults to 0.05.
+            copb (float, optional): _description_. Defaults to 0.5.
+            n_indviduals (int, optional): _description_. Defaults to 100.
+            n_gens (int, optional): _description_. Defaults to 100.
+        """        super().__init__()
 
         self.patients = patients
         self.mutpb = mutpb
@@ -21,7 +30,9 @@ class Patient_opt:
 
         self.toolbox = base.Toolbox()
 
-        creator.create("FitnessMax", base.Fitness, weights=(1.0, -1.0))
+        #creator.create("FitnessMax", base.Fitness, weights=(1.0, -1.0))
+        creator.create("FitnessMax", base.Fitness, weights=(1.0, ))
+        
         creator.create("solution", list, fitness=creator.FitnessMax)
 
         self.toolbox = base.Toolbox()
@@ -64,7 +75,8 @@ class Patient_opt:
         bal = np.abs((len(groups)/2) - np.sum(groups))
 
         # Return cost functions to maximise
-        return (stat.astype(np.float16), bal)
+        #return (stat.astype(np.float16), bal)
+        return (stat.astype(np.float16), )
 
     def select_individuals(self):
 
