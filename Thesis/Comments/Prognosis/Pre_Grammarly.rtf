@@ -1,0 +1,379 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang2057\deflangfe2057{\fonttbl{\f0\fnil\fcharset0 Calibri;}}
+{\*\generator Riched20 10.0.22000}{\*\mmathPr\mnaryLim0\mdispDef1\mwrapIndent1440 }\viewkind4\uc1 
+\pard\sa200\sl276\slmult1\f0\fs22\lang9 % Chapter 3\par
+\par
+\\chapter\{Prognosis\} % Main chapter title\par
+\par
+\\label\{Chapter_Prognosis\} % For referencing the chapter elsewhere, use \\ref\{Chapter1\} \par
+\par
+%----------------------------------------------------------------------------------------\par
+%\tab SECTION 1\par
+%----------------------------------------------------------------------------------------\par
+\par
+\\section\{Introduction\}\par
+\par
+Head and neck squamous cell carcinomas (HNSCCs) are the sixth most common form of cancer worldwide, amounting to over 500,000 new cases annually. The majority of head and neck cancers are squamous cell carcinomas which originate in the upper aerodigestive epithelium. The development of oropharyngeal squamous cell carcinoma (OPSCC) is known to be linked to carcinogenic human papillomavirus (HPV), accounting for approximately 51.8\\% - 71\\% of cases \\cite\{Lechner2022\}. \par
+\par
+Oral squamous cell carcinoma (OSCC) is the 8th most common form of cancer in the UK \\cite\{CRUK_2021\} with a recent increase in incidence reported \\cite\{Gamez2018,Ramqvist2011\}. In contrast, OSCCs are rarely mediated by HPV \\cite\{Lopes2011\} and the majority of cases are typically associated with exposure to carcinogens present in tobacco and alcohol \\cite\{Lechner2022,Gamez2018,Argiris2008\}. \par
+\par
+The regions in which head and neck tumours typically develop are anatomically complex and play a vital physiological role in the patient; early diagnosis and selection of appropriate treatment should aim to increase patient survival while maximising retention of vital organ function.\par
+\par
+A key issue facing clinical decision makers is the determination of the optimal course of treatment for a patient. In cases where lower biological aggression can be demonstrated, a de-escalation of therapy may be possible \\cite\{Barry2013, Rosenberg2021\}. Conversely, early identification of cases with poor prognosis could allow targetting for neo-adjuvant therapy. However, identification of these cases prior to surgery is not insignificant, even given the acknowledged prognostic importance of extra-nodal extension (ENE) \\cite\{Amin2017\}. Physical methods such as magnetic resonance imaging (MRI) and computed tomography (CT) have proven to be of limited benefit \\cite\{Park2021\} despite improvements in analysis techniques utilising deep learning models \\cite\{Kann2020\}. \par
+\par
+Previous studies \\cite\{ODonnell2005, Roepman2005, Rickman2008,Zhao2018\} have hypothesised that tumours with ENE which may be responsive to novel therapeutic treatment may carry a distinct molecular fingerprint; the identification of which may allow for screening of patients towards appropriate treatment. Despite small studies identifying putative biomarkers of ENE that might be of use in the analysis of diagnostic biopsy material \\cite\{Graizel2020\}, none of the proposed biomarkers or molecular fingerprints of aggression has progressed into practice. For approximately 50\\% of HPV negative HNSCC patients, current treatment plans are ineffective \\cite\{chen2015associations, nichols2020treatment\}. Neo-adjuvant therapy has the potential to improve prognoses, and aid clinical decision making if applicable cases can be determined at the time of diagnosis.\par
+\par
+Fourier transform infra-red (FTIR) microscopy is a well established technique, which has been utilised in a range of biomedical applications in recent years. Due to its ability to access chemical information present within the sample; FTIR microscopy data and accompanied multivariate analysis has been used to diagnose cancer in biofluids \\cite\{Sala2020, Sitnikova2020, Lazaro-Pacheco2020\}, surgically resected tissue \\cite\{Li2017, Berisha2019\}, and cells \\cite\{Ingham2019, Maziak2007a, BatistadeCarvalho2016a\}. FTIR microscopy allows for imaging of sample specimens at thousands of infra-red wavelengths simultaneously using a typical spectrometer. This is achieved through the use of a broadband light source and Michelson interferometer set up. Individual chemical spectra are then obtained by performing a Fourier transform on the resulting interferogram. \par
+Marginal spectral differences in biochemical compounds of interest are typically located in a region known as the fingerprint region (1000cm$^\{-1\}$-1800cm$^\{-1\}$). It is differences in these absorption bands which contain information which can be utilised to discriminate between samples of interest.\par
+\par
+This work explores the potential efficacy of FTIR microscopy in combination with a known prognostic biomarker: $\\alpha$-smooth muscle actin (ASMA) expression, as a method of identifying ENE prior to surgery. Previous work \\cite\{Dhanda2014, Vered2010, Kellermann2007\} has explored the efficacy of ASMA and SERPINE1 \\cite\{Dhanda2014\} as predictive variables for extra capsular spread (ECS), and as prognostic biomarkers for OSCC. ASMA expression is closely associated with the presence of activated fibroblasts, also known as myofibroblasts in tumour associated stroma. The degree of ASMA expression can be interrogated through the use of appropriate chemical stains, and evaluated using an optical microscope. %ASMA information obtained from the same cohort as \\cite\{Dhanda2014\} was used so that a direct comparison can be made with the diagnostic performance of conventional MRI and SERPINE1.\par
+\par
+\par
+\\section\{Materials and Methods\}\par
+\par
+\\subsection*\{Tissue preparation\}\par
+\par
+The dataset comprised FTIR spectra taken from primary tumour sites of 29 patients with a diagnosis of OSCC. The specimens are a subset of those arranged in a previously described tissue microarray (TMA; \\cite\{Dhanda2014\}). Inclusion criteria for this study were: a diagnosis of OSCC; the presence of OSCC in the TMA core; the ability to co-register adjacent H\\&E stained and FTIR imaged sections; a follow-up period after surgery of at least 24 months; HPV negative. Patients gave written, informed consent and the study was undertaken under ethical approval (Northwest - Liverpool Central REC number EC47.01). All samples were 1mm diameter cores of formalin fixed paraffin embedded (FFPE) tissue arranged into a TMA. \par
+\par
+Four adjacent sections of 4$\\mu$m thickness were taken from the TMA, the first and last sections were stained with haematoxylin and eosin (H\\&E) and used to assess the presence and location of tumour material in the 2nd and 3rd sections. Specimens were removed from the sample set if no clear area containing predominantly tumour cells was discernable in the H\\&E stained sections. Samples were also removed from the sample set if the outline of the regions containing tumour cells were markedly different between the 1st and 4th sections. Images of stained sections were scanned using an Aperio CS2 scanner (Leica Biosystems) and used for IR image annotation. The 2nd and 3rd TMA sections were mounted onto CaF$_\{2\}$ disks for FTIR microspectroscopy.\par
+\par
+\\begin\{figure\}[H]\par
+\\begin\{center\}\par
+\\includegraphics[scale=0.55]\{Figures/Prognosis/Annotation_TMA_1_D5.pdf\}\par
+\\includegraphics[scale=0.55]\{Figures/Prognosis/Annotation_TMA_1_A12.pdf\}\par
+\\includegraphics[scale=0.55]\{Figures/Prognosis/Annotation_TMA_1_C3.pdf\}\par
+\\caption\{Annotation of OSCC-containing areas in FTIR images. [A,D,G]: H\\&E image of a tissue core; [B,E,H]: FTIR image at 1650cm$^\{-1\}$; [C,F,I]: Areas from which FTIR data was extracted for analysis\}\par
+\\label\{fig:Annotation\}\par
+\\end\{center\}\par
+\\end\{figure\}\par
+\par
+\\Cref\{fig:Annotation\} shows three examples of tumour areas selected from H\\&E sections and used for further analysis. Selections were annotated using GIMP \\cite\{gimp\} image manipulation software onto IR images at 1650cm$^\{-1\}$ to ensure spectra were extracted accurately. The obtained mask was then used to compile spectra of tumour regions indexed by patient identity and corresponding metadata. \par
+\par
+\\subsection*\{FTIR Microspectroscopy\}\par
+\par
+FTIR measurements of TMA cores were taken at room temperature using a Varian Cary 670-FTIR spectrometer with an attached Varian Cary 620-FTIR microscope produced by Varian (now Agilent Technologies, Santa Clara CA, USA); with a liquid nitrogen cooled 128$\\times$128 pixel mercury-cadmium-telluride (MCT) focal plane array with an effective field of view for each pixel of 5.5$\\mu$m. The sample stage was enclosed in a perspex box and pumped with dry air until a humidity of ~1\\% was achieved into order to mitigate the effects of water contributions on measured IR spectra. Images were acquired at a resolution of 6cm$^\{-1\}$ over a spectral range of 990cm$^\{-1\}$ to 3800cm$^\{-1\}$ using a co-addition of 128 scans. Attenuator and integration time of the focal plane array (FPA) were chosen to gain the maximum signal-to-noise ratio. Background scans were acquired using a blank CaF$_\{2\}$ disk situated within the perspex box before each session of measurements; data was extracted from raw output using MATLAB methods from ChiToolBox \\cite\{henderson\}.\par
+\par
+\par
+\\subsection*\{Data Preprocessing \\& Analysis\}\par
+\par
+Selection of tissue areas to include in the analysis was undertaken by a consultant oral pathologist (AT), who identified regions containing high proportions of tumour cells on the H\\&E images. These were subsequently co-registered with IR images at 1650cm$^\{-1\}$ (the amide-I peak), from the same tissue core in order to extract IR data for analysis. %(\\Cref\{fig:Annotation\}). \par
+\par
+In order to correct for atmospheric scattering, extracted spectra were pre-processed using an open-source extended multiplicative scattering correction (EMSC) code provided by Kohler et.al \\cite\{Kohler2008\}. An unsupervised quality control check of all data, to eliminate anomalous spectra through the use of the multivariate Hotelling's $T^2$ statistic \\cite\{F.F2009, Hardle2015\}; spectra determined to have a $\\text\{T\}^2$ value lying outside the 95$^\{th\}$ percentile were deemed to be anomalous and were omitted from further analysis.\par
+\par
+The following preprocessing steps were carried out on the dataset before a final classification step was performed using a logistic regression (LR) classifier. Vector normalisation was used in order to account for sample thickness; wavenumber absorbance features were mean-centered; and variance scaled to one; before a final principal component analysis (PCA) step to reduce dimensionality of the dataset. Seven principal components were taken to assist convergence when fitting the LR classifier. A large L2 regularisation term ($1\\times10^\{5\}$) was applied to the objective function when fitting the LR model in order to mitigate the potential for overfitting.\par
+\par
+Scientific Python packages \\cite\{scikit-learn, lifelines, 2020SciPy-NMeth\} were used to implement classification models and survival analysis. The classification power of an FTIR spectrum as a prognostic biomarker was estimated using the area under both the receiver operating characteristic (ROC) curve (AUROC), and the precision-recall (PR) curve (AUPRC). In order to obtain an estimate of the variability of the classification power of FTIR, bootstrap out-of-bag sampling was utilised as follows. A training data set was constructed by drawing ~80\\% of patients in the total dataset without replacement. The remaining ~20\\% was used as the "out of bag" test set on which fitted models were evaluated, and statistics calculated. This process was repeated 100 times ensuring that no two sample sets were identical. When fitting the LR model, data points were inversely weighted against differing number of acquired spectra per patient and by risk group to mitigate the imbalanced nature of the dataset. Predictions of risk group from the LR model are presented as a list of probabilities for each risk group. Final prediction scores for each patient are taken to be the median probability predicted for each patient.\par
+\par
+Calculated statistics included: AUROC, Matthew's correlation coefficient (MCC), specificity, sensitivity, positive predictive value (PPV), and negative predictive value (NPV) --- all statistics were calculated using appropriate weightings to compensate for class/patient imbalance and to ensure a classification statistics were not skewed. Prognostic efficacy was investigated using Kaplan-Meier survival-analysis, a Cox proportional hazards regression, and a log-rank test. \par
+\par
+\\subsubsection*\{Prediction of patient outcomes\}\par
+\par
+Rather than utilising arbitrary outcome cutoffs to identify degree of risk, the cohort was stratified into "high" and "low" risk categories. The choice of risk group for each patient was determined through an optimisation routine which maximised the log-rank statistic with respect to the groupings of patients solely using outcome data. The optimisation procedure was performed using a genetic algorithm (GA) based approach utilising the distributed evolutionary algorithms for python (DEAP) library \\cite\{DEAP_JMLR2012\}. The "individuals" involved in the GA routine are vectors comprising the identity of the risk group of each patient in the analysis. The "fitness" of an individual set is the log-rank statistic --- calculated using the patient risk groups specified by that individual. \par
+\par
+Maximum individual fitness of the generation against the generation number which showed a plateauing of the log-rank statistic at around 40 (\\cref\{fig:Optimisation\} A). The resulting risk groups show a clear distinction in clinical outcomes (\\cref\{fig:Optimisation\} B,C).\par
+\par
+\\begin\{figure\}[H]\par
+\\begin\{center\}\par
+\\includegraphics[width=\\linewidth]\{Figures/Prognosis/Optimisation/Optimisation_Curve.pdf\}\par
+\\caption\{Stratification of patients into high and low risk. A: Maximum log-rank statistic vs GA generation, plateauing around 40. B: whisker box plots of survival duration in each risk group. C: Kaplan-Meier Survival curves showing optimal risk stratification of the patient cohort, also shown are the log-rank statistic and corresponding p-value for the optimal groupings.\}\par
+\\label\{fig:Optimisation\}\par
+\\end\{center\}\par
+\\end\{figure\}\par
+\par
+The risk groups derived from the GA process were then utilised as prediction targets for classification. This process sought to identify objective groupings to identify using FTIR and ASMA as predictive variables.\par
+\par
+\par
+\\section\{Results\}\par
+\par
+%When stratifying the dataset by survival beyond one year 205,701 spectra (68\\%) belonging to 24 patients died within one year; compared to 96,402 spectra (32\\%) belonging to 10 patients who survived. Stratifying for survival beyond two years; 151,408 (50\\%) spectra belonged to 19 patients who died within two years, with 150,695 (50\\%) spectra belonging to 15 patients who survived beyond two years. \\Cref\{tab:Summary Table\} lists the clinical and pathological characteristics of the patient cohort for both strata.\par
+\par
+The inclusion criteria designated in materials and methods gave a sample set of 29 patients from the original 102 previously described \\cite\{Dhanda2014\}. Of these 29 patients, 19 remained alive 12 months after surgery, while 14 survived to two years. The cohort was representative of this original patient set except that the male:female ratio was inverted (\\cref\{tab:Summary_Table\}) but now corresponds more closely with larger datasets (\\cref\{tab:Summary_Table\}; final column). In agreement with the published cohort, the sample set was enriched for cases with ENE (i.e. poor prognosis) in comparison to the general HNSCC population \\cite\{Rogers2009\}.\par
+\par
+\\begin\{onehalfspacing\}\par
+\\begin\{table\}[H]\par
+    \\footnotesize\par
+    \\centering\par
+    \\caption[Characteristics of the sample cohort]\{Characteristics of the sample cohort\}\par
+    \\vspace\{0.5cm\}\par
+    \\begin\{tabular\}\{?m\{3cm\}?m\{1.4cm\}<\{\\centering\}?cc?cc?p\{1.8cm\}<\{\\centering\}?p\{2cm\}<\{\\centering\}?\}\par
+    \\specialrule\{.1em\}\{.05em\}\{.05em\}\par
+        & & \\multicolumn\{2\}\{p\{2.2cm\}<\{\\centering\}?\}\{Outcome at 12 months\} &  \\multicolumn\{2\}\{p\{2.2cm\}<\{\\centering\}?\}\{Outcome at 24 months\} & Original cohort \\cite\{Dhanda2014\} & Larger, local cohort \\cite\{Rogers2009\} \\\\\par
+        & All (N=29) & Dead & Alive & Dead & Alive &N=102&N=489\\\\\\specialrule\{.1em\}\{.05em\}\{.05em\}\par
+        Age (years) &  &  &  &  &  &&\\\\\\specialrule\{.1em\}\{.05em\}\{.05em\}\par
+        Mean & ~60 & 70.4 & 56.3 & 64.5 & 57.2 &~60&\\\\ \par
+        Range & 29-85 & 59-85 & 29-72 & 48-85 & 29-68 &29-89&\\\\ \par
+        Median & 61 & 70.5 & 56.5 & 64 & 60 & &\\\\\\specialrule\{.1em\}\{.05em\}\{.05em\}\par
+        $\\alpha$-SMA &  &  &  &  &&&  \\\\\\specialrule\{.1em\}\{.05em\}\{.05em\} \par
+        High/Intermediate & 26 (94) &  &  &  &  &60 (64)&ND\\\\ \par
+        %Intermediate &14 & 9 & 5 & 6 & 8 \\\\\par
+        Low & 3 (6) &  &  &  &  &33 (36) & ND\\\\\\specialrule\{.1em\}\{.05em\}\{.05em\}\par
+        Gender &  &  &  &  & && \\\\\\specialrule\{.1em\}\{.05em\}\{.05em\}\par
+        F & 7 (24)$^\\dagger$ & 0 & 7 & 2 & 5 & 57 (56)$^a$&187 (38)$^b$\\\\ \par
+        M & 22 (76) & 10 & 12 & 13 & 9 &45 (45)&302 (62)\\\\\\specialrule\{.1em\}\{.05em\}\{.05em\} \par
+        T Stage* &  &  &  &  &  &&\\\\\\specialrule\{.1em\}\{.05em\}\{.05em\} \par
+        1 & 1 (3)& 0 & 1 & 0 & 1 &8 (8)&123 (25)$^b$\\\\ \par
+        2 & 14 (48) & 4 & 10 & 7 & 8 &57 (54)&175 (35)\\\\ \par
+        3 & 2 (7)& 0 & 2 & 2 & 0 &12 (11)&47 (10)\\\\ \par
+        4 & 8 (28)& 4 & 4 & 3 & 5 &20 (19)&144 (30)\\\\ \par
+        4a & 4 (14)& 2 & 2 & 2 & 2 &9 (8)&\\\\\\specialrule\{.1em\}\{.05em\}\{.05em\} \par
+        N Stage$^\\#$ &  &  &  &  &  &&\\\\\\specialrule\{.1em\}\{.05em\}\{.05em\} \par
+        0 & 7 (24) & 2 & 4 & 1 & 5 &38 (37)$^b$& 314 (64)$^c$\\\\ \par
+        1 & 7 (24)& 2 & 4 & 2 & 4 &18 (17)&64 (14)\\\\ \par
+        2a & 1 (3)& 1 & 0 & 1 & 0 &&101(20)\\\\ \par
+        2b & 16 (55)& 4 & 9 & 8 & 5 &45 (44)&\\\\ \par
+        2c & 3 (10)& 1 & 2 & 3 & 0 &&\\\\\\specialrule\{.1em\}\{.05em\}\{.05em\} \par
+        Pathological Site &  &  &  &  &  &&\\\\\\specialrule\{.1em\}\{.05em\}\{.05em\} \par
+        Floor of mouth & 8 (28)& 2 & 6 & 4 & 4 &35 (34)$^b$&162 (33)\\\\ \par
+        %Oropharynx & 3 (10)& 0 & 3 & 0 & 3&6 (6)&\\\\ \par
+        Other & 12 (41)& 5 & 7 & 5 & 7 &24 (24)&183 (36)\\\\ \par
+        Tongue & 9 (31)& 3 & 6 & 6 & 3 &37 (36)&144 (30)\\\\\\specialrule\{.1em\}\{.05em\}\{.05em\}\par
+    \\end\{tabular\}\par
+    \\label\{tab:Summary_Table\}\par
+\\end\{table\}\par
+%\\begin\{center\}\par
+%\\begin\{figure\}[H]\par
+\\begin\{footnotesize\}\par
+\\begin\{minipage\}[b]\{0.5\\linewidth\}\par
+    a: p$<$0.005\\\\\par
+    b: p=NS\\\\\par
+    c: p$<$0.00001\par
+\\end\{minipage\}\par
+\\begin\{minipage\}[b]\{0.5\\linewidth\}\par
+\\raggedright\par
+    \\hspace\{0.1cm\}*: T stage 1+2 v 3+4\\\\\par
+    \\hspace\{0.1cm\}$^\\dagger$: numbers in parenthesis are percentages\\\\\par
+    \\hspace\{0.1cm\}\\#: N stage 0 v 1 v 2\par
+  \\end\{minipage\}\par
+\\end\{footnotesize\}\par
+%\\end\{figure\}\par
+%\\end\{center\}\par
+\\end\{onehalfspacing\}\par
+\par
+%Table 1 shows that males were more prevalent than females in this cohort. The commonest TNM stage characteristics were T2 and T4; with N2b being the most prevalent nodal metastasis status.\par
+\par
+\par
+%-----------------------------------------------------------------------------\par
+\par
+%\\subsection*\{Prediction of death within one year\}\par
+\par
+FTIR and ASMA data from the reduced sample set were evaluated as prognostic indicators of death within one year of surgery, both separately and together (\\Cref\{fig:Opt_Spectra_Curves\}). A total of 168,460 FTIR spectra were obtained from the 19 patients who survived beyond one year and 96,402 spectra were obtained from 10 patients who died within 12 months.% After modelling these data in 100 different train/test iterations, as described in materials and methods.\par
+\par
+\\subsubsection*\{Evaluation of individual spectra\}\par
+\par
+Using predictions derived from individual spectra only, ROC and PR analysis were performed (\\cref\{fig:Opt_Spectra_Curves\}). The ASMA model shows poor performance across all thresholds for both analyses; the FTIR model is slightly better and is a reasonable predictor in its own right. However, the combined model shows superior ROC and PR curves overall. The baseline shown in \\cref\{fig:Opt_Spectra_Curves\}[B] corresponds to the prevalence of spectra labelled as high risk.\par
+\par
+\\begin\{figure\}[H]\par
+\\begin\{center\}\par
+\\includegraphics[width=0.8\\linewidth]\{Figures/Prognosis/ROC_PR/Spectra/Opt_Group_roc_pr_curves.pdf\}\par
+\\caption\{Median ROC and PR curves shown in solid lines; dashed lines represent baselines scores associated with random chance. AUROC and AUPRC scores are shown for each set of prognostic indicators.\}\par
+\\label\{fig:Opt_Spectra_Curves\}\par
+\\end\{center\}\par
+\\end\{figure\}\par
+\par
+\\Cref\{fig:Opt_Spectra_Stats\} shows distributions of classification statistics calculated for each set of prognostic variables. As shown in \\cref\{fig:Opt_Spectra_Curves\}[A,B] AUROC and AUPRC scores of the FTIR models show promising scores, but also a small spread in comparison to the ASMA model. Many other statistics show the combined model as the most effective, with the exception of the sensitivity score.\par
+\par
+\\begin\{figure\}[H]\par
+\\begin\{center\}\par
+\\includegraphics[scale=0.6]\{Figures/Prognosis/Stats_Plots/Spectra/Opt_Group_stats.pdf\}\par
+\\caption\{Whisker boxplots of classification statistics calculated across all data subsets. AUROC (A); AUPRC (B); F1 (C); MCC (D); specificity (E); sensitivity (F); PPV (G); NPV (H). Boxes show the median, 25$^\{th\}$, and 75$^\{th\}$ percentiles; whiskers extend to points that lie within 1.5 inter quartile ranges of the lower and upper quartiles; points lying outside this range are shown as individual diamonds.\}\par
+\\label\{fig:Opt_Spectra_Stats\}\par
+\\end\{center\}\par
+\\end\{figure\}\par
+\par
+\\subsubsection*\{Evaluation on a patient basis\}\par
+\par
+To obtain a prediction of risk group for each patient, final prediction scores were taken as the median probability predicted across all spectra for any given patient.\par
+\par
+\\begin\{figure\}[H]\par
+\\begin\{center\}\par
+\\includegraphics[width=0.8\\linewidth]\{Figures/Prognosis/ROC_PR/Patient/Opt_Group_roc_pr_curves.pdf\}\par
+\\caption\{Median ROC and PR curves shown in solid lines; dashed lines represent baselines scores associated with random chance. AUROC and AUPRC scores are shown for each set of prognostic indicators.\}\par
+\\label\{fig:Opt_Patient_Curves\}\par
+\\end\{center\}\par
+\\end\{figure\}\par
+\par
+The median AUROC obtained from FTIR alone was 0.89 (\\Cref\{fig:Opt_Patient_stats\} [a,c]); incorporation of the ASMA data into this analysis, increased the AUROC slightly to 0.92; while ASMA alone achieved a significantly poorer score of 0.46. Precision and recall scores both remained high for the FTIR and combined ASMA/FTIR models across a range of decision thresholds --- indicating that both models can balance both statistics effectively, and that imbalance in the dataset was not detrimental (\\Cref\{fig:Opt_Patient_stats\} [B]).\par
+\par
+\\begin\{figure\}[H]\par
+\\begin\{center\}\par
+\\includegraphics[scale=0.6]\{Figures/Prognosis/Stats_Plots/Patient/Opt_Group_stats.pdf\}\par
+\\caption\{Whisker boxplots of classification statistics calculated across all data subsets. AUROC (A); AUPRC (B); F1 (C); MCC (D); specificity (E); sensitivity (F); PPV (G); NPV (H). Boxes show the median, 25$^\{th\}$, and 75$^\{th\}$ percentiles; whiskers extend to points that lie within 1.5 inter quartile ranges of the lower and upper quartiles; points lying outside this range are shown as individual diamonds.\}\par
+\\label\{fig:Opt_Patient_stats\}\par
+\\end\{center\}\par
+\\end\{figure\}\par
+\par
+ Furthermore, additional classification statistics produced comparable conclusions, showing that the combined model was a good predictor of poor outcome (\\Cref\{fig:Opt_Patient_stats\} [A-H]).\par
+\par
+\\begin\{table\}[!ht]\par
+\\centering\par
+\\caption[Median classification statistics]\{Median classification statistics. Classification thresholds (\\cref\{tab:Median_Table\}) used to convert probabilities to binary decisions were determined to be those that maximised the log-rank statistic.\}\par
+\\begin\{footnotesize\}\par
+\\begin\{tabular\}\{lrrrrrrrrr\}\par
+\\toprule\par
+\{\} &  AUROC &  AUPRC &    F1 &   MCC &  Spec &  Sens &   PPV &   NPV &  Thresh \\\\\par
+Variables      &        &        &       &       &              &              &       &       &         \\\\\par
+\\midrule\par
+ASMA      &   0.46 &   0.41 &  0.22 &  0.00 &         0.18 &         0.50 &  0.19 &  0.48 &    0.48 \\\\\par
+ASMA+FTIR &   0.92 &   0.85 &  0.51 &  0.00 &         1.00 &         0.08 &  0.95 &  0.66 &    0.69 \\\\\par
+FTIR      &   0.89 &   0.79 &  0.54 &  0.17 &         0.83 &         1.00 &  0.62 &  0.85 &    0.34 \\\\\par
+\\bottomrule\par
+\\end\{tabular\}\par
+\\end\{footnotesize\}\par
+\\label\{tab:Median_Table\}\par
+\\end\{table\}\par
+\par
+A comparison of the median scores of these statistics shows that ASMA alone is a poor predictive variable for this dataset with low scores in all metrics (\\cref\{tab:Median_Table\}), while the FTIR alone scores are consistently high. The combined model shows high specificity and low sensitivity, with a high PPV and moderate NPV indicating numerous false negatives.\par
+\par
+The classification threshold for each model was used to assign patients to high or low risk groups and survival analyses were undertaken. As expected, the use of ASMA alone did not show good separation of the high and low risk groups as shown in Kaplan-Meier curves (\\Cref\{fig:KMCurves_ASMA\}) and, indeed, the risk group predictions were inverted to that expected. The use of FTR alone to predict risk showed significant separation of the groups (\\Cref\{fig:KMCurves_FTIR\}; p=0.01), while the combined model produced good separation with a highly significant p value (\\Cref\{fig:KMCurves_ASMAFTIR\}; p$<$0.005).\par
+\par
+%\\Cref\{fig:1year\} is a visual representation of classification metrics calculated across sample subsets for each model. Consistently high AUROC scores were observed, with a median of 0.92 for the model using both sets of variables data. The model using ASMA alone had a median AUROC of ~0.46. Particularly good statistics were observed for the model using FTIR alone with median sensitivity and specificity at 1 and 0.83 respectively. Furthermore, the combined model also suffers from a low sensitivity and NPV in comparison to the FTIR model\par
+\par
+\par
+\\begin\{singlespacing\}\par
+%------------------------------------------------------------------------------------------\par
+\\begin\{figure\}[H]\par
+\\centering\par
+\\footnotesize\par
+\\begin\{subfigure\}\{1\\linewidth\}\par
+\\caption[Kaplan-Meier survival curves for each risk group - ASMA]\{ASMA\}\par
+\\label\{fig:KMCurves_ASMA\}\par
+\\begin\{minipage\}\{0.5\\linewidth\}\par
+\\includegraphics[width=1\\linewidth]\{Figures/Prognosis/Survival_Curves/Patient/Opt_Group_survcurvs_big_ASMA.pdf\}\par
+\\end\{minipage\}\par
+\\begin\{minipage\}\{0.5\\linewidth\}\par
+\\begin\{tabular\}\{m\{0.5cm\}lm\{0.15cm\}m\{0.15cm\}m\{0.15cm\}m\{0.15cm\}m\{0.15cm\}m\{0.15cm\}ll\}\par
+\\toprule\par
+   Risk      &          &  0 &  20 &  40 &  60 &  80 &  100 &  120 \\\\\par
+\\midrule\par
+High  & At risk & 21 &  13 &   9 &   6 &   5 &    4 &    3 \\\\\par
+         & censored &  0 &   0 &   2 &   1 &   0 &    1 &    1 \\\\\par
+Low & At risk &  8 &   2 &   2 &   1 &   1 &    1 &    - \\\\\par
+         & censored &  0 &   0 &   0 &   1 &   1 &    1 &    - \\\\\par
+\\bottomrule\par
+\\end\{tabular\}\par
+\\end\{minipage\}\par
+\\end\{subfigure\}\par
+%------------------------------------------------------------------------------------------\par
+\\begin\{subfigure\}\{1\\linewidth\}\par
+\\caption[Kaplan-Meier survival curves for each risk group - ASMA]\{ASMA + FTIR\}\par
+\\label\{fig:KMCurves_ASMAFTIR\}\par
+\\begin\{minipage\}\{0.5\\linewidth\}\par
+\\includegraphics[width=\\linewidth]\{Figures/Prognosis/Survival_Curves/Patient/Opt_Group_survcurvs_big_ASMA_FTIR.pdf\}\par
+\\end\{minipage\}\par
+\\begin\{minipage\}\{0.5\\linewidth\}\par
+\\begin\{tabular\}\{m\{0.5cm\}lm\{0.15cm\}m\{0.15cm\}m\{0.15cm\}m\{0.15cm\}m\{0.15cm\}m\{0.15cm\}ll\}\par
+\\toprule\par
+  Risk       &          &  0 &  20 &  40 &  60 &  80 &  100 &  120 \\\\\par
+\\midrule\par
+High & At risk &  4 &   - &   - &   - &   - &    - &    - \\\\\par
+         & censored &  0 &   - &   - &   - &   - &    - &    - \\\\\par
+Low & At risk & 25 &  14 &  10 &   7 &   6 &    4 &    3 \\\\\par
+         & censored &  0 &   0 &   2 &   1 &   0 &    1 &    1 \\\\\par
+\\bottomrule\par
+\\end\{tabular\}\par
+\\end\{minipage\}\par
+\\end\{subfigure\}\par
+%------------------------------------------------------------------------------------------\par
+\\begin\{subfigure\}\{1\\linewidth\}\par
+\\caption[Kaplan-Meier survival curves for each risk group - FTIR]\{FTIR\}\par
+\\label\{fig:KMCurves_FTIR\}\par
+\\begin\{minipage\}\{0.5\\linewidth\}\par
+\\includegraphics[width=1\\linewidth]\{Figures/Prognosis/Survival_Curves/Patient/Opt_Group_survcurvs_big_FTIR.pdf\}\par
+\\end\{minipage\}\par
+\\begin\{minipage\}\{0.5\\linewidth\}\par
+\\begin\{tabular\}\{m\{0.5cm\}lm\{0.15cm\}m\{0.15cm\}m\{0.15cm\}m\{0.15cm\}m\{0.15cm\}m\{0.15cm\}ll\}\par
+\\toprule\par
+   Risk      &          &  0 &  20 &  40 &  60 &  80 &  100 &  120  \\\\\par
+\\midrule\par
+High & At risk & 14 &   4 &   3 &   3 &   2 &    1 &    -  \\\\\par
+         & censored &  0 &   0 &   0 &   0 &   1 &    1 &    -  \\\\\par
+Low & At risk & 15 &  11 &   8 &   5 &   4 &    3 &    3  \\\\\par
+         & censored &  0 &   0 &   2 &   1 &   0 &    1 &    1  \\\\\par
+\\bottomrule\par
+\\end\{tabular\}\par
+\\end\{minipage\}\par
+\\label\{fig:1year KM\}\par
+\\end\{subfigure\}\par
+\\caption\{Kaplan-Meier survival curves for each risk group according input variables. Low-risk:blue, high-risk:red. Confidence intervals are computed using the exponential Greenwood method \\cite\{Sawyer2003\}.\}\par
+\\end\{figure\}\par
+\\end\{singlespacing\}\par
+%------------------------------------------------------------------------------------------\par
+\par
+A univariate Cox proportional hazard model was fit to prediction scores obtained from the LR model to assess the prognostic utility of the prediction score before conversion to a binary decision. Both models using FTIR data have significantly higher hazard ratios than the pure ASMA model suggesting the LR classifier is able to stratify risk groups effectively. However the 95\\% confidence intervals for all models spanned a wide range.\par
+\par
+\\begin\{singlespacing\}\par
+\\begin\{table\}[H]\par
+\\centering\par
+\\begin\{footnotesize\}\par
+\\caption[Cox proportional hazards model fit statistics]\{Cox proportional hazards model fit statistics\}\par
+\\begin\{tabular\}\{lrrrrl\}\par
+\\toprule\par
+\{\} &  Coefficients &     z &     p &          Hazard ratio \\\\\par
+Variables &   &      &     &           \\\\\par
+\\midrule\par
+ASMA      & -0.03 & -0.02 &  0.98 &   0.97 (0.06-15.08) \\\\\par
+ASMA+FTIR &  1.84 &  2.12 &  0.03 &   6.29 (1.14-34.59) \\\\\par
+FTIR      &  2.02 &  2.07 &  0.04 &   7.52 (1.12-50.62) \\\\\par
+\\bottomrule\par
+\\end\{tabular\}\par
+\\label\{tab:Cox_table\}\par
+\\end\{footnotesize\}\par
+\\end\{table\}\par
+\\end\{singlespacing\}\par
+\par
+\\Cref\{fig:CoxCurveASMA,fig:CoxCurveASMAFTIR,fig:CoxCurveFTIR\} show predicted survival curves for five simulated patients. Prediction scores for patients vary between 0 (definitely low risk) and 1 (definitely high risk) showing how LR predictions translate to expected survival outcomes. As expected \\cref\{fig:CoxCurveASMA\} showed very little stratification between simulated predictions; this is consistent with a hazard ratio of $\\sim$1 as shown in \\cref\{tab:Cox_table\}. The combined model shows a much better level of stratification by risk than ASMA alone with distinct survival curves clearly visible. The FTIR model also shows distinct survival curves consistent with a large hazard ratio. The addition of ASMA data appears to be detrimental to the overall prognostic utility of the combined model.\par
+\par
+%---------------------------------------------------------------------------------\par
+\\begin\{figure\}[H]\par
+\\centering\par
+% ---------------------------------------------\par
+\\begin\{subfigure\}\{\\linewidth\}\par
+\\caption[Cox proportional hazards model patient simulation - ASMA]\{ASMA\}\par
+\\includegraphics[width=1\\linewidth]\{Figures/Prognosis/Survival_Curves/Patient/Cox_curves_ASMA.pdf\}\par
+\\label\{fig:CoxCurveASMA\}\par
+\\end\{subfigure\}\par
+% ---------------------------------------------\par
+\\begin\{subfigure\}\{\\linewidth\}\par
+\\caption[Cox proportional hazards model patient simulation - ASMA+FTIR]\{ASMA+FTIR\}\par
+\\includegraphics[width=1\\linewidth]\{Figures/Prognosis/Survival_Curves/Patient/Cox_curves_ASMA_FTIR.pdf\}\par
+\\label\{fig:CoxCurveASMAFTIR\}\par
+\\end\{subfigure\}\par
+% ---------------------------------------------\par
+\\begin\{subfigure\}\{\\linewidth\}\par
+\\caption[Cox proportional hazards model patient simulation - FTIR]\{FTIR\}\par
+\\includegraphics[width=1\\linewidth]\{Figures/Prognosis/Survival_Curves/Patient/Cox_curves_FTIR.pdf\}\par
+\\label\{fig:CoxCurveFTIR\}\par
+\\end\{subfigure\}\par
+% ---------------------------------------------\par
+\\caption[Cox proportional hazards model patient simulation]\{Predicted survival curves for five simulated patients varying between 0 and 1. The hazard baseline is represented by a dotted line.\}\par
+\\end\{figure\}\par
+%---------------------------------------------------------------------------------\par
+\par
+\\section\{Discussion\}\par
+\par
+It has previously been established that the presence of ENE is a marker of poor prognosis in oral cancer. However, the presence of ENE cannot be firmly established until after pathological inspection of surgically removed nodal material. This prevents the use of neo-adjuvant treatment in those patients with poor prognosis, for whom current treatment regimens do not work. It has been shown that the chemical 'fingerprint' of the primary tumour, readily observed through the use of FTIR microscopy is able to identify individuals whose disease will progress following treatment.\par
+\par
+Much of the existing literature concerning prognositic indicators utilises disease specific survival and overall survival as indicators of patient prognoses. Stratification of these measures into groups according to risk is typically decided according to a number of years e.g. one year, two years. The decision to use a cut off threshold of a discrete number of years is somewhat arbitrary, thus, it would be desirable to determine a threshold that was decided objectively. A GA approach was used to stratify patients in this cohort into either a low or high risk group, where the log-rank statistic calculated from a log-rank test was maximised --- indicating the best separation. This threshold was determined to be 11 months and was used to dichotomize patients into risk groups.\par
+\par
+Results presented here suggest that FTIR spectra can be used to stratify patients into useful clinical risk groups. Models utilising a combination of FTIR and ASMA data showed some diminished prognostic utility --- suggesting that the addition of ASMA data was detrimental. Many other statistics show the combined model as the most effective, with the exception of the sensitivity score; indicating a high proportion of false negatives and thus suggesting that low risk patients are often misclassified and would be under treated in a clinical setting. The FTIR model scores are generally high, indicating that FTIR spectra can serve as a prognostically useful biomarker. A slightly lower PPV however suggests the FTIR model incurs more false positives --- indicating that patients with better prognoses may be given inappropriate treatment.\par
+\par
+A significant improvement was observed when taking the median prediction score for each patient. This is potentially a reflection of the fact that the molecular fingerprint for poor prognosis varies in magnitude across the measured tumour section --- genetic heterogeneity within OSCC lesions has been noted previously \\cite\{Almangush2017\}. The aggregation of scores across an entire tumour section may cause a 'regularising' effect, thus mitigating the effects of overfitting to specific chemical fingerprints. This regularisation effect may be dependent upon the size of the measured tumour section present within the core. Data subsets containing patients with relatively few measured spectra may experience lower scores as a result; possibly explaining the large degree of variation within sample scores to some extent.\par
+\par
+Survival analysis showed that groups allocated by the classifier had significantly different outcomes. The combined model (\\cref\{fig:KMCurves_ASMAFTIR\}) is nearly able to perfectly replicate survival the ideal survival curves in (\\cref\{fig:Optimisation\}c). Model predictions using FTIR data showed a marked improvement over the pure ASMA model. Hazard ratios of 6.29 and 7.5 for the ASMA+FTIR and FTIR model respectively show that the prognoses of patients allocated to the high-risk group are significantly poorer. 95\\% confidence intervals for hazard ratios span a large range (FTIR: 1.12-50.62; ASMA+FTIR: 1.14-34.59). This is indicative of a high degree of heterogeneity in the sample cohort and would justify further exploration with a larger cohort in the future.\par
+\par
+The use of FTIR in clinical diagnostics is growing quickly, however relatively little work has been aimed towards prognostic biomarkers. The combination of both FTIR microscopy with techniques more familiar to oncologists such as immunohistochemical staining has the potential to improve prognostic predictive capabilities significantly as shown in this work. Previous studies \\cite\{Shaw2009, Mermod2016, Chin2005, Kellermann2007, Vered2010, Dhanda2014, Liao2018\} have investigated the viability of a range of prognostic biomarkers for head and neck cancer, with varying degrees of success. Many previously analysed biomarkers are measured on surgically resected tissue --- limiting the potential for timely treatment. What is needed are prognostic biomarkers which can be measured in biopsy tissue prior to surgery. The discovery of effective prognostic biomarkers has been difficult, and thus far has largely focused on immunohistochemistry techniques. MRI has also been utilised \\cite\{Lwin2012, Wang2012, Waech2021\} to measure physical attributes such as: tumour thickness, depth of invasion, and the presence of sub-volumes in a non-invasive manner. However, MRI based techniques often quantify biomarkers inaccurately when validated against direct measurements of pathological staging sections \\cite\{Hoang2013, Mao2019\}.\par
+\par
+Zawlik et.al \\cite\{Zawlik2016\} investigated FTIR coupled with PCA to investigate the efficacy of chemotherapy in triple-negative breast cancer. They determined that it was possible to monitor changes in the biochemical composition of the tissue in order to monitor the effectiveness of received treatment. Butler et.al \\cite\{Butler2019\} have undertaken development of a high-throughput ATR-FTIR based instrument for use in biofluid assays. Their work concluded that it was possible to triage brain cancer using utilising FTIR spectroscopy of biofluid samples. Their analysis comprised a large retrospective cohort of 724 patients with a range of brain cancer subtypes and stages. They utilised a binary support vector machine (SVM) classifier, and were able to achieve a sensitivity and specificity of 93.2\\% and 92.8\\% respectively.\par
+\par
+Many other prognostic biomarkers exist \\cite\{Zapaa2014,Scholzen2000, Shah2009\} but a large proportion are still in the "discovery phase" --- requiring further study to ascertain prognostic benefit \\cite\{Rivera2017\}. The use of FTIR within clinical diagnostics likely fits into this category, as many potential barriers facing other potential biomarkers are still present.\par
+\par
+A relatively small sample set was a key issue facing this study due to the difficulty in acquiring and imaging large numbers of samples. Despite attempts to determine the feasibility of FTIR as a prognostic tool through multiple sampling of the dataset; a larger study would be required in the future to estimate wider clinical utility. A large degree of variation was observed across some classification statistics, potentially signifying a large degree of biological heterogeneity in the dataset. A potential cause for this could be the effect of inherent molecular heterogeneity of the tumour microenvironment; or perhaps varying extents of lymphocyte infiltration present in specimens. The difficulty of annotating samples is also likely to introduce noise into the dataset; alongside inconsistencies in sample preparation and measurement procedure.\par
+\par
+\\section\{Conclusion\}\par
+\par
+The use of FTIR in a clinical setting is still in its infancy, however the work covered here shows that it has the potential to be of significant benefit as a prognostic tool. The addition of ASMA information was shown to be beneficial in one case, and demonstrates that additional information from other modalities could lead to the creation of a novel and informative prognostic tool. FTIR spectroscopy has been shown to be capable of observing a molecular fingerprint associated with poor prognosis. It would be of considerable benefit to be able to direct patients with poor prognoses towards appropriate treatment. Currently it is not ethically possible to select patients for neo-adjuvant treatment in window trials; patients who would not benefit from such treatment would incur unnecessary adverse effects and additional health risks. It is currently only possible to determine patient prognoses after post-surgical nodal biopsies have taken place. The work presented here would allow for this crucial window of opportunity to be seized and to enable the development of new treatment methods to take place.\par
+\par
+%In order to progress the work covered here a larger patient sample set would be needed to affirm the conclusions reached here. The addition of information from a broader range IHC stains or imaging modalities could further increase the prognostic benefit outlined here and yield powerful tools for clinicians.\par
+\par
+\\putbib[Bibliographies/Prognosis]\par
+}
+ 

@@ -1,0 +1,10 @@
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+{} &  AUROC &  AUPRC &    F1 &   MCC &  Specificity &  Sensitivity &   PPV &   NPV &  Thresh \\
+Vars      &        &        &       &       &              &              &       &       &         \\
+\midrule
+ASMA      &   0.46 &   0.41 &  0.22 &  0.00 &         0.18 &         0.50 &  0.19 &  0.48 &    0.48 \\
+ASMA\_FTIR &   0.92 &   0.85 &  0.51 &  0.00 &         1.00 &         0.08 &  0.95 &  0.66 &    0.69 \\
+FTIR      &   0.89 &   0.79 &  0.54 &  0.17 &         0.83 &         1.00 &  0.62 &  0.85 &    0.34 \\
+\bottomrule
+\end{tabular}

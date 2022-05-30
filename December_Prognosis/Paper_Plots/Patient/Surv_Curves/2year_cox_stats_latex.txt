@@ -1,0 +1,9 @@
+\begin{tabular}{lrrrr}
+\toprule
+{} &  coef &     z &     p &  -log2(p) \\
+\midrule
+ASMA      & -1.67 & -1.33 &  0.18 &      2.44 \\
+ASMA\_FTIR &  0.59 &  0.78 &  0.43 &      1.21 \\
+FTIR      &  2.62 &  2.51 &  0.01 &      6.39 \\
+\bottomrule
+\end{tabular}

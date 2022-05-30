@@ -1,0 +1,531 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang2057\deflangfe2057{\fonttbl{\f0\fnil\fcharset0 Calibri;}}
+{\*\generator Riched20 10.0.22000}{\*\mmathPr\mnaryLim0\mdispDef1\mwrapIndent1440 }\viewkind4\uc1 
+\pard\sa200\sl276\slmult1\f0\fs22\lang9 % Chapter Template\par
+\par
+\\chapter\{FTIR Preprocessing Pipeline Optimisation\} % Main chapter title\par
+\\label\{Chapter_Pipeline\}\par
+\par
+ % Change X to a consecutive number; for referencing this chapter elsewhere, use \\ref\{ChapterX\}\par
+\par
+%----------------------------------------------------------------------------------------\par
+%\tab SECTION 1\par
+%----------------------------------------------------------------------------------------\par
+\par
+\\section\{Introduction\}\par
+\par
+In recent decades, vibrational spectroscopy has emerged as a useful analysis method applicable to a range of specimens, from food and pharmaceutical samples to security and medical applications. Vibrational spectroscopy techniques interrogate the molecular structure of a specimen by utilising infrared radiation, either directly (infrared absorption spectroscopy) or indirectly (Raman scattering spectroscopy). The absorption of discrete photon energies by molecular vibrational modes within the sample gives rise to characteristic spectral profiles, which can be associated with the inherent chemistry of the sample under interrogation. %It is for this reason that the technique is seeing a surge in popularity in cancer diagnostics. \par
+\par
+%A host of research groups and private companies have directed their efforts towards leveraging the high throughput, objective techniques, coupled with sophisticated statistical computer models, in order to discriminate between different pathologies and disease states [need refs].\par
+\par
+\\subsection\{Optimisation\}\par
+\par
+Despite the undeniable promise of the field, it is somewhat hampered by the lack of consensus on precisely how to preprocess the data preprocessing subsequently analyse it. The number of available preprocessing methods and predictive models is vast; each method typically has one or more parameters associated with it, exacerbating the problem further. \par
+\par
+Analysis of spectroscopic data is typically a multi-step procedure, starting with preprocessing, and ultimately the employment of pattern recognition and machine learning tools to classify the data into distinct groups. Preprocessing is a vital step in the analysis process of IR data, as it has been shown to generally increase performance of classification models \\cite\{Lasch2012\} allowing them to generalise more effectively to larger clinical cohorts, and to increase the interpretability of results.\par
+\par
+FTIR and Raman data sets are highly dimensional. In the case of Raman mapping and FTIR imaging, sample numbers are very large, with data sets comprising large numbers of patients typically having tens of thousands of spectra. A further motivating factor known as the 'no free lunch' (NFL) theorem states that 'any two optimisation algorithms are equivalent when their performance is averaged across all possible problems' \\cite\{NoFreeLunch\}. This was stated generally for optimisation problems; due to the close relationship between optimisation and machine learning methods, the same theorem applies \\cite\{NoFreeLunchML\}. The implications of the NFL theorem would require a thorough search of multiple machine learning models to ensure some degree of certainty that the task is possible.\par
+\par
+An optimisation protocol that can efficiently search across a highly dimensional space would be of considerable benefit to users of multivariate analysis techniques. One approach \\cite\{Jarvis2005\} utilised a genetic algorithm (GA) to perform an optimisation search procedure to determine more effective processing pipelines. A single 'individual' in this framework was represented as a processing pipeline; many generations of preprocessing pipelines were allowed to `evolve' in a manner analogous to Darwinian evolution. The 'fittest' individuals which influence subsequent generations were chosen to be those with the lowest prediction error, hence directing the process towards optimal values.   %The `fittest' pipelines were allowed to cross over with each other to produce offspring which resemble each parent'  can mutate and cross over to produce subsequent generations.\par
+The optimised pipeline resulted in a 16\\% reduction in the model error compared with the raw data model. Similar work \\cite\{Correa2011\} utilised a GA approach to assist with feature selection. The authors were interested in using Curie-point pyrolysis mass spectrometry to differentiate between bacterial spore samples. The highly dimensional nature of these datasets makes interpretation prohibitively difficult; the GA approach was used to select a subset of these features for further analysis. A trial-and-error approach was more recently reported \\cite\{Butler2018\} which trialled every permutation of preprocessing steps within a defined search space on an ATR-FTIR biofluid dataset comprising patients with varying types of brain cancer. The authors utilised RF and SVM classifiers. However, the hyperparameters of the final classifiers were not optimised in this approach. A brute force approach will cover every possible combination, but the number of combinations grows extremely quickly and is generally infeasible as a strategy.\par
+\par
+This work proposes a novel approach to objectively optimise an effective preprocessing and classification pipeline. We perform a Bayesian hyperparameter search on several candidate pipelines using a parallel computing approach --- more efficiently searching all possible solutions. The focus of this paper will be on FTIR imaging data, but the process is in theory generalisable to \\textit\{any\} pipeline type inference problem. \par
+\par
+\\section\{Theoretical\}\par
+\par
+\\subsection\{Preprocessing\}\par
+\par
+Preprocessing of FTIR data can be broken into several discrete steps, with each step designated to mitigate unwanted spectral aberrations and measurement artefacts. Using modern object-oriented programming languages, preprocessing step can be encapsulated as a transformer object --- an abstract representation of a preprocessing step. A transformer will typically take a data set as input, perform the transformation associated with it, and then output the transformed data. A sequence of transformers with or without a final estimator can be visualised as a pipeline. A pipeline consists of a sequence of transformers that take data as an input and pass the data through each transformer sequentially until a final result is obtained. Such a preprocessing sequence is briefly set out below.\par
+\par
+\\begin\{singlespacing\}\par
+\\begin\{figure\}[H]\par
+\\begin\{center\}\par
+\\begin\{tikzpicture\}[\par
+squarednode/.style=\{rectangle\par
+, font=\\footnotesize\par
+, draw=black!60\par
+, text width=2.2cm\par
+, align=center\par
+, node distance=2.92cm\par
+, very thick\}\par
+]\par
+\par
+%Nodes\par
+\\node[squarednode]  (SS)                         \par
+\{Spectral\\\\Smoothing\};\par
+\\node[squarednode]  (N)     [right of= SS]       \par
+\{Normalisation\};\par
+\\node[squarednode]  (BC)    [right of= N]        \par
+\{Baseline\\\\Correction\};\par
+\\node[squarednode]  (FS)    [right of= BC]       \par
+\{Feature\\\\Scaling\};\par
+\\node[squarednode]  (DR)    [right of= FS]       \par
+\{Dimensionality\\\\Reduction\};\par
+\par
+%Lines\par
+\\draw[->] (SS.east) -- (N.west);\par
+\\draw[->] (N) -- (BC.west);\par
+\\draw[->] (BC.east) -- (FS.west);\par
+\\draw[->] (FS.east) -- (DR.west);\par
+\\end\{tikzpicture\}\par
+\\end\{center\}\par
+\\caption\{Preprocessing pipeline flowchart\}\par
+\\label\{fig:PipelineFlowchart\}\par
+\\end\{figure\}\par
+\\end\{singlespacing\}\par
+\par
+\\paragraph\{Spectral smoothing\} - \\textit\{Accounts for high frequency noise in the data\}. This unwanted noise may have instrumental, environmental, or sample origins. There are several associated methods, including the commonly used Savitzy-Golay \\cite\{Savitzky1964\}, whereby a polynomial is fit to a local moving window of a specified length. Other methods such as PCA de-noising and FFT filtering are also commonly applied.\par
+\par
+\\paragraph\{Normalisation\} - \\textit\{Accounts for unimportant changes in absolute absorbances\}. This important step accounts for absolute differences in absorption according to the Beer-Lambert law \\cite\{Smith2011\} --- which is to be expected with a biologically diverse data-set from multiple samples. This step helps mitigate the effect of sample thickness on the analysis --- a potential confounding factor.\par
+\par
+\\paragraph\{Baseline correction\} - \\textit\{Accounts for variations \}. Spectra are often superimposed on a non-linear baseline due to background scattering interference effects. Methods such as rubberband correction and spectral differentiation are often applied to compensate for these effects.\par
+\par
+\\paragraph\{Feature scaling\} - \\textit\{Ensures variables all lie within the same range\}. A scaling step is sometimes applied to scale the absorbance for each wavenumber to a common range. This can often increase the performance of some classifiers and is sometimes a required preprocessing step for dimensionality reduction algorithms.\par
+\par
+\\paragraph\{Dimensionality reduction\} - \\textit\{A reduction in the number of predictive variables\}. Reducing the dimensionality of the data to a much lower space often facilitates more robust classifier results and can mitigate issues arising from correlated variables. Feature selection/extraction techniques such as PCA \\cite\{Duda2001\} and forward feature selection (FFS) \\cite\{Guyon2006\} are often used to reduce the number of variables while retaining maximum important information.\par
+\par
+\par
+In addition to numerous preprocessing methods, each may have intrinsic parameters, referred to from here on as \\textit\{hyperparameters\}, which must also be determined. Exhaustively trialling every possible combination of preprocessing transformations to a dataset is often prohibitive. Whilst this would yield the true optimal combination of methods, it would be at a high computational cost.\par
+\par
+Whilst it is possible to exhaustively trial all preprocessing transformations to find the true optimal combination of methods, this may come at a prohibitive computational cost. For instance, consider a case where there are five preprocessing steps, each containing five methods to select from. Each of these methods has a hyperparameter space that spans twenty possible values. The total number of pipelines to construct and evaluate and is equal to 10$^\{10\}$, rendering this brute-force approach prohibitive when faced with a large, multidimensional search space. \par
+\par
+There is a demand for an optimisation protocol that can efficiently and intelligently search across a high dimensional space. One approach \\cite\{Jarvis2005\} utilised a genetic algorithm (GA) by which generations of preprocessing sequences were allowed to `evolve' in a manner analogous to Darwinian evolution. The `fittest' pipelines were allowed to cross over with each other to produce offspring which can mutate and cross over to produce more generations. The optimised pipeline resulted in a 16\\% reduction in the model error compared with the raw data model. GA does not scale well with complexity as each generation is dependent on the previous. Therefore improvements to the runtime using parallelisation are not possible. A trial-and-error approach was more recently reported \\cite\{Butler2018\} which trialled every permutation of preprocessing steps within a defined search space on an ATR-FTIR biofluid dataset of brain cancer patients before classification using either random forest (RF) or RF/GA fed support vector machines (SVM). This brute force approach is comprehensive but can also lead to prohibitive runtimes. Furthermore, the hyperparameters of the final estimators were not optimised in this approach.\par
+This work proposes a novel approach to objectively optimise a preprocessing and classification pipeline. We combine parallel processing with Bayesian hyperparameter search to search a large parameter space efficiently. An FTIR-imaging dataset comprising several patients and over 100,000 spectra is used to test the framework on an existing problem. %The approach is generalisable to \\textit\{any\} pipeline oriented inference problem. \par
+\\subsection\{Bayesian hyperparameter Search\}\par
+\par
+To efficiently search for optimal pipeline configurations, it was necessary to perform a Bayesian hyperparameter search due to the computational expense of evaluating each pipeline. An open-source python library \\textit\{scikit-optimize\} \\cite\{skopt\} was used to leverage a Gaussian process (GP) regression over the parameter space associated with each job.\par
+\par
+A GP is an efficient method of searching for maxima or minima over a complicated function. The GP model is utilised to approximate the loss function with limited data. The loss function is the score obtained when a proposed set of hyperparameters is used. The search for an optimal set of hyperparameters is summarised in \\Cref\{eq:optimal_hyperparams\}.\par
+\par
+\\begin\{equation\}\par
+\\label\{eq:optimal_hyperparams\}\par
+\\boldsymbol\{\\theta^*\} = \\operatorname*\{argmin\}_\{\\theta\} f(\\boldsymbol\{\\theta\})\par
+\\end\{equation\}\par
+\par
+Where \\boldsymbol\{$\\theta^*$\} is the optimal hyperparameter configuration, and $f(\\boldsymbol\{\\theta\})$ corresponds to the process of training and evaluation of the pipeline in question using the hyperparameter vector \\boldsymbol\{$\\theta$\}. This framework is well-suited to the problem, which can be described as a sequential model-based optimisation task. The loss function is estimated sequentially, using previous evaluations to determine the optimal hyperparameter configuration to evaluate next. To evaluate the next point, which will result in the most significant improvement in the loss function given all previous evaluations and current estimates of the space; the expected improvement criterion is used \\cite\{GP\}:\par
+\par
+\\begin\{equation\}\par
+\\label\{expected_improvement\}\par
+\\mathit\{EI\}(\\boldsymbol\{\\theta\}) = (\\mu(\\boldsymbol\{\\theta\})-f(\\widehat\{\\boldsymbol\{\\theta\}\}))\\Phi(Z) + \\sigma(\\boldsymbol\{\\theta\})\\phi(Z)\par
+\\end\{equation\}\par
+\par
+\\begin\{equation\}\par
+\\label\{Z\}\par
+Z = \\frac\{\\mu(\\boldsymbol\{\\theta\})-f(\\widehat\{\\boldsymbol\{\\theta\}\})\}\{\\sigma(\\boldsymbol\{\\theta\})\}\par
+\\end\{equation\}\par
+\par
+Where $\\Phi(z)$, and $\\phi(z)$, are the cumulative density function and probability density function of a multivariate normal distribution.\par
+\par
+\par
+\\subsection\{Gaussian Processes\}\par
+\par
+A GP regression seeks to estimate a distribution over an infinite set of candidate functions over a noisy loss function \\cite\{GP\}. A GP frames the problem in such a way that each point in the optimisation space is considered to be a dimension in a multivariate Gaussian, described by a mean function \\cref\{meanfunc_eq\} and covariance matrix \\cref\{covariancefunc_eq\}:\par
+\par
+\\begin\{equation\}\par
+\\label\{meanfunc_eq\}\par
+m(x) = \\mathbb\{E\}[f(x)]\par
+\\end\{equation\}\par
+\par
+\\begin\{equation\}\par
+\\label\{covariancefunc_eq\}\par
+k(x,x') = \\mathbb\{E\}[(f(x) - m(x))(f(x')-m(x'))]\par
+\\end\{equation\}\par
+\par
+Where a GP is defined as:\par
+\par
+\\begin\{equation\}\par
+\\label\{GP_eq\}\par
+f(x) \\sim\{\} \\mathcal\{GP\}(m(x), k(x,x'))\par
+\\end\{equation\}\par
+\par
+The mean function approximates the underlying hyperspace, which we wish to estimate. Whereas the covariance function quantifies the relationship between the points in this space. The covariance function $k(x,x')$ can be represented by several different functions and can be used to instil prior knowledge of the relationship between data points. A commonly used covariance function is the \\textit\{Matern\} kernel:\par
+\par
+\\begin\{equation\}\par
+\\label\{Matern_eq\}\par
+k_\{Matern\}(r) = \\frac\{2^\{1-\\nu\}\}\{\\Gamma(\\nu)\}\\left(\\frac\{\\sqrt\{2\\nu\}r\}\{l\}\\right)^vK_\\nu\\left(\\frac\{\\sqrt\{2\\nu\}r\}\{l\}\\right)\par
+\\end\{equation\}\par
+\par
+Where\par
+\par
+\\begin\{equation\}\par
+\\label\{r_eq\}\par
+r = x - x'\par
+\\end\{equation\}\par
+\par
+Where $K_\\nu$ is a modified Bessel function of order $\\nu$ and $l$ is the parameter governing the length of the relationship between data points. The Matern kernel can cope with a noisy loss function and is the default kernel for the GP optimisation in skopt's BayesSearchCV. A GP is generally considered to be a non-parametric method. However, it is conceptually helpful to consider a GP as having an \\textit\{infinite\} number of parameters. This is due to the fact that a GP instead seeks to estimate the posterior distribution over an \\textit\{infinite\} number of potential functions. This can be contrasted with a typical random variable as instead of drawing a scalar value from the corresponding distribution, a \\textit\{function\} is drawn instead. The function is drawn from a Gaussian distribution of mean \\cref\{meanfunc_eq\} and covariance \\cref\{covariancefunc_eq\}.\par
+\par
+\\subsubsection\{Toy example\}\par
+\par
+To demonstrate the sequential optimisation procedure described above and re-enforce the intuition behind a GP, a \\textit\{toy\} example has been constructed, a visual representation is shown in \\cref\{fig:GP_toy_example\}. Shown in plot (a) is the true underlying function to be approximated. Plots (b) and (c) show the mean and standard deviation at each point respectively. Plot (d) shows the expected improvement at each point in the space given by \\cref\{expected_improvement\}.\par
+\par
+\\begin\{figure\}[H]\par
+\\begin\{center\}\par
+\\includegraphics[scale=0.4]\{Figures/Pipeline/GP_Plots/Iteration_1.pdf\}\par
+\\includegraphics[scale=0.4]\{Figures/Pipeline/GP_Plots/Iteration_5.pdf\}\par
+\\includegraphics[scale=0.4]\{Figures/Pipeline/GP_Plots/Iteration_15.pdf\}\par
+\\includegraphics[scale=0.4]\{Figures/Pipeline/GP_Plots/Iteration_25.pdf\}\par
+\\caption\{Bayesian hyperparameter search using a GP\}\par
+\\label\{fig:GP_toy_example\}\par
+\\end\{center\}\par
+\\end\{figure\}\par
+\par
+The optimiser is initialised with 5 random points to assist with the convergence of the algorithm. These initial points are then used to fit a GP regression at the first step. The GP regression (\\cref\{fig:GPFlowchart\}) then predicts the mean function (b) and standard deviation (c) at each point in the search space given. The expected improvement is then calculated using the observed data at that step. The maximum expected improvement is then taken as the point which will next be sampled. This next point is then taken with all previous data, and the process is repeated for the desired number of iterations. The hyperparameter configuration chosen is then taken to be that which resulted in the most optimal score from the sequence of previous evaluations. \par
+\par
+\\begin\{singlespacing\}\par
+\\begin\{figure\}[H]\par
+\\begin\{center\}\par
+\\begin\{tikzpicture\}[every node/.style=\{scale=0.85\}]\par
+\par
+\\tikzstyle\{startstop\} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black, fill=red!30, thick]\par
+\\tikzstyle\{io\} = [trapezium, trapezium left angle=80, trapezium right angle=100, minimum width=3.2cm, minimum height=1cm, text centered, draw=black, fill=blue!30, thick, text width=3cm]\par
+\\tikzstyle\{process\} = [rectangle, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=orange!30, thick, text width=2.5cm]]\par
+\\tikzstyle\{decision\} = [diamond, minimum width=3cm, minimum height=0.5cm, text centered, draw=black, fill=green!30, thick, text width=2.5cm]\par
+\\tikzstyle\{arrow\} = [thick,->,>=stealth]\par
+\par
+\\node (start) [startstop] \{Start\};\par
+\\node (in) [io, below of=start, yshift=-0.5cm] \{Sampled\\\\points\};\par
+\\node (fit) [process, below of=in, yshift=-0.5cm] \{Fit GP\};\par
+\\node (samp) [process, below of=fit, yshift=-0.5cm] \{Sample maximum EI\};\par
+\\node (conv) [decision, below of=samp, yshift=-2cm] \{Convergence criteria met?\};\par
+\\node (app) [process, right of=conv, xshift=3.5cm] \{Append new point to data\};\par
+\\node (sel) [process, below of=conv, yshift=-2cm] \{Select\};\par
+\\node (out) [io, below of=sel, yshift=-0.5cm] \{Optimal\\\\hyperparameters\};\par
+\\node (end) [startstop, below of=out, yshift=-0.5cm] \{End\};\par
+\par
+\\draw [arrow] (start) -- (in);\par
+\\draw [arrow] (in) -- (fit);\par
+\\draw [arrow] (fit) -- (samp);\par
+\\draw [arrow] (samp) -- (conv);\par
+\\draw [arrow] (conv) -- node[anchor=north] \{no\} (app);\par
+\\draw [arrow] (conv) -- node[anchor=west] \{yes\} (sel);\par
+\\draw [arrow] (app) |- (in);\par
+\\draw [arrow] (sel) -- (out);\par
+\\draw [arrow] (out) -- (end);\par
+\par
+\\end\{tikzpicture\}\par
+\\caption\{GP hyperparameter optimisation flowchart showing the overall process.\}\par
+\\label\{fig:GPFlowchart\}\par
+\\end\{center\}\par
+\\end\{figure\}\par
+\par
+The number of iterations can be dictated by several criteria such as the convergence of the loss score, a preferred number of iterations, or a set amount of time. The convergence criteria are generally subject to the constraints of the available computing resources, but if resources are plentiful, convergence criteria are usually used.\par
+\par
+\\Cref\{fig:GP_Comparison\} shows a comparison between the mean function represented in \\cref\{fig:GP_toy_example\} (a), and the true function we wish to approximate (b).\par
+\par
+\\begin\{figure\}[H]\par
+\\begin\{center\}\par
+\\includegraphics[scale=0.7]\{Figures/Pipeline/GP_Plots/Comparison.pdf\}\par
+\\caption\{A comparison of true function to GP regression approximation. The optima predicted by the GP regression (red dot) is very close to that of the true function (black dot).\} \par
+\\label\{fig:GP_Comparison\}\par
+\\end\{center\}\par
+\\end\{figure\}\par
+\\end\{singlespacing\}\par
+\par
+Shown in red and black dots are the global optimum of the true function, and the maximum of the GP mean function. Whilst a GP can approximate a high-dimensional loss surface well, it only serves to \\textit\{direct\} the search process. The optimal hyperparameter set chosen is selected as the set which was \\textit\{known\} to yield a low loss score through evaluation. This avoids using the somewhat speculative maximum given by the GP mean function, which can be particularly important when considering very high dimensional search spaces where the number of points sampled is relatively low compared to the entire volume of the space.\par
+\par
+\\section\{Methods\}\par
+%The framework consists of three stages: \par
+\par
+%\\begin\{itemize\}\par
+    %\\item[--] Parameter search space initialization/job generation.\par
+    %\\item[--] Bayesian search cross validation for inner parameters. \par
+    %\\item[--] Estimator ranking and testing\par
+%\\end\{itemize\}\par
+\par
+%\\subsection\{Parameter search space initialisation/job generation\}\par
+\par
+To utilise the framework, first the methods and hyperparameter search spaces they wish to trial must be input. Also defined in this stage is the order in which the steps are applied, with an estimator always occupying the final step. At this point, it is instructive to define the validation procedure to use in the scoring stage. Protocols such as k-fold cross-validation and leave-one-out cross-validation are preferential over a single train-test split to mitigate the risk of overfitting. A completely independent set of data is put aside to test the final, optimised model. Each possible combination of methods is generated and distributed to a network of computers. The initial release of the framework is optimised for those utilising the well established HTCondor service \\cite\{Thain2005\}. HTCondor is an open-source high throughput package that enables the user to distribute parallelisable computationally expensive tasks (jobs) to a pool of idle computers on a local network, a method known as 'cycle-scavenging'. A flowchart summary of the process is shown in \\cref\{fig:flowchart\}.\par
+\par
+\\begin\{singlespacing\}\par
+\\begin\{figure\}[H]\par
+\\begin\{center\}\par
+\\begin\{tikzpicture\}[every node/.style=\{scale=0.85\}]\par
+\\tikzstyle\{startstop\} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black, fill=red!30, thick]\par
+\\tikzstyle\{io\} = [trapezium, trapezium left angle=80, trapezium right angle=100, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=blue!30, thick, text width=3cm]\par
+\\tikzstyle\{process\} = [rectangle, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=orange!30, thick, text width=2.5cm]]\par
+\\tikzstyle\{decision\} = [diamond, minimum width=3cm, minimum height=0.5cm, text centered, draw=black, fill=green!30, thick, text width=2.5cm]\par
+\\tikzstyle\{arrow\} = [thick,->,>=stealth]\par
+\par
+\\node (start) [startstop] \{Start\};\par
+\\node (md) [io, left of=start, xshift=-4cm] \{Method\\\\Dictionary\};\par
+\\node (data) [io, right of=start, xshift=4.5cm, text width=1cm] \{Data\};\par
+\par
+\\node (gp) [process, below of=start, yshift=-1.5cm] \{Generate pipeline combinations\};\par
+\\node (train_test) [process, right of=gp, xshift=4.5cm ] \{Split data into train, test\};\par
+\par
+\\node (bayes) [process, below of=gp, yshift=-2cm] \{Bayesian optimisation routine\};\par
+\\node (hp_space) [io, left of=bayes, xshift=-3.5cm] \{Hyperparameter\\\\space\};\par
+\\node (inner_valid) [process, right of=bayes, xshift=4.5cm] \{Split train into inner train and validation\};\par
+\par
+\\node (rank) [process, below of=bayes, yshift=-1.5cm] \{Rank pipelines\};\par
+\\node (return_rank) [io, below of=rank, yshift=-1cm] \{Ranked pipelines\};\par
+\\node (end) [startstop, below of=return_rank, yshift=-1cm] \{End\};\par
+\par
+\\draw [arrow] (start) -- (gp);\par
+\\draw [arrow] (md) |- (gp);\par
+\\draw [arrow] (data) -- (train_test);\par
+\par
+\\draw [arrow] (gp) -- node[anchor=west] \{pipeline\} (bayes);\par
+\\draw [arrow] (train_test) --node[anchor=east] \{train\} (inner_valid);\par
+\\draw [thick] (train_test.east) -- (6.5,-2.13);\par
+\\draw [arrow] (6.5,-2.13) |- (rank.east);\par
+\\draw [thick] (3.5,-6.8) node[anchor=south] \{test\};\par
+\par
+\\draw [arrow] (inner_valid.west)+(0,0.25) -- node[anchor=south,text width=1cm, text centered]\{validation\} (1.3,-4.43);\par
+\\draw [arrow] (inner_valid.west)+(0,-0.25) -- node[anchor=north,text width=1cm]\{inner train\} (1.3,-4.93);\par
+\par
+\\draw [arrow] (hp_space) -- (bayes);\par
+\\draw [arrow] (bayes) -- (rank);\par
+\\draw [arrow] (rank) -- (return_rank);\par
+\\draw [arrow] (return_rank) -- (end);\par
+%\\draw [arrow] (train_test.east) -- coordinate(-2cm, 5cm) |- (rank.east);\par
+\par
+%\\draw [arrow] (start) -- (in);\par
+%\\draw [arrow] (conv) -- node[anchor=west] \{yes\} (sel);\par
+%\\draw [arrow] (app) |- (in);\par
+\par
+\\draw[dashed,thick,black] (-5.8,-2.9)--(6.3,-2.9)--(6.3,-5.9)--(-5.8,-5.9)--(-5.8,-2.9);\par
+\\draw[thick] (-4.5,-6.5) node[anchor=south] \{for each pipeline\};\par
+\par
+\\draw[dashed,thick,black] (-6.2,-0.9)--(6.7,-0.9)--(6.7,-7.6)--(-6.2,-7.6)--(-6.2,-0.9);\par
+\\draw[thick] (-4.7,-8.2) node[anchor=south] \{for each sample\};\par
+\par
+\\end\{tikzpicture\}\par
+\\end\{center\}\par
+\\caption\{Flowchart of overall optimisation process\}\par
+\\label\{fig:flowchart\}\par
+\\end\{figure\}\par
+\\end\{singlespacing\}\par
+\par
+%\\begin\{figure\}[H]\par
+%\\begin\{center\}\par
+%\\includegraphics[scale=0.65]\{Figures/pipeline_flowchart.pdf\}\par
+%\\caption\{Flowchart of overall optimisation process\}\par
+%\\label\{fig:flowchart\}\par
+%\\end\{center\}\par
+%\\end\{figure\}\par
+\par
+The number of jobs is directly related to the number of methods n belonging to each step i by the following:\par
+\par
+\\begin\{equation\}\par
+\\label\{n_pipelines\}\par
+n_\{pipelines\} = \\prod_\{i = 0\}^\{n_\{parameters\}\}n_i\par
+\\end\{equation\}\par
+\par
+Each distributed job is a unique combination of preprocessing transformers and final estimator. Contained within the job configuration is the set of search spaces associated with the hyperparameters, which can be initialised as one of three different types:\par
+\par
+\\begin\{itemize\}\par
+    \\item[-] \\textbf\{Categorical\} --- hyperparameter values can be any from an unordered list.\par
+    \\item[-] \\textbf\{Continuous space\} --- hyperparameters are drawn from a defined probability distribution.\par
+    \\item[-] \\textbf\{Integer space\} --- hyperparameters are discretised values from a given range.\par
+\\end\{itemize\}\par
+\par
+Different sampling distributions can be specified when viable hyperparameter values span a wide range. Specifying sampling distributions for hyperparameters allows the user to provide prior knowledge of feasible values; or avoided entirely by specifying a uniform distribution.\par
+\par
+\\begin\{singlespacing\}\par
+\\begin\{figure\}[H]\par
+\\begin\{center\}\par
+\\begin\{tikzpicture\}[]\par
+\\newcommand\\ysheft\{-1cm\}\par
+\\newcommand\\xsheftm\{5cm\}\par
+\\tikzstyle\{general\} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black, fill=red!10, thick,node distance=2cm,text width=2.7cm]\par
+\\tikzstyle\{method\} = [rectangle,text centered, text width=2.7cm, draw=black, thick]\par
+\\tikzstyle\{params\} = [rectangle, rounded corners, text centered, fill=green!10, text width=7cm, draw=black, thick]\par
+\par
+% %Nodes\par
+% \\node[general]  (SS)                         \par
+% \{Spectral\\\\Smoothing\};\par
+% \\node[general]  (N)     [below of= SS]       \par
+% \{Normalisation\};\par
+% \\node[general]  (BC)    [below of= N]        \par
+% \{Baseline\\\\Correction\};\par
+% \\node[general]  (FS)    [below of= BC]       \par
+% \{Feature\\\\Scaling\};\par
+% \\node[general]  (DR)    [below of= FS]       \par
+% \{Dimensionality\\\\Reduction\};\par
+% \\node[general]  (C)    [below of= DR]       \par
+% \{Classifier\};\par
+\par
+\\node[method]  (SS_) [] \{PCA\\\\ de-noising\};\par
+\\node[method]  (N_) [below of=SS_, yshift=\\ysheft] \{Min-max normalisation\};\par
+\\node[method]  (BC_) [below of=N_, yshift=\\ysheft] \{Rubber band correction\};\par
+\\node[method]  (FS_) [below of=BC_, yshift=\\ysheft] \{None\};\par
+\\node[method]  (DR_) [below of=FS_, yshift=\\ysheft] \{PCA\};\par
+\\node[method]  (C_) [below of=DR_, yshift=\\ysheft] \{Logistic regression\};\par
+\par
+\\node[params]  (SS_m) [right of=SS_, xshift=\\xsheftm] \{Retained variance:\\\\ \\textbf\{Real(0.95, 0.99, uniform prior)\}\};\par
+\\node[params]  (N_m) [right of=N_, xshift=\\xsheftm, text width=1.7cm] \{None\};\par
+\\node[params]  (BC_m) [right of=BC_, xshift=\\xsheftm, text width=1.7cm] \{None\};\par
+\\node[params]  (FS_m) [right of=FS_, xshift=\\xsheftm, text width=1.7cm] \{None\};\par
+\\node[params]  (DR_m) [right of=DR_, xshift=\\xsheftm] \{Number of principal components:\\\\ \\textbf\{Integer(3, 10, uniform prior)\}\};\par
+\\node[params]  (C_m) [right of=C_, xshift=\\xsheftm] \{Regularisation parameter:\\\\ \\textbf\{Real(0.01, 100, log-uniform prior)\}\};\par
+\par
+%Lines\par
+\\draw[->] (SS_.south) -- (N_.north);\par
+\\draw[->] (N_) -- (BC_.north);\par
+\\draw[->] (BC_.south) -- (FS_.north);\par
+\\draw[->] (FS_.south) -- (DR_.north);\par
+\\draw[->] (DR_.south) -- (C_.north);\par
+\par
+\\draw[-] (SS_.east) -- (SS_m.west);\par
+\\draw[-] (N_) -- (N_m.west);\par
+\\draw[-] (BC_.east) -- (BC_m.west);\par
+\\draw[-] (FS_.east) -- (FS_m.west);\par
+\\draw[-] (DR_.east) -- (DR_m.west);\par
+\\draw[-] (C_.east) -- (C_m.west);\par
+\par
+\\end\{tikzpicture\}\par
+\\end\{center\}\par
+\\caption\{An example pipeline showing each step with associated hyperparameter search arguments (green).\}\par
+\\label\{fig:An example pipeline\}\par
+\\end\{figure\}\par
+\\end\{singlespacing\}\par
+\par
+As an example, consider a processing pipeline consisting of PCA-de-noising, followed by min-max normalisation, PCA, and ending with a logistic regression classifier. Three steps have hyperparameters that require tuning: the explained variance of the PCA de-noising method, the number of principal components retained by the PCA transform, and the regularisation parameter in logistic regression. A reasonable range of values to optimise over for the explained variance would be 0.95-0.99 (95-99\\%) to eliminate low variance noise; the space should be initialised as \\textbf\{Real(0.95, 0.99, uniform prior)\}. The regularisation parameter value of the logistic regression classifier is inversely proportional to the regularisation strength --- smaller values correspond to a stronger regularisation effect and mitigate the potential for overfitting. Optimal values exist on a much wider domain, nominally taking up values between 10$^\{-2\}$ and 10$^\{2\}$, therefore the search space argument is initialised as \\textbf\{Real(0.01, 100, log-uniform prior)\} sampling from a log-uniform distribution.  \par
+\par
+The initialised job now begins the Bayesian search regime, through which the hyperparameter space is sequentially sampled, updating the loss function at each iteration and informing the subsequent search choices taken as the maximum expected improvement in the loss score \\cref\{expected_improvement\}. The number of iterations, loss function, and validation protocol, are all pre-defined parameters which can be selected based on the size of the search space and type of optimisation problem. In the case of a classification task with a large parameter space, a large number of iterations will likely be needed. Once a set of hyperparameters has been found the fine tuned pipeline is validated on an unseen dataset to prevent information leakage and thus overly optimistic results. The completed jobs are then aggregated and ranked according to the mean validation AUC score.\par
+\par
+\\section\{Results\}\par
+\par
+To test the framework, an evaluation was performed on the same FTIR dataset described in \\ref\{Chapter_Prognosis\}. The objective was to obtain the optimised pipeline with the best mean performance across several train-test splits. The task was to predict whether a patient would live beyond or less than one year of the most recent review date.\par
+\par
+Using a test set of preprocessing methods 576 unique pipelines were evaluated using the optimisation routine. Approximately one third of patients were held out for final model evaluation, with the remaining patients used for model training and optimisation. The loss function was the aggregated mean AUC score of three patient-stratified folds; the optimiser iteration limit was set to 50.\par
+\par
+The jobs were distributed to the HTCondor framework at the University of Liverpool, UK. Each of the 1900 PCs on the network is equipped with an Intel Core i3 (quad-core) processor running at 3.3 GHz, 8 GB RAM and 120 GB storage. Completed jobs were extracted from HTCondor and the results for each permutation across the 50 train-test splits were aggregated to compare average results. Pipelines were ranked according to the mean AUC score across the 50 iterations; classification scores for these pipelines are shown in \\cref\{fig:ranked-metrics\}.\par
+\par
+%\\begin\{equation\}\par
+%\\label\{mcc\}\par
+%MCC = \\frac\{TP \\times TN - FP \\times %FN\}\{\\sqrt\{(TP + FP)(TP + %FN)(TN+FP)(TN+FN)\}\}\par
+%\\end\{equation\}\par
+\par
+\\begin\{figure\}[H]\par
+\\begin\{center\}\par
+\\includegraphics[scale=0.8]\{Figures/Pipeline/rankings.pdf\}\par
+\\caption\{Classification statistics for the top 50 pipelines ranked according to AUC score; AUC (A), MCC (B), Specificity (C), Sensitivity (D).\} \par
+\\label\{fig:ranked-metrics\}\par
+\\end\{center\}\par
+\\end\{figure\}\par
+\par
+The top 5 ranked pipelines discerned from the optimisation procedure are summarised in \\cref\{tab:pipeline_table\} and \\cref\{tab:pipeline_conf_matrix\}. \par
+\par
+\\begin\{singlespacing\}\par
+\\begin\{table\}[H]\par
+\\begin\{footnotesize\}\par
+\\begin\{center\}\par
+\\caption\{Best performing pipelines with optimal processing steps and number of parameters $n_\\theta$.\}\par
+\\label\{tab:pipeline_table\}\par
+\\begin\{tabular\}\{lm\{1.7cm\}<\{\\centering\}m\{1.6cm\}<\{\\centering\}m\{1.8cm\}<\{\\centering\}m\{1.2cm\}<\{\\centering\}m\{1.8cm\}<\{\\centering\}m\{1.5cm\}<\{\\centering\}c\} \par
+\\toprule\par
+Rank & Spectral smoothing & Baseline correction & Normalisation & Feature scaling & Feature extraction & Classifier & $n_\{\\theta\}$ \\\\ \par
+\\midrule\par
+1 & N/A & N/A & Amide I & Robust  & N/A & LR & 1  \\\\ \par
+2 & SG & N/A & Min-Max & Standard  & PCA & LR & 3  \\\\\par
+3 & N/A & N/A & Vector & Robust  & N/A & LR & 1  \\\\ \par
+4 & N/A & N/A & Amide I & Robust  & N/A & LR & 1  \\\\\par
+5 & N/A & RB & Vector & Standard  & PCA & LR & 2  \\\\\par
+\\bottomrule\par
+\\end\{tabular\}\par
+\\end\{center\}\par
+\\end\{footnotesize\}\par
+\\end\{table\}\par
+\\end\{singlespacing\}\par
+\par
+\par
+\par
+\\begin\{singlespacing\}\par
+\\begin\{table\}[H]\par
+\\footnotesize\par
+\\begin\{center\}\par
+\\caption\{Top ranking pipeline classification scores as decimals.\} \par
+\\label\{tab:pipeline_conf_matrix\}\par
+\\begin\{tabular\}\{lccccc\}\par
+\\toprule\par
+Rank &    TN  &    FP  &    FN  &    TP  & AUC\\\\\par
+\\midrule\par
+1 &  0.51 &  0.16 &  0.11 &  0.22 & 0.63 $\\pm$ 0.02\\\\\par
+2 &  0.47 &  0.20 &  0.12 &  0.21 & 0.62 $\\pm$ 0.02\\\\\par
+3 &  0.44 &  0.22 &  0.10 &  0.24 & 0.61 $\\pm$ 0.02\\\\\par
+4 &  0.45 &  0.22 &  0.09 &  0.25 & 0.61 $\\pm$ 0.02\\\\\par
+5 &  0.42 &  0.25 &  0.11 &  0.22 & 0.61 $\\pm$ 0.02\\\\\par
+\\bottomrule\par
+\\end\{tabular\}\par
+\\end\{center\}\par
+\\end\{table\}\par
+\\end\{singlespacing\}\par
+\par
+\\Cref\{tab:pipeline_table\} summarises the specific methods used in each of the top 5 ranked pipelines.\par
+\par
+\\begin\{figure\}[H]\par
+\\begin\{center\}\par
+\\includegraphics[scale=0.7]\{Figures/Pipeline/ROC_Curves.pdf\}\par
+\\caption\{ROC curves shown with standard errors for best (A) and second-best (B) pipelines.\} \par
+\\label\{fig:pipe_roc_curves\}\par
+\\end\{center\}\par
+\\end\{figure\}\par
+\par
+\\Cref\{fig:pipe_2_hp_surfaces\} shows the loss functions sampled during the hyperparameter search for pipeline two. The loss surface is shows a strong dependence upon the fraction of components used in the feature extraction step. This contrasts with the relatively low dependence upon the regularisation parameter associated with the logistic regression classifier. This is likely due to the fact that both parameters play a regularising role in the inference procedure so as to avoid overfitting. If both steps were to have parameters indicating a high regularisation effect, this would be detrimental to the classification performance so feature extraction seems to be preferred.\par
+\par
+\\begin\{figure\}[H]\par
+\\begin\{center\}\par
+\\includegraphics[scale=0.8]\{Figures/Pipeline/Pipeline_5_mean.pdf\}\par
+\\caption\{GP hyperparameter surfaces showing mean function in red and standard deviations in blue averaged across 50 sample iterations.\} \par
+\\label\{fig:pipe_2_hp_surfaces\}\par
+\\end\{center\}\par
+\\end\{figure\}\par
+\par
+Optimised pipelines from each of the 50 train test splits each have a unique set of hyperparameters; these parameters are "tuned" to specific training and validation data sets during the training phase. To determine a more generally applicable set of parameters the mode of the distribution of values was taken. \\Cref\{fig:hyperparameter_histogram\} shows histograms of each of the selected hyperparameters for the top two pipelines over 50 samples.\par
+\par
+\\begin\{figure\}[H]\par
+\\begin\{center\}\par
+\\includegraphics[scale=0.5]\{Figures/Pipeline/HP_hist.pdf\}\par
+\\caption\{Histograms of optimum hyperparameters over the 50 train-test splits.\} \par
+\\label\{fig:hyperparameter_histogram\}\par
+\\end\{center\}\par
+\\end\{figure\}\par
+\par
+To acquire a complete measure of the performance of the optimised pipelines, the model is sequentially tested 50 times by randomly drawing train-test splits without replacement. Modal values from \\cref\{fig:hyperparameter_histogram\} are used as final model hyperparameter values. Aggregated statistics for pipelines 1 and 2 are shown in \\cref\{fig:full_samples\}.\par
+\par
+\\begin\{figure\}[H]\par
+\\begin\{center\}\par
+\\includegraphics[scale=0.5]\{Figures/Pipeline/rank_1_2_fullsample.pdf\}\par
+\\caption\{Mean confusion matrix and ROC curve shown with standard errors for best (a,b) and second best (c,d) pipelines trained and tested on full dataset.\} \par
+\\label\{fig:full_samples\}\par
+\\end\{center\}\par
+\\end\{figure\}\par
+\par
+\\Cref\{fig:full_samples\} shows a significant increase in both sensitivity and specificity when the optimised pipelines and hyperparameters are deployed on the full dataset. A lower specificity translates to more false positives indicating the model struggles to identify patients with a poor prognosis.\par
+\par
+\\section\{Discussion\}\par
+\par
+classification scores vary widely but generally exhibit good classification scores well above random chance; shown in \\cref\{fig:ranked-metrics\}. The more holistic measures of AUC and MCC follow a similar trend, whereas the relatively noisy sensitivity and specificity traces imply that there is often a trade off between the two metrics, where high sensitivity often leads to low specificity. Ranking metrics by AUC or MCC favours pipelines with balanced sensitivity and specificity scores. The trace in \\cref\{fig:ranked-metrics\}(A) shows a number of small, relatively high scoring pipelines, before gradually decreasing towards an AUC of around 0.4, and an MCC of 0.0. The steep increase in AUC and MCC scores towards the higher end imply the expense of the optimisation procedure is justified.\par
+\par
+\\Cref\{tab:pipeline_table\} indicates that the optimal classifier for this dataset is logistic regression, with various choices of preprocessing options preceding this step. Normalisation and scaling are never bypassed, suggesting this is an imperative step. Two instances in the top five classifiers utilise PCA to reduce dimensionality, suggesting this step is not such an important for this dataset paired with logistic regression. Similarly, spectral smoothing by Savitzy-Golay filtering appears in the second pipeline, but is absent for the top ranking and remaining pipelines in the top five. \par
+\par
+In order to investigate the effects of different methods on the performance of the pipeline, the frequency that a certain method either enhances or diminishes performances relative to a reference can be informative. Here, the reference score is the median score of all pipelines in the analysis. \par
+\par
+\\begin\{figure\}[H]\par
+\\begin\{center\}\par
+\\includegraphics[scale=0.35]\{Figures/Pipeline/methods_median.png\}\par
+\\caption\{Frequency each method either enhances (green) or diminishes (red) relative to the median score (AUC = 0.48). Steps are (a) smoothing, (b) baseline, (c) normalisation, (d) scaling, (e) feature-extraction, (f) classifier.\} \par
+\\label\{fig:method_hist\}\par
+\\end\{center\}\par
+\\end\{figure\}\par
+\par
+\\Cref\{fig:method_hist\} shows some interesting insights of the effects of various methods. The choice of smoothing method has a significant effect; the majority of pipelines that utilise PCA de-noising perform worse than the median, whilst Savitzy-Golay smoothing predominantly increases scores. It could be argued that baseline correction has an insignificant effect, perhaps slightly detrimental, this could be attributed to the data already being subject to a previous scatter correction prior to the analysis, negating the requirement to perform a baseline correction. Normalisation is a step that can not be bypassed, an expected result as spectra originate from different samples, each with differences in sample thickness. Mitigating the effects of sample thickness has a positive impact on classification scores.\par
+\par
+It appears that min-max normalisation occurs most frequently in the higher-performing pipelines. Scaling of the data appears to have a significant effect on the performance of the pipeline, but the choice of scaling does not seem to be hugely important. It should be reiterated that the top five pipelines in \\cref\{tab:pipeline_table\} employ a scaling method to the data in the pipeline, suggesting that re-scaling each wavenumber variable is beneficial for logistic regression. It would also appear that application of PCA to decompose the data prior to classification is slightly more beneficial than not. As previously stated, logistic regression emerges as a favourable classifier to the tree based random forest and gradient boosted classifiers, implying that a simpler, linear based model is preferred to complexity, perhaps as complex models are more prone to overfitting and have a much larger hyperparamater space to optimise. In fact, the dramatic drop off at approximately AUC = 0.40 is the result of pipelines with an XGBoost classifier, which has a large hyperparameter space that requires fine tuning. It may be the case that more iterations within the Bayesian hyperparameter search would produce more favourable results for the tree based models such as RF and XGBoost, but this would increase the time taken for the optimisation to execute.  \par
+\par
+The histograms in \\cref\{fig:hyperparameter_histogram\} show distributions of hyperparameters for each of the two top performing pipelines. Interestingly, it reveals that the logistic regression regularisation value in pipeline one \\cref\{fig:hyperparameter_histogram\}(A) converges to a much lower value ($\\sim\{0.01\}$) than for pipeline two, where it appears to converge towards 100. Pipeline two applies smoothing and feature extraction in addition to normalisation and scaling, which themselves have a regularisation effect on the subsequently fitted models. This may be the reason as to why the ultimate C parameter of logistic regression needn't be as low as 0.01 for pipeline two.\par
+\par
+Taking the modal hyperparameter selections from \\cref\{fig:hyperparameter_histogram\} and training and testing on all available data (using the same patients for each of the 50 train-test splits) enhances the scores significantly, as shown by the mean confusion matrices and ROC curves in \\cref\{fig:full_samples\}. There is a 14\\% increase in mean specificity for pipeline one and a 3\\% increase in mean sensitivity. Pipeline two exhibits an 11\\% increase in specificity and 9\\% increase in sensitivity. This would suggest that the strategy of sampling equally small subsets of data from each patient for the purposes of efficiency and stratification is sound, and translates well to a more realistic scenario where all the available data from different patients would be used instead. \par
+\par
+\\section\{Conclusion\}\par
+\par
+The work presented here demonstrates a versatile framework capable of determining a near-optimal data preprocessing and classification pipeline. This optimisation framework has been employed on a real inference problem and has successfully demonstrated that this process can be performed objectively and without specific prior knowledge of optimal parameters. The framework's performance has been tested across a range of sample datasets. It has shown that effective configurations can be determined through a rigorous analysis, as proven by validation on held-out data. The choices of preprocessing methods resulting in pipelines with the highest ranks seem to follow conventional logic --- normalisation is necessary, Savitzky-Golay smoothing is beneficial, PCA is advantageous depending on the choice of the classifier. Valuable insights have been gained from the procedure, showing that some preprocessing methods are particularly beneficial compared to others. \par
+\par
+To gain further knowledge of effective preprocessing methods, it would be useful to perform the optimisation procedure in a broader variety of datasets. This could yield insights into which preprocessing steps are effective or given classes of inference problems. \par
+\par
+This framework could be utilised by other researchers to perform a similar process for a given problem and set of preprocessing steps. It is by no means limited to FTIR spectroscopy and could be extended to other inference problems with minimal adjustment. \par
+\par
+\\putbib[Bibliographies/Pipeline]\par
+}
+ 

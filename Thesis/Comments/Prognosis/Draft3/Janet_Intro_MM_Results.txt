@@ -1,0 +1,13 @@
+Begin with an introductory statement along the lines of ‘It has previously been established that the presence of  ENE (extranodal extension) is a marker of poor prognosis in oral cancer. However, this clinical indicator cannot be definitively determined until after pathological inspection of surgically removed nodal material. This prevents the use of neo-adjuvant treatment in those  patients with poor prognosis, for whom current treatment regimens do not work. We have now shown that the chemical ‘fingerprint’ of the primary tumour, as determined by FTIR, is able to identify individuals whose disease will progress following treatment.”
+
+Then : 
+- discuss the defining of the risk groupings with respect to outcome. Identify the outcome time that ‘separates’ the groups and discuss wrt the normal cutoff times used in the literature (namely 1 year, 2 years and 5 years)
+- discuss the comparative success of the 3 models : ASMA alone is poor in this smaller sample group; FTIR alone gives more false positives (lower specificity) which might lead to over treatment in the clinical setting; ASMA + FTIR gives more false negatives (lower sensitivity) which might lead to under treatment in the clinical setting.
+Discuss the sensitivity/specificity etc of the models in comparison with clinical imaging and biomarkers e.g. ASMA etc. (with reference to the literature)
+- discuss small sample number, sample heterogeneity (with examples of what this might be e.g lymphocyte infiltration), technical inconsistencies.
+- discuss the data from the survival curves: discuss the setting of thresholds;
+FTIR + ASMA appears to be a good prognostic indicator splitting the patients into risk groups comparable to those obtained using outcome data alone;
+- discuss the hazard ratio data: both FTIR and ASMA + FTIR have hazard ratios greater than 1 (give actual number) with confidence intervals that remain above 1, however the upper limit of the HRs is 50 and 35, respectively. Suggest why this might be the case.
+
+Finally, look to the future: larger group to confirm; is it possible to use the technique on diagnostic biopsy? (i.e. will there be clinical utility). 
+Re-iterate here the clinical necessity of identifying patients with poor prognosis for stratification into, for example, window trials of new-adjuvant treatment. It is currently not ethical to do this because we do not want to overtreat those patients with good prognosis under current treatment plans - additional chemotherapy produces additional health risks to patients, so we need to target this to those individuals who are not likely to be cured with standard treatment

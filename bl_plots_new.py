@@ -18,10 +18,22 @@ from lifelines.statistics import logrank_test
 from lifelines import CoxPHFitter
 from lifelines.plotting import add_at_risk_counts
 
-from sklearn.metrics import roc_auc_score, roc_curve, precision_recall_curve, f1_score, confusion_matrix, matthews_corrcoef
+from sklearn.metrics import roc_auc_score, roc_curve, precision_recall_curve, f1_score, confusion_matrix, matthews_corrcoef, auc
+
 
 metadata = pd.read_excel(
     '/mnt/c/Users/conor/Git_Projects/PHD/metadata_0206.xlsx')
+
+
+def pr_auc_score(y_true, y_pred, sample_weight=None):
+
+    if sample_weight is not None:
+        prec, rec, th = precision_recall_curve(y_true, y_pred, sample_weight=sample_weight)
+    
+    else:
+        prec, rec, th = precision_recall_curve(y_true, y_pred)
+
+    return auc(x=rec, y=prec)
 
 
 def km_calculate(df, duration_col, pred_col, censored_col, thresh=0.5, patient=False):
@@ -198,24 +210,23 @@ def box_plot(stats):
     Returns:
         _type_: _description_
     """
-    fig, axes = plt.subplots(ncols=3, nrows=2, figsize=(10, 6))
+    fig, axes = plt.subplots(ncols=2, nrows=4, figsize=(8, 12))
     fig.subplots_adjust(wspace=0.2)
-    letters = string.ascii_uppercase[2:]
+    letters = string.ascii_uppercase#[2:]
 
     for ax, name, let in zip(axes.flatten(), stats.columns, letters):
         ax = sns.boxplot(data=stats.reset_index(),
                          x='Vars', y=name, ax=ax, whis=1)
 
-
         ax.set_xticklabels(['ASMA', 'ASMA+FTIR', 'FTIR'])
         ax.set_xlabel(None)
 
-        if let in ['C', 'F']:
+        if let in ['C', 'E', 'G', 'A']:
             ax.set_ylabel('Score')
         else:
             ax.set_ylabel(None)
 
-        if name == 'MCC':
+        if name in ['MCC','AUPRC']:
             ax.set_ylim(-1.1, 1.1)
 
         else:
@@ -239,7 +250,7 @@ def calc_stats(datasets, weight=True, patient=False, threshold='class'):
 
     for name, dataset in datasets.items():
 
-        stats = {'AUC': [], 'F1': [], 'MCC': [], 'Specificity': [],
+        stats = {'AUROC': [], 'AUPRC':[], 'F1': [], 'MCC': [], 'Specificity': [],
                  'Sensitivity': [], 'PPV': [], 'NPV': [], 'Thresh': []}
 
         #dataset['Preds'] = 1-dataset['Preds']
@@ -271,17 +282,30 @@ def calc_stats(datasets, weight=True, patient=False, threshold='class'):
                     [1 if el > best_threshold else 0 for el in split_df['Preds']])
 
             if weight:
+                t,f = get_baseline(split_df)
                 cm = confusion_matrix(
                     y_true=split_df['Y_true'], y_pred=preds, sample_weight=split_df['Weights'])
-                stats['AUC'].append(roc_auc_score(
+
+                stats['AUROC'].append(roc_auc_score(
                     split_df['Y_true'], split_df['Preds'], sample_weight=split_df['Weights']))
+
+                stats['AUPRC'].append(pr_auc_score(
+                    split_df['Y_true'], split_df['Preds'])-(t/(t+f)))
+
                 stats['F1'].append(f1_score(y_true=split_df['Y_true'], y_pred=preds,
                                    sample_weight=split_df['Weights'], average='weighted'))
 
             else:
+
+                t,f = get_baseline(split_df)
                 cm = confusion_matrix(y_true=split_df['Y_true'], y_pred=preds)
-                stats['AUC'].append(roc_auc_score(
+
+                stats['AUROC'].append(roc_auc_score(
                     split_df['Y_true'], split_df['Preds']))
+
+                stats['AUPRC'].append(pr_auc_score(
+                    split_df['Y_true'], split_df['Preds'])-(t/(t+f)))
+
                 stats['F1'].append(
                     f1_score(y_true=split_df['Y_true'], y_pred=preds))
 
@@ -314,63 +338,94 @@ def data_plot(datasets, weight=True, patient=False):
     Returns:
         _type_: _description_
     """
+
     fig, (ax1, ax2) = plt.subplots(ncols=2, figsize=(8, 4))
 
     for colour, (name, dataset) in zip(['tab:blue', 'tab:orange', 'tab:green'], datasets.items()):
 
-        aucs = []
+        aurocs = []
+        auprcs = []
         roc_curves = []
         prec_curves = []
+        baselines = []
 
-        for split, split_df in dataset.groupby(level=0):
+        for _, split_df in dataset.groupby(level=0):
 
             if patient:
 
                 split_df = split_df.groupby('Patient_Number').median()
 
             if weight:
-                fpr, tpr, thr = roc_curve(
+                fpr, tpr, _ = roc_curve(
                     split_df['Y_true'], split_df['Preds'], sample_weight=split_df['Weights'])
                 prec, recall, _ = precision_recall_curve(
                     split_df['Y_true'], split_df['Preds'], sample_weight=split_df['Weights'])
-                auc = roc_auc_score(
+                auroc = roc_auc_score(
                     split_df['Y_true'], split_df['Preds'], sample_weight=split_df['Weights'])
+                auprc = pr_auc_score(
+                    split_df['Y_true'], split_df['Preds'], sample_weight=split_df['Weights'])
+
+                t,f = get_baseline(split_df)
+                baselines.append(0.5)
+            
             else:
-                fpr, tpr, thr = roc_curve(
+                
+                fpr, tpr, _ = roc_curve(
                     split_df['Y_true'], split_df['Preds'])
                 prec, recall, _ = precision_recall_curve(
                     split_df['Y_true'], split_df['Preds'])
-                auc = roc_auc_score(split_df['Y_true'], split_df['Preds'])
+                auroc = roc_auc_score(split_df['Y_true'], split_df['Preds'])
+                auprc = pr_auc_score(split_df['Y_true'], split_df['Preds'])
+
+                t,f = get_baseline(split_df)
+                baselines.append(t/(t+f))
 
             roc_curves.append(np.interp(np.linspace(0, 1, 100), fpr, tpr))
             prec_curves.append(np.interp(np.linspace(0, 1, 100), prec, recall))
-            aucs.append(auc)
+            aurocs.append(auroc)
+            auprcs.append(auprc-(t/(t+f)))
 
-        ax1.plot([0, 1], [0, 1], ls='--', c='black')
         ax1.plot(np.linspace(0, 1, 100), np.median(np.array(roc_curves),
-                 axis=0), c=colour, label=f'{name} - AUC:{np.median(aucs):0.2f}')
-        #ax1.plot(np.linspace(0,1,100), np.mean(np.array(roc_curves), axis=0),c=colour, ls='--', label=f'{name} - AUC:{np.mean(aucs):0.2f}')
-        #ax1.set_title('ROC')
+                 axis=0), c=colour, label=f'{name} - {np.median(aurocs):0.2f}')
+
+
         ax1.text(-0.05, 1.05, 'A', size='x-large', transform=ax1.transAxes)
         ax1.set_xlabel('False positive rate')
         ax1.set_ylabel('True positive rate')
-        ax1.legend(bbox_to_anchor=(0.1, -0.35, 2, 0),
-                   loc="lower center", mode="expand", ncol=3)
+        ax1.legend(title='AUROC scores', bbox_to_anchor=(-0.5, -0.5, 2, 0),
+                   loc="lower center", ncol=1)
 
         ax2.plot(np.linspace(0, 1, 100), np.median(
-            np.array(prec_curves), axis=0), c=colour, label=f'{name}')
-        #ax2.plot(np.linspace(0,1,100), np.mean(np.array(prec_curves), axis=0),c=colour, ls='--', label=f'{name}')
-        #ax2.set_title('PR')
+            np.array(prec_curves), axis=0), c=colour, label=f'{name} - {np.median(auprcs):0.2f}')
+        ax2.legend(title='AUPRC scores', bbox_to_anchor=(-0.5, -0.5, 2, 0),
+                   loc="lower center", ncol=1)
+
+
         ax2.text(-0.05, 1.05, 'B', size='x-large', transform=ax2.transAxes)
         ax2.set_xlabel('Recall')
         ax2.set_ylabel('Precision')
         #ax2.legend()
+    
+    #if not weight:
+    baseline = np.median(baselines)
+    ax2.plot([0, 1], [baseline, baseline], c='black', ls='--')
+
+    ax1.plot([0, 1], [0, 1], ls='--', c='black')
 
     return fig
 
 
 def km_curve(dataset, patient=False, thresh=None):
+    """_summary_
 
+    Args:
+        dataset (_type_): _description_
+        patient (bool, optional): _description_. Defaults to False.
+        thresh (_type_, optional): _description_. Defaults to None.
+
+    Returns:
+        _type_: _description_
+    """    
     ps = []
     kmf = KaplanMeierFitter()
 
@@ -416,7 +471,13 @@ def km_curve(dataset, patient=False, thresh=None):
 
 
 def plot_kcmo(kmco, ax=None, logp=True):
+    """_summary_
 
+    Args:
+        kmco (_type_): _description_
+        ax (_type_, optional): _description_. Defaults to None.
+        logp (bool, optional): _description_. Defaults to True.
+    """    
     if not ax:
         fig, ax = plt.subplots()
 
@@ -604,3 +665,10 @@ def get_opt_prog_thresh(dataset):
     ths = pd.Series(ths)
 
     return ths
+
+
+def get_baseline(split_df):
+
+    counts = split_df[['Y_true']].value_counts()
+
+    return counts[1], counts[0]

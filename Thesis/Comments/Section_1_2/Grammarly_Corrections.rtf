@@ -1,0 +1,1214 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang2057\deflangfe2057{\fonttbl{\f0\fswiss\fprq2\fcharset0 Calibri;}}
+{\*\generator Riched20 10.0.22000}{\*\mmathPr\mnaryLim0\mdispDef1\mwrapIndent1440 }\viewkind4\uc1 
+\pard\nowidctlpar\sa200\sl276\slmult1\f0\fs22\lang9 % Chapter 1\par
+%\\begin\{refsection\}\par
+\\label\{Chapter_Background\}\par
+\\chapter\{The physics approach to cancer diagnostics\} % Main chapter title\par
+\par
+%This research project can be separated into three key areas: scanning techniques, data analysis, and adaptation for application. The current state of histopathology and oncology shall be discussed; the underlying causes of cancer and biological mechanisms which characterise it shall be briefly mentioned. An overview of the operational principles of FTIR microscopes and the associated technologies is then covered. The data analysis techniques used to extract insights from data will then be discussed, focusing on ML and its relevant subtopics.\par
+\par
+The following section is intended to serve as a basic introduction to several key areas covered in this thesis. Additional detail will be given in later chapters where appropriate. \\Cref\{sec:C&H\} will cover some fundamental aspects of oncology and provide an overview of the field of histology and biomarker discovery. An overview of the sample preparation process and implications for measurements will be discussed. \\Cref\{sec:Experimental\} will cover topics relating to the experimental aspects of the thesis. The physical phenomena underpinning spectroscopy shall be explained with sections covering electronic hardware and data collection considerations. Data analysis techniques will be covered briefly in \\Cref\{sec:Data_Analysis\}, with a focus on the underlying mechanics and evaluation of classification algorithms.\par
+\par
+%------------------------------------------------------------------------------------------------------------------------\par
+\par
+\\section\{Cancer and Histopathology\}\par
+\\label\{sec:C&H\}\par
+\par
+\\subsection\{Cancer\}\par
+\par
+Cancer is the broad term given to a class of diseases \lang2057 that\lang9  share the characteristics of abnormal cellular growth and a tendency to spread into surrounding tissue \\cite\{nationalcancerinstitute2015\}. The first description of breast cancer was recorded by an ancient Egyptian doctor in approximately 3000 BC \\cite\{Cancer_history3000BC\} as a "bulging tumour of the breast, a grave disease --- with no treatment". The Greek physician Galen noted the crab-like appearance of a solid cross-sectioned tumour and referred to tumours as \\textit\{Karkinos\}. The term Karkinos was later translated into Latin as \\textit\{Cancer\} --- from where its modern name originates \\cite\{Cancer_history3000BC\}. \par
+\par
+Cancer is the second leading cause of death after heart disease globally \\cite\{Bray2006\}, with around 8.8 million deaths a year --- accounting for 15.7\\% of deaths \\cite\{healthdata2015\}. As cancer is an entire class of diseases, the specific \lang2057 symptoms\lang9 , causes, and treatments for each type of cancer vary widely. It has become necessary to develop specific treatments and diagnostic tests to account for the varying conditions and circumstances in which cancers are found. \par
+\par
+In terms of their cause, different types of cancer are typically divided into one of two types according to their origin: those originating from genetic mutations triggered by environmental factors --- amounting to approximately 90-95\\% \\cite\{Anand2008\} and those due to genetic origin accounting for the remaining 5-10\\% \\cite\{Anand2008\}.\par
+\par
+A cancer typically manifests itself in the form of a tumour or \\textit\{neoplasm\} ---  a collection of cells which exhibit signs of malignancy. The multi-step process which a cell undergoes when becoming cancerous is known as \\textit\{Malignant progression\}, this process is shown in \\cref\{fig:Malignant_progression\}:\par
+\par
+\\begin\{figure\}[th]\par
+\\centering\par
+\\includegraphics[width = 140mm]\{Figures/Background/Cancer/malignant_progression.png\}\par
+\\caption[Malignant Progression]\{Malignant Progession. \\cite\{Yokota2000\}\}\par
+\\label\{fig:Malignant_progression\}\par
+\\end\{figure\}\par
+\par
+Malignant progression occurs in tissue when tumour cells are present --- which have undergone a series of genetic mutations\lang2057 ; these\lang9  tumour cells are characterised predominantly by the eight hallmarks of cancer and two enabling characteristics \\cite\{HANAHAN2011646\}:\par
+\par
+\\subsection\{The Hallmarks of cancer\}\par
+\par
+\\subsubsection\{Capabilities\}\par
+\par
+As normal cells progress towards malignancy, a sequence of hallmarks \lang2057 is\lang9  typically acquired. A tumour comprises a complex mass of numerous distinct cell types, interacting with each other in varying ways. \lang2057 Alongside\lang9  these malignant cells are normal cells \lang2057 that\lang9  \lang2057 contain\lang9  a tumour-associated stroma. This tumour-associated stroma is not merely present but plays an active role in facilitating the acquisition of capabilities typical of cancers.\par
+\par
+\\paragraph\{Cell growth and division without proper signalling\}\par
+\par
+A fundamental trait of cancer is the uncontrolled proliferation of cells. Normal cells carefully control growth-promoting signals\lang2057 ,\lang9  which dictate progression through the cell growth-and-division cycle. It has been observed that cancer cells can acquire the ability to produce growth-factor ligands themselves or influence associated stromal cells to provide these growth-factor signals \\cite\{Cheng2008\}. Sources of proliferative signals situated within normal tissues are still not \lang2057 well-understood\lang9  \\cite\{HANAHAN2011646\}. This issue is further complicated \lang2057 because\lang9  growth factor signals dictating cell growth are thought to be modulated temporally and spatially between a cell and its neighbours.\par
+\par
+\\paragraph\{Unabated cell division in the presence of inhibitor signals\}\par
+\par
+\lang2057 To\lang9  proliferate, cancerous cells must also avoid tumour suppressing signals. Two proteins moderate these tumour suppressant signals: the \\textit\{RB\} (Retinoblastoma) protein \\cite\{Burkhart2008\} --- which controls whether or not a cell shall proceed through its growth-and-division cycle, and \\textit\{TP53\} --- which works similarly to RB but is dependent upon environmental factors within the cell such as levels of oxygenation and glucose \\cite\{Steele1998\}. TP53 is sensitive to indicators of stress and damage within tumour cells and \lang2057 can\lang9  inhibit further cell-cycle progression until conditions return to normal. If conditions reach a point where damage is irreparable, TP53 can trigger cell apoptosis --- cleansing \lang2057 the \lang9 defective cells. These two proteins form independent and redundant tumour suppressant systems. \lang2057 Therefore, a cell must\lang9  suffer from a defect in the functioning of both systems to be prone to unabated cell division.  \par
+\par
+\\paragraph\{Avoidance of apoptosis\}\par
+\par
+Apoptosis is the highly-regulated process that a cell undergoes when significant cell stress is detected from within the cell due to DNA damage or signalled from other cells. In the case where apoptosis is triggered in a defective cell, those which have acquired the ability can avoid programmed death \\cite\{Adams2007\}. Due to acquired mutations, tumour cells can resist apoptosis by becoming de-sensitised to internal and external signalling. The level of attenuation of apoptosis in tumours has been shown to be severe in tumours \lang2057 that\lang9  are well-progressed \\cite\{Adams2007\}.\par
+\par
+\\paragraph\{Biological immortality\}\par
+\par
+Malignant cells differ from normal cells in their ability to circumvent the states of \lang2057 senescence\lang9  (cell \lang2057 ageing\lang9 ) and crisis (cell death) \\cite\{Blasco2005\}. These processes \lang2057 prevent \lang9 uncontrolled\lang2057  \lang9 proliferation of cells in the body, avoiding a "hoarding" of nutrients by these cells and the potential to adversely affect surrounding tissue. A characteristic of \lang2057 biologically immune cells\lang9  is the presence of telomerase which prohibits telomere shortening of chromosomes within the cell \\cite\{HANAHAN2011646\} and \lang2057 senescence\lang9  and crisis from stopping uncontrolled proliferation. A large body of evidence suggests that the presence of telomerase allows for \lang2057 the \lang9 unlimited proliferation of cells --- facilitating the growth of macroscopic tumours. \par
+\par
+\\paragraph\{Construction of blood vessel networks (angiogenesis)\}\par
+\par
+As is the case for normal tissue, an adequate blood supply is required to provide necessary nutrients and oxygen and remove waste products. \lang2057 Angiogenesis\lang9  is the process of creating this blood supply by activating an "angiogenic switch" \\cite\{Baeriswyl2009\}. This is typically temporary for healthy adults\lang2057 ; however,\lang9  this switch is permanently activated and continuously promotes the growth of vasculature to help support neoplastic tissue \\cite\{HANAHAN2011646\}.\par
+\par
+\\paragraph\{Invasion of surrounding tissue and metastases\}\par
+\par
+Typically occurring in later stages in the progression of cancer: metastases of malignant cells to neighbouring tissue sites and other organs of the body. These invasive and metastatic malignant cells are characterised typically by a change in shape\lang2057 ,\lang9  and a reduction in E-cadherin --- a key molecule in cell-to-cell adhesion \\cite\{HANAHAN2011646\}.\par
+\par
+\\paragraph\{Deregulation of metabolism\}\par
+\par
+A change in the metabolic processes favoured by malignant cells has been observed in many types of cancer \\cite\{Alfarouk2014\}. These changes allow neoplastic cells to obtain \lang2057 more significant\lang9  amounts of energy to fuel cellular growth and division. Typically normal cells respire, converting glucose to ATP. However\lang2057 ,\lang9  cancer cells have been observed to \\textit\{reprogram\} their glucose metabolism, resulting in a conversion to a state termed "aerobic glycolysis" \\cite\{HANAHAN2011646\}. \par
+\par
+\\paragraph\{Evasion of the immune system\}\par
+\par
+For a tumour to grow, it must have the capacity to avoid detection by the immune system and resist \lang2057 interference\lang9 . It is important to note that \lang2057 several\lang9  cancers are induced by viruses, which a compromised immune system may struggle to eradicate. However, only $\\sim$20\\% of tumours are virus-induced\lang2057 ; the\lang9  remaining $\\sim$80\\% are thus able to overcome interference from the \lang2057 immune\lang9  system.\par
+\par
+\\subsubsection\{Enabling Characteristics\}\par
+\par
+\\paragraph\{Genomic instability and mutation\}\par
+\par
+For a tumour to become established, the characteristics listed above must be acquired through a series of genetic changes. This happens gradually as individual cells \lang2057 developing\lang9  these changes possess an advantage over neighbouring cells, making reproduction more likely and establishing a cancer lineage. \lang2057 Alongside\lang9  genetic changes, epigenetic changes such as DNA methylation and histone modifications have been linked to cancer cells \\cite\{Berdasco2010\}. In normal tissue\lang2057 ,\lang9  mutation rates are usually low\lang2057 . However,\lang9  tumour cells can increase the level of mutation by increasing the sensitivity to mutagenic agents and \lang2057 adversely\lang9  affecting systems \lang2057 that\lang9  monitor genomic integrity.\par
+\par
+\\paragraph\{Inflammation of surrounding tissue\}\par
+\par
+Other than innate characteristics of neoplastic tissue, inflammation of tissue caused by varying degrees of an immune response can often have a counterproductive effect of promoting tumour growth. Inflammation can exacerbate and aid certain acquired characteristics by supplying molecules useful to the tumour to its local vicinity. An immune response can \lang2057 provide\lang9  enzymes \lang2057 that\lang9  modify the extracellular matrix allowing invasion, angiogenesis, and metastasis \\cite\{HANAHAN2011646\}.\par
+\par
+\par
+\par
+\\subsection\{The tumour microenvironment\}\par
+\par
+The environments in which neoplastic cells develop vary widely and will change over time. An exact prediction of how a tumour will develop is not possible; it depends at least in part on the structural environment in which it resides and the interaction with other bodily systems. \\Cref\{fig:TumourMicroEnvironment\} depicts typical tumour microenvironments in which neoplastic cells and their associated normal cells can be found.\par
+\par
+\\vskip 0.5cm\par
+\\begin\{figure\}[H]\par
+\\begin\{center\}\par
+\\includegraphics[width = 120mm]\{Figures/Background/Cancer/Tumour_Microenvironment.png\}\par
+\\end\{center\}\par
+\\caption\{(Upper) The microenvironment of the tumour showing a complex array of interacting cell types. (Lower) Distinct microenvironments in which neoplastic cells are typically found. These environments develop progressively through the duration of the lineage of a collection of neoplastic cells \\cite\{HANAHAN2011646\}.\}\par
+\\label\{fig:TumourMicroEnvironment\}\par
+\\end\{figure\}\par
+\par
+The objective of the work in this thesis is effectively to observe variables associated with the tumour microenvironment. The variables in question vary according to the technique being utilised and are known informally as '-omics\lang2057 ,\lang9 ' e.g. genomics, proteomics, metabolomics etc. The hallmarks discussed above will lead to changes in the tumour microenvironment which will lead to chemical changes which can be quantified using FTIR spectroscopy.\par
+\par
+\\subsection\{Oral Cancer\}\par
+\par
+Whilst the work covered in this thesis seeks to develop methods \lang2057 that\lang9  \lang2057 apply\lang9  to a range of diagnostic applications, the primary focus has been the development of diagnostic and prognostic tools for the treatment of oral cancer.\par
+\par
+Oral cancer is characterised by \lang2057 tissue growth\lang9  in various regions of the oral cavity, pharyngeal regions, and salivary glands. Oral cancer usually presents as an ulcer with fissuring or raised exophytic margins. It may also present as a lump, as a red lesion (erythro- plakia), as a white or mixed white and red lesion, as a non-healing extraction socket or as a cervical lymph node enlargement \lang2057 characterised\lang9  by hardness or fixation \\cite\{Markopoulos2012, CawsonR2008\}.\par
+\par
+Risk factors associated with oral cancer in the western world include tobacco and alcohol consumption\lang2057 ,\lang9  with 75\\% of all cases of oral cancer being associated with tobacco. In addition to tobacco\lang2057  smoking\lang9  and alcohol\lang2057 ,\lang9  other risks factors such as betel quid chewing and various narcotics are associated with the development of oral cancer. \lang2057 The human\lang9  papilloma virus (HPV) is widely reported as a virus \lang2057 that\lang9  carries oncogenetic potential\lang2057 . However,\lang9  results are conflicting as to the true extent of this potential \\cite\{Markopoulos2012\}. It has been noted previously that some HPV genomes have been incorporated into oral cancer cells \\cite\{CawsonR2008\}, but this has not yet proven to be a useful diagnostic variable when employed as a screening test \\cite\{CawsonR2008\}. Epstein-Barr virus \\cite\{Jalouli2010\} and Hepatitis C Virus (HCV) \\cite\{Gonzalez-Moles2002\} are also considered to be viruses \lang2057 whose\lang9  oncogenetic potential \lang2057 is felt \lang9 through the influence of oncoproteins\lang2057 ; these\lang9  are\lang2057 ,\lang9  however\lang2057 ,\lang9  not known to follow oral cancer with a high incidence. The work covered in this thesis seeks to identify prognostic biomarkers in \lang2057 non-virus-induced\lang9  cancers\lang2057 ,\lang9  as this is where the \lang2057 most significant\lang9  clinical need lies. This is due to the ineffectiveness of current treatment plans \\cite\{chen2015associations, nichols2020treatment\}. Neo-adjuvant therapy has the potential to improve prognoses and aid clinical decision making if applicable cases can be determined at the time of diagnosis.\par
+\par
+The influence of individual genetics is also widely recognised as an influencing factor in developing oral squamous cell carcinoma (OSCC). Mice with a genetic \lang2057 predisposition\lang9  to developing OSCC have been bred --- suggesting a genetic causation. However\lang2057 ,\lang9  the genetics of oral cancer \lang2057 is\lang9  complex\lang2057 ,\lang9  and a causative genetic link has not been firmly established in humans \\cite\{CawsonR2008\}. Some cancer predisposition syndromes such as Li Fraumeni syndrome and Fanconi anaemia have an increased prevalence of oral cancer, suggesting that p53 and DNA repair processes are important. This is thought to be due to \lang2057 significant\lang9  risk factors containing chemicals known to alter DNA --- leading to many of the \lang2057 aforementioned hallmarks\lang9 .\par
+\par
+Of particular relevance to the work contained in this thesis is the \lang2057 occurrence\lang9  of different pathological sites in which OSCC\par
+typically develops. The most common site of \lang2057 occurrence\lang9  of OSCC overall is the lower lip, with the most common site within the mouth being the tongue \\cite\{CawsonR2008\}. Within the oral cavity\lang2057 ,\lang9  OSCC is particularly prevalent in the lower mouth, along the borders of the tongue, \lang2057 the \lang9 floor of the mouth, and adjoining areas. Whilst only comprising 20\\% of the area of the oral cavity, approximately 70\\% of oral cancers are known to occur in these regions \\cite\{CawsonR2008\}.\par
+\par
+\\subsection\{Molecular Oncology\}\par
+\par
+Molecular oncology is the interdisciplinary approach to cancer treatment \lang2057 that\lang9  focuses on the effects of tumours at the molecular scale. As an \lang2057 interdisciplinary\lang9  field\lang2057 ,\lang9  molecular oncology frequently overlaps with chemistry and cytology and may be able to offer some level of insight into FTIR spectra. The ultimate goal of molecular oncology is to develop targeted therapies \lang2057 to\lang9  improve patient outcomes. However, the impact of molecular oncology is not solely limited to the development of \lang2057 treatments\lang9 , as a large amount of effort is directed towards the prevention of cancer and the development of \\textit\{molecular imaging\} methods which may allow for the detection and study of malignant cells in situ \\cite\{Bronchud2004\}.\par
+\par
+The methods presented in this thesis may allow for such molecular imaging through the examination and FTIR microscopy images. Due to the ability of IR spectroscopy to access the chemical information contained in a sample, and in combination with imaging microscopes, FTIR microscopy could form the basis for such a technology. A key limiting factor in the development of molecular imaging and cancer treatment is not the lack of target molecules but the limited resources available to dedicate to the pursuit. This issue is exacerbated even further due to heterogeneity present in many tumours, meaning that singular biomarkers are often ineffective on their own. FTIR microscopy is a high-throughput, objective, and relatively inexpensive technology; combined with vast data sets and an \lang2057 ever-growing\lang9  range of statistical techniques, it may be possible \lang2057 to expedite this process significantly\lang9 .% A considerable amount of work \\cite\{Giamougiannis2021, DelValle2021, Yang2021, Grzelak2018\} has shown that FTIR microscopy coupled with statistical techniques can perform mapping of tissue types,\par
+\par
+\\subsection\{Biomarker Discovery\}\par
+\par
+The primary objective of a diagnostic or prognostic tool is to infer the presence or state of a disease; \lang2057 to\lang9  accomplish this\lang2057 ,\lang9  an indicator variable known as a \\textit\{biomarker\} is employed. A biomarker may come in many forms and can be considered any chemical, physical, or biological variable; the measurement of a biomarker can be molecular, cellular, biochemical or physiological \\cite\{WorldHealthOrgnization1993, Jain2010\}. Biomarkers may be present in any part of the body\lang2057 ,\lang9  including bodily fluids such as blood serum, urine, \lang2057 cerebrospinal\lang9  fluid; biomarkers may also be found in any tissue situated in the body. \lang2057 Many\lang9  currently used biomarkers are found in bodily fluids and are a \lang2057 standard\lang9  diagnostic tool employed by clinicians \lang2057 for\lang9  \lang2057 many\lang9  purposes.\par
+\par
+Tissue biomarkers are those typically examined \lang2057 post-biopsy\lang9  after undergoing a series of steps to enable them to be viewed under an optical microscope. These methods are often supplemented using immunohistochemical stains \lang2057 to\lang9  \lang2057 enhance \lang9 contrast in desired regions of the image. \lang2057 To\lang9  validate biomarkers for the clinic, a large volume of data is typically required to ensure that a biomarker generalises well to a larger patient cohort and is not solely a feature of a subset of patient data \\cite\{Jain2010\}. A Tissue Micro Array (TMA) is a collection of samples often taken from hundreds of biopsies using a needle punch biopsy arranged in a grid-like fashion\lang2057 ; this\lang9  is demonstrated in \\cref\{fig:TMA\}.\par
+\par
+\lang2057 Several requirements must be met for a biomarker to translate to a clinical setting\lang9 . An ideal biomarker achieves the following:\par
+\par
+\\begin\{itemize\}\par
+    \\item[--] It is specifically associated with the presence or state of a disease\lang2057  and can\lang9  differentiate between similar physiological conditions.\par
+    \\item[--] Standard biological sources can be used to observe the biomarker\lang2057 ,\lang9  e.g. bodily fluids, tissue.\par
+    \\item[--] The measurement of the biomarker must ideally be quick, simple, accurate, and inexpensive.\par
+    \\item[--] The biomarker is comparable to a measurable and standardised baseline reference.\par
+\\end\{itemize\}\par
+\par
+Biomarkers must be discerned using statistically robust methods and offer a benefit to clinicians which justifies the cost of implementing the test. Any failings in a biomarker's ability to do so could lead physicians to make decisions on a patient's treatment, which may be useless or detrimental to their well-being.\par
+\par
+\\vskip 0.5cm\par
+\\begin\{figure\}[H]\par
+\\begin\{center\}\par
+\\includegraphics[width = 100mm]\{Figures/Background/Cancer/TMA.png\}\par
+\\end\{center\}\par
+\\caption\{An example of a TMA showing cores taken from resected tumour tissue arranged in a grid like fashion. Cores have been stained with H\\&E to show contrast in protein and nucleic acid concentrations.\}\par
+\\label\{fig:TMA\}\par
+\\end\{figure\}\par
+\par
+\par
+\\subsection\{Histology\}\par
+\par
+Pathology is the branch of medicine that is concerned with the study of disease by studying patient samples (urine, blood, tissue, etc.) to aid or provide diagnosis or prognosis \\cite\{orchard2011histopathology\}. The main focuses of pathology are \lang2057 evaluating\lang9  structural and functional changes in patient samples. In the UK NHS, 80-90\\% of diagnoses performed are based on information gained from laboratory-based medical specialists \\cite\{orchard2011histopathology\}. \par
+\par
+Histopathology is the microscopic study of patient tissue samples and is primarily concerned with diseases like cancer, infection, and inflammation. In contrast to pathology, histopathology is based on the visual inspection of samples --- a subjective process relying on the interpretation of morphological information present in stained \lang2057 microscope\lang9  slides by \lang2057 a highly-skilled histopathologist\lang9 . A \lang2057 standard\lang9  method of diagnosis is \lang2057 by examining\lang9  H\\&E stained tissue samples using an optical microscope. An example of a H\\&E stained image is shown in \\cref\{fig:HEStainedExamples\}.\par
+\par
+\\vskip 0.5cm\par
+\\begin\{figure\}[h!]\par
+\\begin\{center\}\par
+\\includegraphics[width = 140mm]\{Figures/Background/Cancer/Annotation.pdf\}\par
+\\end\{center\}\par
+\\caption\{Examples of H\\&E stained samples from varied locations within the oral cavity.\}\par
+\\label\{fig:HEStainedExamples\}\par
+\\end\{figure\}\par
+\par
+Histopathologists typically aim to diagnose potentially malignant tissue according to a standardised classification system \\cite\{Warnakulasuriya2008\}. The classification system used to assess oral cancers is based upon the visual interpretation of both \lang2057 architectural\lang9  features and cytology \\cite\{Warnakulasuriya2008\}. Whilst agreement between histologists on the extent of morphological features present within samples is \lang2057 mainly consistent\lang9 , intra and inter-observer variability \lang2057 continue\lang9  to hinder this process due to its inherent subjectivity \\cite\{Warnakulasuriya2008, Paech2011, Jain2010\}. Any \lang2057 discrepancies\lang9  in judgement between clinicians could result in misclassification, resulting in over or under treatment for the patient.\par
+\par
+The sequence of steps \lang2057 that\lang9  a tissue sample follows when being prepared for a TMA is outlined below:\par
+\par
+\\paragraph\{Slide preparation\}\par
+\par
+The process under which a tissue goes through from biopsy to the microscope follows a few key steps:\par
+\par
+\\paragraph\{Biopsy/resection\}\par
+\par
+\lang2057 In the\lang9  process of removing a tissue specimen from a patient's body, \lang2057 various\lang9  methods are used in practice depending on the area to be examined.\par
+\par
+\\paragraph\{Fixation\}\par
+\par
+A crucial step in the process where the tissue sample is preserved in a fixative to prevent decomposition. The standard practice is to use neutral buffered formalin \\cite\{orchard2011histopathology\}.\par
+\par
+\\paragraph\{Paraffin embedding\}\par
+\par
+\lang2057 For\lang9  tissue to be viewed under a\lang2057 n optical\lang9  microscope it must be cut thin enough for light to pass through. Paraffin wax at approximately 58$^\{\\circ\}$ C is used to permeate the sample \\cite\{orchard2011histopathology\}.\par
+\par
+\\paragraph\{Microtomy\}\par
+\par
+The fixed sample is then sliced precisely to a few micrometres using a \\textit\{microtome\}. A ribbon of \lang2057 paraffin-embedded\lang9  tissue is then extracted and floated in a water bath to prevent creases in the sample \\cite\{Alturkistani2015\}\lang2057 ; this\lang9  ribbon is then fixed to either a glass slide or a Calcium Fluoride disk for use in IR spectroscopy or other methods -- due to its opacity in the IR. \par
+\par
+\\paragraph\{Staining and mounting\}\par
+\par
+At this point\lang2057 ,\lang9  the procedure can be halted\lang2057 ,\lang9  and the sample can be used unstained in IR spectroscopy and other techniques which do not require histological staining. Further progression in the process rids the tissue sample of paraffin and any lipids present\lang2057 ; this\lang9  will alter the chemical \lang2057 makeup\lang9  of the sample\lang2057 ,\lang9  which may have implications for subsequent analysis. If the sample is to be de-waxed\lang2057 ,\lang9  it is subjected to a sequence of xylene and alcohol washes\\cite\{Jedani2020\}. The sample is then stained using the required chemical to \lang2057 produce\lang9  the desired type of contrast.\par
+\par
+The entire slide preparation process can take up to 48 hours \\cite\{orchard2011histopathology\} and is unsuitable for intraoperative diagnosis\lang2057 ,\lang9  which requires a report within the time that the patient is under general anaesthetic. This may be overcome by freezing the tissue after biopsy rather than formalin-fixation. However\lang2057 ,\lang9  this is a highly skilled process \lang2057 that\lang9  often results in inferior quality samples \lang2057 and results in a \lang9 greater challenge of interpretation. \lang2057 For\lang9  a diagnostic process relying on samples prepared in this way to be used within this time frame, they must be able to perform the diagnosis under cryogenic conditions. This has significant implications for techniques reliant upon IR spectroscopy as water has strong absorbance in the spectral regions typically used for diagnosis \\cite\{Pilling2016c\}.\par
+\par
+%------------------------------------------------------------------------------------------------------------------------\par
+\\newpage\par
+\\section\{Experimental techniques\}\par
+\\label\{sec:Experimental\}\par
+\par
+With the advent of advances in equipment and data analysis, IR chemical imaging has emerged as a \lang2057 solid contender to\lang9  improve clinical diagnostic capabilities \\cite\{Pilling2016b, Trevisan2012, Fabian2003, Baker2018\}. \par
+\par
+IR spectroscopy methods come in many forms and modalities with their own respective strengths and weaknesses, but all seek to interrogate the underlying chemical composition of the sample being analysed through the absorption of specific wavelengths of IR light. A brief overview of the physics involved in vibrational spectroscopy shall be given\lang2057 , focusing\lang9  on the physical mechanisms of absorption and optics. A general overview of the technology underpinning FTIR microscopes shall also be explained.\par
+\par
+The operating characteristics, advantages, and disadvantages of FTIR will be discussed in the following chapter.\par
+\par
+\\newpage\par
+\\subsection\{Electromagnetic Radiation\}\par
+\par
+\\subsubsection\{The Classical Perspective\}\par
+\par
+In classical electromagnetism, electromagnetic waves comprise a magnetic field $\\vec\{B\}$, and an electric field $\\vec\{E\}$ oscillating in a synchronised manner whilst propagating through space at velocity \\textbf\{c\} in a direction perpendicular to the oscillating fields --- as shown in \\cref\{fig:EM_Wave\}.\par
+\par
+\\begin\{figure\}[th]\par
+\\begin\{center\}\par
+  \\begin\{tikzpicture\}[x=\{(-10:1cm)\},y=\{(90:1cm)\},z=\{(210:1cm)\}]\par
+    % Axes\par
+    \\draw (-1,0,0) node[above] \{$x$\} -- (5,0,0);\par
+    \\draw (0,0,0) -- (0,2,0) node[above] \{$y$\};\par
+    \\draw (0,0,0) -- (0,0,2) node[left] \{$z$\};\par
+    % Propagation\par
+    \\draw[->,ultra thick] (5,0,0) -- node[above] \{$c$\} (6,0,0);\par
+    \\draw[->,thick] (2,1.2,0) -- node[above] \{$\\lambda$\} (4,1.2,0);\par
+    % Waves\par
+    \\draw[thick] plot[domain=0:4.5,samples=200] (\\x,\{cos(deg(pi*\\x))\},0);\par
+    \\draw[gray,thick] plot[domain=0:4.5,samples=200] (\\x,0,\{cos(deg(pi*\\x))\});\par
+    % Arrows\par
+    \\foreach \\x in \{0.1,0.3,...,4.4\} \{\par
+      \\draw[->,help lines, red] (\\x,0,0) -- (\\x,\{cos(deg(pi*\\x))\},0);\par
+      \\draw[->,help lines, blue] (\\x,0,0) -- (\\x,0,\{cos(deg(pi*\\x))\});\par
+    \}\par
+    % Labels\par
+    \\node[above right, red] at (0,1,0) \{$\\vec\{E\}$\};\par
+    \\node[below, blue] at (0,0,1) \{$\\vec\{B\}$\};\par
+  \\end\{tikzpicture\}\par
+\\end\{center\}\par
+\\caption[An electromagnetic wave of wavelength $\\boldsymbol\{\\lambda\}$ comprises a magnetic $\\vec\{B\}$ and an electric field $\\vec\{E\}$ oscillating synchronously whilst propagating in space at velocity \\textbf\{c\}]\{An electromagnetic wave of wavelength $\\boldsymbol\{\\lambda\}$ comprised of a magnetic $\\vec\{B\}$ and an electric field $\\vec\{E\}$ oscillating synchronously whilst propagating in space at velocity \\textbf\{c\}\}\par
+\\label\{fig:EM_Wave\}\par
+\\end\{figure\}\par
+\par
+In accordance with Maxwell's equations governing electromagnetic fields \\cref\{eq:Max_2,eq:Max_4\}, a change in the electric field of a wave invokes a change in the magnetic field of a wave and vice versa. This phenomenon implies that neither type of wave can exist in isolation. \par
+\par
+\\begin\{figure\}[ht] \par
+  %------------------------------------------------------------------------------------\par
+  \\begin\{minipage\}[b]\{0.5\\linewidth\}\par
+    \\centering\par
+    \\begin\{equation\}\par
+      \\vec\{\\nabla\}\\cdot\\vec\{E\} = 0\par
+        \\label\{eq:Max_1\}\par
+    \\end\{equation\}\par
+    \\vspace\{2ex\}\par
+  \\end\{minipage\}\par
+  %-----------------------------------------------------------------------------------\par
+  \\begin\{minipage\}[b]\{0.5\\linewidth\}\par
+    \\centering\par
+    \\begin\{equation\}\par
+       \\vec\{\\nabla\}\\times\\vec\{E\} = -\\frac\{\\partial\\vec\{B\}\}\{\\partial t\}\par
+  \\label\{eq:Max_2\}\par
+    \\end\{equation\}\par
+    \\vspace\{2ex\}    \par
+  \\end\{minipage\}\par
+  %------------------------------------------------------------------------------------\par
+  \\begin\{minipage\}[b]\{0.5\\linewidth\}\par
+    \\centering\par
+    \\begin\{equation\}\par
+      \\vec\{\\nabla\}\\cdot\\vec\{B\} = 0\par
+    \\label\{eq:Max_3\}\par
+    \\end\{equation\}\par
+  \\end\{minipage\}\par
+    %------------------------------------------------------------------------------------\par
+  \\begin\{minipage\}[b]\{0.5\\linewidth\}\par
+    \\centering\par
+    \\begin\{equation\}\par
+      \\vec\{\\nabla\}\\times\\vec\{B\} = \\mu_0 \\epsilon_0 \\frac\{\\partial\\vec\{E\}\}\{\\partial t\}\par
+    \\label\{eq:Max_4\}\par
+    \\end\{equation\}\par
+  \\end\{minipage\} \par
+\\end\{figure\}\par
+\par
+\\begin\{minipage\}[b]\{0.5\\linewidth\}\par
+$\\vec\{E\}$ = Electric field vector ($NC^\{-1\}$)\\newline\par
+$\\epsilon_0$ = Permittivity of free space ($Fm^\{-1\}$)\par
+\\end\{minipage\}\par
+\\begin\{minipage\}[b]\{0.5\\linewidth\}\par
+$\\vec\{B\}$ = Magnetic field vector ($T$)\\newline\par
+$\\mu_0$ = Permeability of free space ($NA^\{-2\}$)\par
+\\end\{minipage\} \par
+\par
+The amplitudes of both fields vary temporally according to the frequency of the wave; the greater the frequency of this oscillation, the greater the energy of the wave. The frequency and wavelength of the wave are related by \\cref\{eq:f=c/l\}\par
+\par
+\\begin\{equation\}\par
+f = c/\\lambda\par
+\\label\{eq:f=c/l\}\par
+\\end\{equation\}\par
+\par
+$f$ = Frequency of oscillation of the electromagnetic wave in Hz ($s^\{-1\}$)\\newline\par
+$c$ = The velocity of light ($3\\times10^8 \\ ms^\{-1\}$)\\newline\par
+$\\lambda$ = Wavelength of the electromagnetic wave ($m$)\par
+\par
+A common convention in spectroscopy is to describe the energy of an electromagnetic wave in terms of its \\textit\{wavenumber\}. The wavenumber is simply the inverse of the wavelength $\\nu = 1/\\lambda$ and is measured in $m^\{-1\}$ but commonly stated as $cm^\{-1\}$ in IR spectroscopy \\cite\{Baker2016c\}.\par
+\par
+The physical process underpinning spectroscopy\lang2057 , in general,\lang9  is \\textit\{absorption\}. Absorption occurs as a result of the dispersive effects of dielectric media\lang2057 ,\lang9  in which the dynamics of the situation become considerably more complicated. Due to the interaction of the electric field with charges within the dielectric media, it is \lang2057 crucial\lang9  to consider the implications this has on the electric and magnetic fields situated within the media. \par
+\par
+The charges within a dielectric media become spatially separated when interacting with an electric field --- an effect known as \\textit\{polarisation\}. The extent of this polarisation for an atomic system of two equal charges is given by \\cref\{eq:polarisation\}.\par
+\par
+\\begin\{equation\}\par
+p = e\\Delta\{x\}\par
+\\label\{eq:polarisation\}\par
+\\end\{equation\}\par
+\par
+$p$ = Electric dipole moment ($Cm$)\\newline\par
+$q$ = Electrical charge ($C$)\\newline\par
+$x$ = Displacement ($m$).\par
+\par
+When considering larger systems of charges: $p$ is multiplied by the number of charges per unit volume $N$ to give the electric polarisation of the dielectric $P$. The displacement $x$ is proportional to the polarisation $P$ and is proportional \lang2057 to \lang9 the strength and direction of the electric field $\\vec\{E\}$, thus the relation can be stated as:\par
+\par
+\\begin\{equation\}\par
+\\vec\{P\} = \\epsilon_0 \\chi_e \\vec\{E\}\par
+\\label\{eq:polarisation_2\}\par
+\\end\{equation\}\par
+\par
+$\\vec\{P\}$ = Polarisation per unit volume ($Cm^\{-2\}$)\\newline\par
+$\\chi_e$ = Electrical susceptibility\par
+\par
+In order to quantify the total electrical field strength in any given position and moment, a new quantity $\\vec\{D\}$ is introduced:\par
+\par
+\\begin\{equation\}\par
+\\vec\{D\} = \\epsilon_0 \\vec\{E\} + \\vec\{P\}\par
+\\label\{eq:Displacement\}\par
+\\end\{equation\}\par
+\par
+$\\vec\{D\}$ = Displacement per unit volume ($Cm^\{-2\}$),%\\newline\par
+\par
+Combining \\cref\{eq:polarisation_2\} and \\cref\{eq:Displacement\} gives:\par
+\par
+\\begin\{equation\}\par
+\\vec\{D\} = \\epsilon_0 \\vec\{E\} + \\epsilon_0 \\chi_e \\vec\{E\} = (1+\\chi_e)\\epsilon_0 \\vec\{E\}\par
+\\label\{eq:Displacement_2\}\par
+\\end\{equation\}\par
+\par
+From which the following relations can be derived:\par
+\par
+\\begin\{figure\}[H]\par
+  \\begin\{minipage\}[b]\{0.5\\linewidth\}\par
+    \\centering\par
+    \\begin\{equation\}\par
+      \\vec\{D\} = \\epsilon_r \\epsilon_0 \\vec\{E\}\par
+    \\label\{eq:Displacement_3\}\par
+    \\end\{equation\}\par
+  \\end\{minipage\}\par
+    %------------------------------------------------------------------------------------\par
+  \\begin\{minipage\}[b]\{0.5\\linewidth\}\par
+    \\centering\par
+    \\begin\{equation\}\par
+      \\epsilon_r = 1 + \\chi_e\par
+    \\label\{eq:relative_permitivity\}\par
+    \\end\{equation\}\par
+  \\end\{minipage\} \par
+\\end\{figure\}\par
+\par
+These equations relate the electric field strength $\\vec\{E\}$ to the overall electric displacement $\\vec\{D\}$ by taking into consideration the effect of the polarisation induced by $\\vec\{E\}$. \par
+\par
+In the case of an electromagnetic wave interacting with matter, the situation becomes even more complex due to the time-varying electric field associated with the wave. \lang2057 To\lang9  account for the oscillating nature of the wave, it is necessary to consider the inertia of the charges present in the media. Given an oscillating electric field:\par
+\par
+\\begin\{equation\}\par
+\\vec\{E\} = \\vec\{E_0\}e^\{j\\omega t\}\par
+\\label\{eq:Time_varying_E\}\par
+\\end\{equation\}\par
+\par
+It is necessary to allow the electric susceptibility $\\chi_e$ to take on a complex form to account for the phase difference implied by the lag in $\\vec\{P\}$ compared to $\\vec\{E\}$. Thus \\cref\{eq:polarisation_2\} becomes:\par
+\par
+\\begin\{equation\}\par
+\\vec\{P\} = \\epsilon_0 (\\chi_\{e1\} - j\\chi_\{e2\}) \\vec\{E\}\par
+\\label\{eq:polarisation_2_complex\}\par
+\\end\{equation\}\par
+\par
+Given \\cref\{eq:Time_varying_E\} and \\cref\{eq:polarisation_2_complex\}, the polarisation $\\vec\{P\}$ of the matter is now shown to be dependent upon the frequency of the oscillating electric field in which it is situated. The interaction of the electromagnetic wave with matter leads to \lang2057 an\lang9  oscillating force driving the displacement of charges in the material. This is governed by the \\textit\{Lorentz\} force given by: \par
+\par
+\\begin\{equation\}\par
+\\vec\{F\} = e(\\vec\{E\} + \\vec\{v\} \\times \\vec\{B\})\par
+\\label\{eq:Lorentz\}\par
+\\end\{equation\}\par
+\par
+In the far-field regime\lang2057 ,\lang9  where the distance from a source to a point is greater than $2\\lambda$, the wave can be approximated as a plane wave\lang2057 . Therefore,\lang9  the amplitude of the electric field strength in comparison to its associated magnetic field is $E\\approx\\frac\{B\}\{c\}$. Within molecules, charged particle velocities are $v \\ll c$ therefore \\cref\{eq:Lorentz\} can be approximated to:\par
+\par
+\\begin\{equation\}\par
+\\vec\{F\} = e\\vec\{E\} = e \\vec\{E_0\} e^\{j \\omega t\}\par
+\\label\{eq:Lorentz_approx\}\par
+\\end\{equation\}\par
+\par
+Assuming a simple harmonic oscillator (SHO) model for charges in the media; the following equation of motion can be derived:\par
+\par
+\\begin\{equation\}\par
+x = \\frac\{1\}\{(\\omega_0^2 - \\omega^2) + j\\omega \\Gamma\}\\frac\{q\}\{m\}\\vec\{E\}_0e^\{j \\omega t\}\par
+\\label\{eq:SHO_Approx\}\par
+\\end\{equation\}\par
+\par
+$\\Gamma$ = Velocity dependent damping factor\\newline\par
+$\\omega_0$ = Fundamental oscillation frequency\par
+\par
+Generalising \\cref\{eq:SHO_Approx\} to a case with multiple oscillators with their own respective fundamental frequencies and damping factors and combining with \\cref\{eq:polarisation_2\} and \\cref\{eq:polarisation_2_complex\}.\par
+\par
+\\begin\{equation\}\par
+\\vec\{P\} = \\sum_\{i\}\\frac\{N_i q^2 /m \}\{(\\omega_i^2 - \\omega^2) + j\\omega \\Gamma_i\}\\vec\{E\}_0e^\{j \\omega t\} = \\chi_e \\epsilon_0 \\vec\{E\}_0e^\{j \\omega t\}\par
+\\label\{eq:SHO_Susceptibility\}\par
+\\end\{equation\}\par
+\par
+Extracting $\\chi_e$ and combining with \\cref\{eq:relative_permitivity\} we find that the complex form of the electric susceptibility can be separated into its constituent components:\par
+\par
+\\begin\{equation\}\par
+\\chi_\{e1\} = \\frac\{q^2\}\{m\\epsilon_0\}\\sum_\{i\}\\frac\{N_i(\\omega_i^2 - \\omega^2)\}\{(\\omega_i^2 - \\omega^2)^2 + \\omega^2 \\Gamma_i^2\}\par
+\\label\{eq:Real_permittivity\}\par
+\\end\{equation\}\par
+\par
+\\begin\{equation\}\par
+\\chi_\{e2\} = \\frac\{q^2\}\{m\\epsilon_0\}\\sum_\{i\}\\frac\{N_i\\omega_i \\Gamma_i\}\{(\\omega_i^2 - \\omega^2)^2 + \\omega^2 \\Gamma_i^2\}\par
+\\label\{eq:Imag_permittivity\}\par
+\\end\{equation\}\par
+\par
+From where the refractive index of the material can be deduced as shown by \\cref\{eq:refractive_index\}.\par
+\par
+\\begin\{equation\}\par
+n = \\sqrt\{1+\\chi_\{e1\}-j\\chi_\{e2\}\}\par
+\\label\{eq:refractive_index\}\par
+\\end\{equation\}\par
+\par
+As the frequency of the incident electromagnetic radiation $\\omega$ approaches resonant frequencies of the charges within the media $\\omega_i$, the susceptibility becomes complex\lang2057 ,\lang9  and anomalous dispersion occurs in a region close to $\\omega_i$ bounded by $\\Gamma_0$.\par
+\par
+\\begin\{figure\}[th]\par
+\\centering\par
+\\includegraphics[width = 100mm]\{Figures/Background/IR/Complex_Permittivity.pdf\}\par
+\\caption[Complex electric susceptibility of a dielectric as a function of $\\omega$.]\{Complex electric susceptibility of a dielectric as a function of $\\omega$. The range of $\\omega$ values where anomalous dispersion occurs is enclosed in grey dashed lines. This feature repeats at every $\\omega_i$.\}\par
+\\label\{fig:Complex_susceptibility\}\par
+\\end\{figure\}\par
+\par
+The parameters $\\omega_i$ and $\\Gamma_i$ are \lang2057 material-specific\lang9  and have multiple values for each region of resonance\lang2057 ; this\lang9  gives rise to a characteristic spectrum associated with a material where absorbance occurs at each resonance peak. These values of $\\omega_i$ and $\\Gamma_i$ might be energy transitions that are either electronic, vibrational, or rotational in nature\lang2057 ,\lang9  but all involve a change in the dipole moment of the system in question. The origin of these $\\omega_i$ and $\\Gamma_i$ values have so far been overlooked\lang2057 ; however,\lang9  \lang2057 to\lang9  explain these terms in reasonable detail\lang2057 ,\lang9  it is necessary to look to quantum mechanics.\par
+\par
+\\subsubsection\{The Quantum Perspective\}\par
+\par
+Classical electromagnetism is able to explain a wide range of phenomena associated with waves and particles, and often serves as a useful approximation. However, phenomena such as the photoelectric effect and black body radiation \lang2057 could not\lang9  be truly explained using classical physics --- thus\lang2057 ,\lang9  quantum theories of waves and particles were developed to understand these phenomena. Quantum mechanics forms the basis of all current understanding of the Universe at all scales and is necessary to fully appreciate the complexity of many phenomena.\par
+\par
+All equations in the previous section are classical equations and thus take no account of quantum effects. It is now understood that when particles interact\lang2057 ,\lang9  they do so through the exchange of discrete \\textit\{quanta\} of energy, the inclusion of quantum effects into classical field theories gives rise to \\textit\{quantum\} field theories. The quantisation of a field theory leads to the appearance of many new features compared to classical field theories and is therefore much more complex.\par
+\par
+Energy quantisation is a requirement to explain \lang2057 many\lang9  phenomena. Max Planck assumed that the energy carried by an electromagnetic wave of frequency $\\omega$ can only exist in quantised amounts corresponding to:\par
+\par
+\\begin\{equation\}\par
+E = \\hbar\\omega\par
+\\label\{eq:Plane_wave\}\par
+\\end\{equation\}\par
+\par
+$\\hbar$ = Reduced Planck's constant $(1.05\\times 10^\{-34\}Js)$\par
+\par
+This prompts the realisation that interactions between matter and radiation are not a continuous process but are instead mediated by an exchange of discrete amounts of energy. However, some phenomena such as reflection, refraction, and wave interference can \\textit\{only\} be understood by considering electromagnetic radiation to consist of waves. \lang2057 To\lang9  bring concordance between these two ideas, a framework \lang2057 that\lang9  \lang2057 can\lang9  describe all physical phenomena is needed\lang2057 ; this\lang9  is what quantum mechanics seeks to achieve. \lang2057 To\lang9  explain both types of observation, a quantum entity is assigned a wave-function $\\Psi(r,t)$. A \lang2057 wave function\lang9  may be a real or \lang2057 complex-valued\lang9  function, but a key stipulation is that it has the property:\par
+\par
+\\begin\{equation\}\par
+\\int|\\Psi(r,t)|^2 \\ d^3r = \\int\\Psi(r,t)\\Psi(r,t)^* \\ d^3r = 1\par
+\\label\{eq:Wave-function_probability\}\par
+\\end\{equation\}\par
+\par
+This implies that the particle's total probability density is contained within a defined volume. The previous section used the variables $\\omega_i$ and $\\Gamma_i$ to represent the fundamental frequency and damping coefficient of an oscillating system of charges. \lang2057 To\lang9  give some insight into the origins of these terms\lang2057 ,\lang9  it is necessary to \lang2057 describe\lang9  this system of charges using quantised energy levels. Given the classical representation of a simple harmonic oscillator as the sum of its constituent energy contributions:\par
+\par
+\\begin\{equation\}\par
+V(x) = \\frac\{1\}\{2\}kx^2 = \\frac\{1\}\{2\}m\\omega^2 x^2\par
+\\label\{eq:Classical_SHO\}\par
+\\end\{equation\}\par
+\par
+Its equivalent Schr\{\\"o\}dinger equation is:\par
+\par
+\\begin\{equation\}\par
+\\left( \\frac\{-\\hbar\}\{2m\} \\frac\{d^2x\}\{dx^2\} + \\frac\{1\}\{2\}m\\omega^2 x^2 \\right) \\Psi(x) = E\\Psi(x)\par
+\\label\{eq:Wave-function\}\par
+\\end\{equation\}\par
+\par
+Due to the nature of a harmonic oscillator being in a \lang2057 quantum-mechanically\lang9  bound state, eigenfunctions of \\cref\{eq:Wave-function\} take the general form of \\cref\{eq:Wave-function_General\}. Proof see \\cite\{Mandl1992\}.\par
+\par
+\\begin\{equation\}\par
+\\Psi(x) = e^\{\\frac\{-x^2\}\{2\\alpha^2\}\}(a_0 +a_1x + a_2x^2 ...)\par
+\\label\{eq:Wave-function_General\}\par
+\\end\{equation\}\par
+\par
+And satisfy Hermite's equation:\par
+\par
+\\begin\{equation\}\par
+\\frac\{\\partial\\Psi(x)\}\{\\partial x^2\} + \\beta \\Psi- \\left(\\frac\{x^2\}\{\\alpha^4\} \\right) \\Psi = 0\par
+\\label\{eq:Hermite\}\par
+\\end\{equation\}\par
+\par
+Where:\\newline\par
+\par
+\\begin\{figure\}[H]\par
+  \\begin\{minipage\}[b]\{0.5\\linewidth\}\par
+    \\centering\par
+    \\begin\{equation\}\par
+      \\beta = \\frac\{2mE\}\{\\hbar^2\}\par
+    \\label\{eq:Beta\}\par
+    \\end\{equation\}\par
+  \\end\{minipage\}\par
+    %------------------------------------------------------------------------------------\par
+  \\begin\{minipage\}[b]\{0.5\\linewidth\}\par
+    \\centering\par
+    \\begin\{equation\}\par
+        \\alpha = \\sqrt\{\\frac\{\\hbar\}\{m\\omega\}\} \par
+        \\label\{eq:Alpha\}\par
+    \\end\{equation\}\par
+  \\end\{minipage\} \par
+\\end\{figure\}\par
+\par
+Due to the nature of a bound oscillator state, wave-functions cannot diverge as $x \\rightarrow \\infty$ and must be quantised. Solutions meeting this requirement satisfy:\par
+\par
+\\begin\{equation\}\par
+\\alpha^2 \\beta = 2n + 1\par
+\\label\{eq:HO_Condition\}\par
+\\end\{equation\}\par
+\par
+Therefore, the first three allowed wave-functions meeting this requirement are:\par
+\par
+\\begin\{equation\}\par
+\\Psi_0(x) = c_0 e^\{\\frac\{-x^2\}\{2\\alpha^2\}\}\par
+\\label\{eq:HO_Condition\}\par
+\\end\{equation\}\par
+\par
+\\begin\{equation\}\par
+\\Psi_1(x) = c_1 \\left(\\frac\{x\}\{\\alpha\} \\right) e^\{\\frac\{-x^2\}\{2\\alpha^2\}\}\par
+\\label\{eq:HO_Condition\}\par
+\\end\{equation\}\par
+\par
+\\begin\{equation\}\par
+\\Psi_2(x) = c_2 \\left(\\frac\{2x^2\}\{\\alpha^2 - 1\} \\right) e^\{\\frac\{-x^2\}\{2\\alpha^2\}\}\par
+\\label\{eq:HO_Condition\}\par
+\\end\{equation\}\par
+\par
+\\Cref\{fig:Harmonic_Oscillator\} depicts the first three oscillator eigenfunctions of a quantised harmonic oscillator.\par
+\par
+\\begin\{figure\}[H]\par
+\\begin\{center\}\par
+\\begin\{tikzpicture\}\par
+\\begin\{axis\}[domain=-3.5:3.5, samples=50,no markers,axis lines=left,axis y line=center,ticks=none, y=1cm, xlabel=\{$x$\}, ylabel=\{$V(x)$\}, thick]\par
+    \\addplot [gray] \{1/2*x^2\};\par
+    \\addplot [black] \{1/(2*sqrt(1*1!))*exp(-x^2/2)+1)\};\par
+    \\addplot [black] \{1/(2*sqrt(2*1!))*2*x*exp(-x^2/2)+2\};\par
+    \\addplot [black] \{1/(2*sqrt(4*2!))*(4*x^2-2)*exp(-x^2/2)+3\};\par
+\\end\{axis\}\par
+\\node[] at (-0.75,1) \{$\\Psi_0(x)$\};\par
+\\node[] at (9.5,1) \{$E_0 = \\frac\{1\}\{2\} \\hbar \\omega$\};\par
+\\node[] at (-0.75,2) \{$\\Psi_1(x)$\};\par
+\\node[] at (9.5,2) \{$E_1 = \\frac\{3\}\{2\} \\hbar \\omega$\};\par
+\\node[] at (-0.75,3) \{$\\Psi_2(x)$\};\par
+\\node[] at (9.5,3) \{$E_2 = \\frac\{5\}\{2\} \\hbar \\omega$\};\par
+\\end\{tikzpicture\}\par
+\\caption[Potential energy of the quantised harmonic oscillator with first three allowed eigenfunctions and their corresponding energy eigenvalues.]\{Potential energy of the quantised harmonic oscillator with first three allowed eigenfunctions and their corresponding energy eigenvalues.\}\par
+\\label\{fig:Harmonic_Oscillator\}\par
+\\end\{center\}\par
+\\end\{figure\}\par
+\par
+When a photon is incident upon a chemical sample, an electron is promoted to an excited state if the photon energy $E=\\hbar \\omega$ is equal to $\\Delta E_\{ij\}$. These principles apply to the vibrational energy transitions within molecules \lang2057 that\lang9  spectroscopy techniques seek to observe. In reality\lang2057 ,\lang9  the harmonic oscillator model is inaccurate except for regions at the bottom of the potential energy curve\lang2057 . Instead,\lang9  the potential energy function of an atom follows that of an anharmonic oscillator. The potential energy between two atoms $V(r)$ as a function of the separation $r$ reaches a minimum at $r_0$. This is due to repulsive nuclear forces experienced in regions where $r<r_0$ and attractive forces between electrons and the nucleus in regions where $r>r_0$.\par
+\par
+%---------------------------------------------------------------------------------------------------------\par
+\par
+%%%%%%% Define Potential Function %%%%%%%\par
+\\pgfmathsetmacro\{\\De\}\{10\}\par
+\\pgfmathsetmacro\{\\re\}\{1\}\par
+\\pgfmathsetmacro\{\\a\}\{1\}\par
+\\pgfmathdeclarefunction\{V\}\{1\}\{%\par
+  \\pgfmathparse\{%\par
+    \\De*((1-exp(-\\a*(#1-\\re)))^2-1)\par
+    \}%\par
+\}\par
+%%%%%%% Energy Levels %%%%%%%\par
+% energies are given as multiples of \\hbar \\omega_0 with\par
+% \\omega_0 = \\a*sqrt(2*\\De/\\m), where m is the (reduced) mass of the diatomic molecule\par
+% \\De above is really \\De/(\\hbar*\\omega)\par
+\\pgfmathdeclarefunction\{energy\}\{1\}\{%\par
+  \\pgfmathparse\{%\par
+    -\\De+(#1+0.5) - (#1+0.5)^2/(4*\\De)\par
+    \}%\par
+\}\par
+\par
+\\begin\{figure\}[H]\par
+\\begin\{center\}\par
+\\begin\{tikzpicture\}\par
+\\begin\{axis\}[axis lines = middle,ticks=none, smooth,xlabel = \{$x$\}, ylabel =\{$V(x)$\}, minor tick num =1, grid=none, no markers, every axis x label/.style=\{ at=\{(ticklabel* cs:1.05)\}, anchor=west\},\par
+every axis y label/.style=\{at=\{(ticklabel* cs:1.05)\},anchor=south\},domain=0:10, enlargelimits = true,scale=1]\par
+\\addplot +[black, thick, samples=50, name path global=MorseCurve] \{V(x)\};\par
+\\pgfplotsinvokeforeach\{0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17\}\{\par
+    \\path [name path global=HelperLine-#1] (axis cs: 0,\{energy(#1)\}) -- (axis cs: 10, \{energy(#1)\});\par
+    \\draw[name intersections=\{of=MorseCurve and HelperLine-#1\}] (intersection-1) -- (intersection-2);\par
+\}\par
+\\end\{axis\}\par
+\\end\{tikzpicture\}\par
+\\end\{center\}\par
+\\caption[Potential energy of the quantised anharmonic oscillator]\{Potential energy function of the quantised anharmonic oscillator.\}\par
+\\label\{fig:Anharmonic_Oscillator\}\par
+\\end\{figure\}\par
+\par
+In contrast to a harmonic oscillator, the restoring force felt by an object undergoing \lang2057 an \lang9 anharmonic oscillation is non-linear and dependent upon the displacement from the equilibrium position. An IR spectrum contains multiple peaks corresponding to many different energy transitions\lang2057 ; many\lang9  more transitions are allowed due to the anharmonicity of the potential function; energy changes where $\\Delta n > 1$ are allowed --- these transitions are known as overtone bands \\cite\{Baker2016b\}. These additional transitions have less energy compared to fundamental changes and give rise to \\textit\{hot bands\}. The intensity of an absorption band \lang2057 is\lang9  proportional to the change in molecular dipole moment\lang2057 . Therefore\lang9  larger changes in the molecular dipole moment give rise to larger absorption peaks. In \lang2057 gas-phase\lang9  spectroscopy\lang2057 ,\lang9  IR spectra show distinct peaks due to rotational energy transitions being more readily resolved.\par
+\par
+Molecular vibrations vary from \lang2057 the \lang9 simple coupling of diatomic molecules to a much more complicated situation involving many atoms. Vibrational energy changes are much smaller than electronic energy level changes, as shown in \\cref\{fig:Energy_Changes\}. \par
+\par
+\\begin\{figure\}[H]\par
+\\centering\par
+\\includegraphics[width = 100mm]\{Figures/Background/IR/Vibrational_Energy_Levels.png\}\par
+\\caption[Energy changes present in molecular spectra.]\{Energy changes present in molecular spectra. \\cite\{Baker2016b\}\}\par
+\\label\{fig:Energy_Changes\}\par
+\\end\{figure\}\par
+\par
+A molecule with N atoms has 3N degrees of freedom corresponding to translational motion in x,y,z, and rotational motion \lang2057 centred\lang9  about the x,y,z axes. The remaining 3N-6 degrees of freedom correspond to vibrational modes involving harmonic displacement of atoms from their equilibrium positions. An illustration of vibrational modes in a CH$_2$ group is given in \\cref\{fig:molecular_vibrations\}. \par
+\par
+\\begin\{figure\}[H]\par
+\\centering\par
+\\includegraphics[width = 100mm]\{Figures/Background/IR/Molecular_Vibrations.png\}\par
+\\caption[Types of molecular vibration]\{Energy changes present in molecular spectra. \\cite\{soderberg_2020\}\}\par
+\\label\{fig:molecular_vibrations\}\par
+\\end\{figure\}\par
+\par
+\par
+\par
+%---------------------------------------------------------------------------------------------------------\par
+\par
+\par
+\\subsection\{IR spectroscopy\}\par
+\par
+IR spectroscopy is a \lang2057 well-known\lang9  technique that has grown in complexity and variety over the past few decades. IR spectroscopy is almost universal in its applicability due to many molecules having strong \lang2057 absorption regions\lang9  in the mid-IR region. Samples in any physical state can be examined (with some preparation), and many different types of samples such as polymers, powders, and organic and inorganic compounds can have their IR spectra measured \\cite\{Smith2011\}. Spectra are very \lang2057 information-rich\lang9 ; peak positions give information about molecular structures present in the sample, peak intensities yield information about the concentration of such molecules, and peak widths provide information about the sample's chemical state. It is inexpensive, quick, and operators can be trained quickly using modern hardware and software. Some consideration needs to be taken when examining certain samples: water and CO$_\{2\}$ contributions can be a limiting factor when seeking to \lang2057 analyse\lang9  spectra accurately, but solutions exist to mitigate these effects.\par
+\par
+IR Spectroscopy uses the interaction of IR light with matter across \lang2057 several\lang9  wavelengths to produce an absorption (or transmittance) spectrum\lang2057 ; this\lang9  absorption spectrum arises from the vibrational interactions of the IR light with the molecular bonds present in the sample. The absorption is dependent upon \lang2057 several\lang9  factors: the wavelength of the IR light, the atoms involved in the molecular bond, and the strength of intermolecular interactions \\cite\{Baker2008a\}. This interaction typically occurs in the mid and far-IR spectral region, where molecular vibration frequency and incident light frequency are approximately equal, and when a change in molecular dipole moment occurs \\cite\{Barth2007\}.\par
+\par
+\\begin\{figure\}[H]\par
+\\centering\par
+\\includegraphics[width = 120mm]\{Figures/Background/IR/spectrum_example.pdf\}\par
+\\caption[FTIR spectrum example]\{A typical biological FTIR spectrum example showing three distinct regions of the spectrum: the "functional region" (3800-2500 cm$^\{-1\}$), "silent region" (2500-1800 cm$^\{-1\}$), and "fingerprint" region (1800-900 cm$^\{-1\}$)\}\par
+\\label\{fig:Example_Spectrum\}\par
+\\end\{figure\}\par
+\par
+The interactions between the constituent atoms of a molecule and the incident light results in a unique IR spectrum for the molecule --- an example spectrum is shown in \\cref\{fig:Example_Spectrum\}. A tissue sample or cell is just a collection of molecules in a unique environment \lang2057 that\lang9  will also display a unique IR spectrum. This can be used to characterise entire sections of tissue or cell phenotypes based on the collective contributions of the constituent molecules.\par
+\par
+A common mode of operation for IR spectroscopy is \\textit\{transmission\} mode. A beam of IR light is incident upon the sample where a portion of the light is absorbed according to the vibrational modes of the molecules present in the sample; the amount of absorbance is in proportion to the concentration of the molecules present, according to the Beer-Lambert law. \par
+\par
+\\begin\{equation\}\par
+I = I_0 e^\{-\\mu x\}\par
+\\label\{eq:Beer-Lambert Law\}\par
+\\end\{equation\}\par
+\par
+\par
+$I$ = The attenuated intensity,\\newline\par
+$I_0$ = Intensity of the incident IR beam,\\newline\par
+$\\mu$ = Absorption coefficient of the attenuating material,\\newline\par
+$x$ = The thickness of the attenuating material.\par
+\par
+An IR spectrum measures the \lang2057 sample's absorption\lang9  as a function of the incident photon energy. The measured absorbance is calculated using the following:\par
+\par
+\\begin\{equation\}\par
+A = log_\{10\} \\frac\{I_0\}\{I\}\par
+\\label\{eq:Beer-Lambert Law\}\par
+\\end\{equation\}\par
+\par
+$A$ = Absorbance,\\newline\par
+\par
+This technique is generally used for thin samples in the region of 1-20 $\\mu m$ \\cite\{Baker2016b\} where the Beer-Lambert law is valid. If samples thicker than 20$\\mu m$ are used\lang2057 ,\lang9  the relationship begins to break down. The Beer-Lambert law allows for the determination of molecular concentrations for many applications\lang2057 ; however,\lang9  it is not without its flaws. Particularly dense samples will not absorb linearly\lang2057 ,\lang9  and assumptions about the origins of \lang2057 a\lang9  measured $\\mu$ value must be met with \lang2057 scepticism\lang9  as a chemical compound will not have a single value associated with it. Scattering effects are \lang2057 indistinguishable\lang9  from absorption in IR spectra\lang2057 ,\lang9  so the assumption that any "missing" light intensity is purely due to absorbance effects may be false \\cite\{Griffiths2007\}.\par
+\par
+\\subparagraph\{IR Detectors\}\par
+\par
+When measurements are \lang2057 performed\lang9  in transmission mode using an IR spectrometer, samples are fixed to a substrate \lang2057 that\lang9  is transparent in the IR\lang2057 ,\lang9  such as CaF$_2$. \lang2057 To\lang9  accurately capture the spectrum of a sample with minimal absorbance elsewhere\lang2057 ,\lang9  mirrors are utilised instead of conventional glass optics. A Schwarzchild-Cassegrain objective is used to focus the incoming light onto the sample from above, at which point the light passes through the sample\lang2057 . The light is\lang9  \lang2057 then \lang9 re-collimated by a condenser lens before passing through subsequent mirrors to the detector. A schematic of this process is shown in \\cref\{fig:Cassegrain\}.\par
+\par
+\\begin\{figure\}[H]\par
+\\centering\par
+\\includegraphics[width = 100mm]\{Figures/Background/IR/Cassegrain_Objective.png\}\par
+\\caption[Schwarzchild-Cassegrain Objective]\{A Schwarzchild-Cassegrain showing the incident IR beam passing through a series of mirror optics, sample, and a second series of optics before passing through to the detector \\cite\{Baker2016b\}.\}\par
+\\label\{fig:Cassegrain\}\par
+\\end\{figure\}\par
+\par
+\lang2057 To\lang9  quantify the intensity of IR light for further analysis, the signal must first be converted into electron pulses, digitised, and measured by a computer. The conversion of IR light to electron pulses is typically performed by a mercury cadmium telluride (MCT) detector. An MCT is a semiconductor compound with a \lang2057 bandgap\lang9  tuned to the desired wavelength range through the addition of cadmium. When an IR photon strikes the MCT\lang2057 ,\lang9  an electron within the valence band of the detector is promoted to the conduction band\lang2057 ,\lang9  where it \lang2057 is \lang9 then sent as an \lang2057 analogue\lang9  signal to an accompanying \lang2057 analogue\lang9  to digital converter. In practice\lang2057 ,\lang9  this happens for large numbers of photons\lang2057 ,\lang9  and thus electron pulses are observed\lang2057 ,\lang9  which are proportional to the intensity of the photon flux \\cite\{Subramanian2009\}. An MCT must be cooled to temperatures similar to liquid nitrogen (77K) \lang2057 to\lang9  minimise the effects of noise\lang2057 ,\lang9  induced by thermally excited current carriers. MCT detectors are far more sensitive than other comparable detectors \\cite\{Subramanian2009\} and convert IR photons to electron pulses much more quickly\lang2057 ; this\lang9  has led to MCT detectors becoming the detector type of choice for many scientific applications.\par
+\par
+\\subparagraph\{Light sources\}\par
+\par
+\lang2057 To\lang9  observe a wide range of samples\lang2057 ,\lang9  a suitable \lang2057 IR light source\lang9  is required; three such light sources are the quantum cascade laser (QCL), free-electron laser (FEL), and a globar. Each light source has its respective advantages and disadvantages in terms of spectral output, source stability, intensity, and cost. An IR-FEL requires a large supporting facility and can be extremely expensive to operate\lang2057 ; FELs\lang9  also suffer from source stability issues and are highly unsuitable for a clinical environment \\cite\{Smith2013\}. A typical globar comprises a silicon carbide rod heated to around 1000 - 1650 $^\\circ$C, and a variable interference filter. As the globar emits a continuous IR spectrum across a wide range \lang2057 of \lang9 specific wavelengths, it can be filtered into specific bands of wavelengths or used in conjunction with an interferometer.   \par
+\par
+A QCL is a semiconductor laser \lang2057 that\lang9  utilises epitaxially grown quantum wells containing electrons in lasing states within a sequence of quantum wells. QCLs allow for a spectrally narrow-band beam when used in conjunction with narrow-band mid-IR reflectance filters \\cite\{Baker2016b\}. Shown in \\cref\{fig:QCL\} is a simplified schematic of a QCL.\par
+\par
+\\begin\{figure\}[th]\par
+\\centering\par
+\\includegraphics[width = 100mm]\{Figures/Background/IR/QCL.png\}\par
+\par
+\\caption[A simplified schematic of the gain region of a QCL]\{A simplified schematic of the gain region of a QCL, showing electron energy against \lang2057 the \lang9 position. The electron is injected at the left-most grey arrow and undergoes a radiative transition (blue arrow)\lang2057 ; the\lang9  electron then undergoes a further non-radiative transition (red arrow) before tunnelling to the next quantum well and repeating this process \\cite\{QCL_Diagram\}.\}\par
+\\label\{fig:QCL\}\par
+\\end\{figure\}\par
+\par
+Sources can output either a \\textit\{continuous\} IR spectra in the case of a FEL and globar; or a \\textit\{discrete\} spectrum as in the case of a QCL. A QCL offers a distinct advantage when used with a compatible imaging system; as discrete wavebands are scanned sequentially, the signal to noise ratio can be \lang2057 significantly\lang9  increased by averaging over a small spectral range instead of scanning over the entire spectrum as in an FTIR \\cite\{Baker2016b\}.\par
+\par
+\\subsection\{Fourier-transform infrared spectroscopy (FTIR)\}\par
+\par
+The application of FTIR to biological samples is relatively novel, with a range of potential applications across biomedical sciences. FTIR has been used to investigate the development of cancer in \lang2057 several\lang9  tissue types such as: brain \\cite\{Walsh2008,Krafft2007,Beleites2005\}, colon \\cite\{Li2017\}, skin \\cite\{Ly2009\}, liver \\cite\{Diem2000\} and many others and is considered to be one of the most popular IR techniques available today \\cite\{Yeh2015a\}. It provides a way to assay the chemical structure of a sample in a non-destructive manner. FTIR has proven to be a rapid and cost-effective technique \lang2057 that\lang9  requires minimal preparation and could potentially be used to help alleviate the subjectivity present in histopathological diagnosis.\par
+\par
+\\subparagraph\{Operating Principle\}\par
+\par
+A typical set-up for an FTIR spectrometer is a Michelson interferometer and a detector. A Michelson interferometer is \lang2057 an\lang9  instrument \lang2057 that\lang9  produces an interference pattern by superimposing two beams of light. The light is incident from the IR source\lang2057  \lang9 onto a beamsplitter\lang2057  that \lang9 transmits a portion of the IR light and reflects the other portion onto a fixed mirror. The \lang2057 part\lang9  of the beam transmitted is incident onto a movable mirror that reflects back to the beam splitter, re-combines with the other \lang2057 portion\lang9  of light, and proceeds to the IR detector. The two beams undergo superposition and create an interference pattern. A schematic of a Michelson interferometer is shown in \\cref\{fig:Michelson\}.\par
+\par
+\\begin\{figure\}[th]\par
+\\centering\par
+\\includegraphics[width = 100mm]\{Figures/Background/IR/Michelson_Interferometer.png\}\par
+\\caption[A Michelson interferometer used in a FTIR spectrometer.]\{A Michelson interferometer used in a FTIR spectrometer. \\cite\{Baker2016b\}.\}\par
+\\label\{fig:Michelson\}\par
+\\end\{figure\}\par
+\par
+The recombined light interferes constructively if the distance between the beamsplitter and movable mirror is equal. This condition repeats for every integer multiple of a wavelength; destructive interference occurs every half wavelength for a given wavelength of light. The intensity $I^\{'\}$ of the beam at the detector is given by \\cref\{eq:Intensity_Interferometer\}.\par
+\par
+\\begin\{equation\}\par
+I^\{'\}(\\delta) = 0.5I(v_0) \\left(1+\\cos(2\\pi)\\frac\{\\delta\}\{\\lambda\} \\right)\par
+\\label\{eq:Intensity_Interferometer\}\par
+\\end\{equation\}\par
+\par
+Where the retardation is given by:\par
+\par
+\\begin\{equation\}\par
+\\delta = n\\lambda\par
+\\label\{eq:retardation\}\par
+\\end\{equation\}\par
+\par
+The beamsplitter and detector each have wavelength-dependent efficiencies that can be accounted for by including a correction factor $H(v_0)$. Including the wavenumber dependent responsivity of the detector $G(v_0)$ ($V\\cdot W^\{-1\}$) therefore gives the measured intensity in volts \\cite\{Griffiths2007\}:\par
+\par
+\\begin\{equation\}\par
+S(\\delta) = 0.5I(v_0)H(v_0)G(v_0)\\left(1+\\cos(2\\pi)\\frac\{\\delta\}\{\\lambda\} \\right)\par
+\\label\{eq:Actual_Intensity_Interferometer\}\par
+\\end\{equation\}\par
+\par
+The resulting interferogram combines the intensities of each wavelength of light as the mirror is moved. This interferogram is then transformed to a frequency domain spectrum using a Fourier transform as shown in \\cref\{fig:Interferogram_Spectrum\}. To obtain a spectrum characteristic of the sample, a background measurement is taken in the absence of the sample; the background spectrum is then subtracted to obtain the sample spectrum.\par
+\par
+\\begin\{figure\}[th]\par
+\\centering\par
+\\includegraphics[width = 140mm]\{Figures/Background/IR/Interferogram_example.pdf\}\par
+\\caption[The conversion of an interferogram to a wavelength dependent transmittance spectrum]\{The conversion of an interferogram to a wavelength dependent transmittance spectrum\}\par
+\\label\{fig:Interferogram_Spectrum\}\par
+\\end\{figure\}\par
+\par
+\par
+\par
+\\subparagraph\{Measurement of spatial variation\}\par
+\par
+To obtain spatially varying spectra across the sample of interest, either imaging or mapping can be performed. Mapping is done by collecting the absorbance spectra at each position in the desired area of the sample; this area can be changed through the use of piezoelectric motors to give micrometre resolution \\cite\{Pilling2016c\}. Imaging is achieved by directing the light emitted from the sample region onto a Focal Plane Array (FPA) using focusing optics to define the pixel size \\cite\{Baker2016b\}. Mapping the spectra of a sample area in this way creates a \\textit\{data cube\} with each spatial pixel corresponding to a measured spectrum at that point.\par
+\par
+\\begin\{figure\}[H]\par
+\\centering\par
+\\includegraphics[width = 100mm]\{Figures/Background/IR/Datacube.pdf\}\par
+\\caption[An FTIR datacube example showing spatial variation in x and y with spectral absorbance varying in $\\lambda$]\{An FTIR datacube example showing spatial variation in x and y with spectral absorbance varying in $\\lambda$.\}\par
+\\label\{fig:Datacube\}\par
+\\end\{figure\}\par
+\par
+Several factors govern the achievable spatial resolution of an optical technique such as FTIR. The first is the magnifying lens used to focus the light onto the sample; if a powerful lens is used, the FPA will image a smaller area due to its decreased field of view, and so each pixel represents a smaller area. Second is the Numerical Aperture (NA) of the lens, which is representative of the ability of a lens to collect light over a range of angles; therefore, a lens with a high NA will be able to resolve objects at smaller scales. However, the resolution of an optical instrument is always subject to the diffraction limit. Due to dispersive effects associated with glass lenses, mirrors are the typical choice for the optical path of a FTIR microscope.\par
+\par
+\\subparagraph\{Diffraction and Resolution\}\par
+\par
+To image objects at smaller scales using optical techniques, the resolution of the imaging technique must surpass the diffraction limit, which is limited to roughly half the wavelength of the light source used in acquisition \\cite\{Dunn1999\}. The diffraction limit is the minimum size of the spot to which a beam of light can be focused using standard lensing elements. The focused spot forms a symmetric pattern of concentric rings called an Airy disk pattern, as shown in \\cref\{fig:Airy Disk\}. \par
+\par
+\\begin\{figure\}[th]\par
+\\centering\par
+\\includegraphics[width = 100mm]\{Figures/Background/IR/Airy_Disk.jpg\}\par
+\\caption[Airy Disk]\{An Airy disk diffraction pattern showing periodic bright and dark fringes \\cite\{Gris-Sanchez2016\}.\}\par
+\\label\{fig:Airy Disk\}\par
+\\end\{figure\}\par
+\par
+For two objects which are close by to be individually resolvable, they must obey the \\textit\{Rayleigh criterion\} which states that the two objects must be at least a distance away given by \\cref\{eq:Rayleigh_Criterion\}, the distance between the two first bright fringes of the Airy disk produced by each object.\par
+\par
+\\begin\{equation\}\par
+\\label\{eq:Rayleigh_Criterion\}\par
+d = \\frac\{0.61 \\lambda_0\}\{\\sin(\\theta)\}\par
+\\end\{equation\}\par
+\par
+$d$ = Distance between the centre of the Airy disk and the first minimum intensity\\\\\par
+$\\lambda_0$ = Wavelength of the light in vacuum\\\\\par
+$\\theta$ = Light convergence angle\par
+\par
+With the improvement in NA of many microscopy systems available today, it is possible to achieve values over 1. Consequently, this means that with good quality optics, microscopy systems can achieve resolutions of up to $\\lambda/2$ \\cite\{Dunn1999\}. This can, in practice be overcome with good estimates of the point spread function (PSF) of the detector in conjunction with a high signal-to-noise ratio. However, this theoretical limit is generally never achieved due to limitations of experimental conditions and aberration effects in optical instruments \\cite\{Dunn1999\}.\par
+\par
+FTIR has become a commonplace instrument for the analytical chemist over the past few decades owing to its robust, reproducible spectra, low cost, and versatility of use \\cite\{Baker2016b, Griffiths2007\}. Combined with modern FPA detectors, it is possible to rapidly and cost-effectively extract large datasets for later analyses. \par
+\par
+%------------------------------------------------------------------------------------------------------------------------\par
+\par
+\\section\{Data Analysis\}\par
+\\label\{sec:Data_Analysis\}\par
+\par
+To utilise and gain insight from experimental data collected from FTIR microscopes, the data must be summarised and interpreted. A considerable variety of methods exist which approach the problem from different angles, some are well-established techniques that originate from multivariate statistics, whereas other techniques are categorised as \\textit\{machine learning\} (ML). Effective data analysis is an essential step when developing a clinical diagnostic tool. A high false-positive rate will result in unnecessary procedures, and a high false-negative rate can result in unnecessary deaths.\par
+\par
+With the aim of the project being to gain an understanding of the biological systems present in cancer and to develop prognostic tools, it is necessary to convert the \\textit\{raw data\} containing chemical information about each sample into meaningful insights by quantifying relationships or categorising clusters of data points. The following section starts with a description of a few procedures that are common preprocessing techniques. Then an overview of several statistical methods and machine learning algorithms will be given with a discussion of the process of validating classifier results.\par
+\par
+\\subsection\{Machine Learning \\& Statistics\}\par
+\par
+ML is an approach to data analysis that involves learning from example data rather than relying on heuristics. This approach has led to advances in fields such as finance \\cite\{Trafalis2000\}, healthcare \\cite\{Kononenko2001\}, bioinformatics \\cite\{Bradley1997\}. ML objectives are generally either \\textit\{classification\} or \\textit\{regression\} problems. The goal of classification is to obtain the function $f$ which maps an input vector $\\bm\{X\}$ to a discrete output $\\bm\{t\}$. The input vector $\\bm\{X\}$ is the list of variables that are used to describe a data point, e.g. colour, weight, length, and $\\bm\{t\}$ being the label applied to the data point, e.g. orange, apple, banana. A regression problem seeks to turn $\\bm\{X\}$ into a numerical output, for example, the number of bathrooms or floor space of a house into the market value of the house. Some overlap exists between these types of problems, but they are generally evaluated differently. These problems can be further separated into \\textit\{supervised\} and \\textit\{unsupervised\} learning problems; supervised learning is when each data point has an associated label so that the algorithm can learn more directly; unsupervised learning is therefore learning in the absence of labels. These differences have implications for the types of algorithms that can be used and what insights can be gained. \par
+\par
+%\\textbf\{talk about how machine learning seeks to generalise and avoid overfitting/underfitting, also mention bias vs variance\}\par
+\par
+%\\textbf\{Talk about how recent results have used machine learning techniques\par
+%Recent results in IR imaging applications have shown that machine learning approaches allow for effective interpretation of datasets and are bringing the prospect of digital histopathology closer to reality \\cite\{Kimber2017\} \\cite\{Diem2016a\}\\cite\{Trevisan2012\}.\}\par
+\par
+\\subsection\{Preprocessing\}\par
+\par
+Analysing spectroscopic data is typically a  multi-step procedure, starting with a sequence of preprocessing steps before classification or regression. This process naturally follows a "pipeline" like procedure where data is passed sequentially through several stages; this process is illustrated in \\cref\{fig:PipelineFlowchart\}. Preprocessing is a vital step in the analysis workflow, as it has been shown to increase the performance of classification models \\cite\{Lasch2012\}, as well as to improve the validity and interpretability of results.\par
+\par
+\\begin\{singlespacing\}\par
+\\begin\{figure\}[H]\par
+\\begin\{center\}\par
+\\begin\{tikzpicture\}[\par
+squarednode/.style=\{rectangle\par
+, font=\\footnotesize\par
+, draw=black!60\par
+, text width=2.2cm\par
+, align=center\par
+, node distance=2.95cm\par
+, very thick\}\par
+]\par
+\par
+%Nodes\par
+\\node[squarednode]  (SS)                         \par
+\{Spectral\\\\Smoothing\};\par
+\\node[squarednode]  (N)     [right of= SS]       \par
+\{Normalisation\};\par
+\\node[squarednode]  (BC)    [right of= N]        \par
+\{Baseline\\\\Correction\};\par
+\\node[squarednode]  (FS)    [right of= BC]       \par
+\{Feature\\\\Scaling\};\par
+\\node[squarednode]  (DR)    [right of= FS]       \par
+\{Dimensionality\\\\Reduction\};\par
+\par
+%Lines\par
+\\draw[->] (SS.east) -- (N.west);\par
+\\draw[->] (N) -- (BC.west);\par
+\\draw[->] (BC.east) -- (FS.west);\par
+\\draw[->] (FS.east) -- (DR.west);\par
+\\end\{tikzpicture\}\par
+\\end\{center\}\par
+\\caption[A typical preprocessing pipeline diagram]\{A typical preprocessing pipeline diagram\}\par
+\\label\{fig:PipelineFlowchart\}\par
+\\end\{figure\}\par
+\\end\{singlespacing\}\par
+\par
+An outline of each step in the preprocessing sequence is set out below.\par
+\par
+\\subsubsection\{Normalisation\}\par
+\par
+Spectral normalisation takes place to account for the variable thickness of samples. Due to the dependence of \\cref\{eq:Beer-Lambert Law\} on the thickness of the sample, the absolute absorbance value will vary strongly. This is considered a confounding factor and is typically dealt with by several methods, such as vector normalisation, min-max scaling, or spectral differentiation.\par
+\par
+\\subsubsection\{Spectral Smoothing\}\par
+\par
+Spectral smoothing methods seek to account for high-frequency noise in the data. This unwanted noise may have instrumental, environmental, or sample origins. There are several associated methods, including the commonly used Savitzy-Golay \\cite\{Savitzky1964\}, whereby a polynomial is fit to a local moving window of a specified length. Other methods such as PCA de-noising and fast Fourier transform (FFT) filtering are also commonly applied.\par
+\par
+\\subsubsection\{Baseline Correction\}\par
+\par
+In transmission IR spectroscopy, the incident light beam will experience a degree of \\textit\{Mie\} scattering, modifying the observed IR spectrum. The original chemical spectrum sits atop an induced non-linear baseline caused by the wavelength-dependent scattering of the incident light. Mie scattering occurs if spherical morphological structures present in the sample are of comparable size to the incident radiation. This effect is particularly strong in cells, but tissues are also adversely affected to some extent. The impact in embedded tissue samples is mitigated somewhat by the presence of paraffin wax which results in a more homogenous refractive index throughout the sample \\cite\{Wang2021, Wrobel2020, Solheim2019\}. The data present in this thesis has been subject to an Extended Multiplicative Scattering Correction (EMSC) algorithm outlined in \\cite\{Kohler2008\}.\par
+\par
+\\subsubsection\{Feature Scaling\}\par
+\par
+Feature scaling takes place to remove absolute variable values effectively. This does not detrimentally affect the data as it is only relative values between subgroups of data relevant to discriminatory tasks. This step often helps subsequent classifier steps and is imperative for PCA.\par
+\par
+\\subsection\{Dimensionality Reduction\}\par
+\par
+When a dataset is highly-dimensional, it can become computationally expensive to process. The goal of dimensionality reduction (DR) is to decrease the number of components of the feature vector $x$ to reduce computation time and/or expense; DR can also allow higher dimensional data sets to be visualised in lower dimensions. DR can also be advantageous for classifier performance as it can play a role in regularising the classifier due to reducing the amount of information given to the classifier.\par
+\par
+\\subsubsection\{Principal Component Analysis (PCA)\}\par
+\par
+PCA is a DR technique that seeks to re-orient the axes representing a dataset so that the axes are those which maximise the variance. This reduces the complexity arising from any linear dependence between feature vector components and disregards redundant information. The data is mapped to a subspace which maximises the variance of the orthogonal projections of the data points as shown in \\cref\{fig:PCA\}.\par
+\par
+\\begin\{figure\}[th]\par
+\\centering\par
+\\includegraphics[width = 60mm]\{Figures/Background/ML/PCA.png\}\par
+\par
+\\caption[Principal component analysis, orthogonal projections (shown in green) of the original space data points (in red) projected onto it]\{The principal component shown here by $u_1$ with the orthogonal projections (shown in green) of the original space data points (in red) projected onto it \\cite\{Bishop2013\}\}\par
+\\label\{fig:PCA\}\par
+\\end\{figure\}\par
+This process is performed by obtaining the eigenvectors of the covariance matrix of the data; these eigenvectors then become the principal components \\cite\{Jolliffe2002\}. \par
+\\subsubsection\{Linear Discriminant Analysis (LDA)\}\par
+\par
+Linear Discriminant Analysis (LDA) differs from PCA in that it uses information about the identity of each data point to linearly transform the basis of the dataset. The main goal of LDA is to map to a space that gives good inter-class separability and avoids overfitting to the data. \par
+\par
+\\begin\{figure\}[H]\par
+\\centering\par
+\\includegraphics[width = 120mm]\{Figures/Background/ML/LDA_VS_PCA.png\}\par
+\\caption[A comparison of PCA and LDA]\{A comparison of PCA and LDA \\cite\{raschka2014\}\}\par
+\\label\{fig:LDA VS PCA\}\par
+\\end\{figure\}\par
+\par
+Another goal of LDA is to minimise intra-class variance to avoid scattering the data across the subspace. LDA can facilitate the visualisation of the underlying data structure and aid in visualising the relationships between groups present in the data.\par
+\par
+\\subsection\{Machine learning algorithms\}\par
+\par
+This section will briefly overview some machine algorithms used in this thesis. Neural networks will be covered in more detail in later chapters, where they are utilised as the primary focus.\par
+\par
+\\subsubsection\{Logistic Regression\}\par
+\par
+Logistic regression (LR) is a relatively simple classification method with a basis in classical statistics. It is closely related to linear regression but with an additional logistic function step used to convert input vectors into a usable probability estimate. LR is based on the following equation:\par
+\par
+\\begin\{equation\}\par
+\\label\{eq:Logistic_Regression\}\par
+Pr(Y=1) = \\frac\{1\}\{1 + e^\{-z\} \}\par
+\\end\{equation\}\par
+\par
+Where\par
+\par
+\\begin\{equation\}\par
+\\label\{eq:Logistic_Regression\}\par
+z = \\beta_0 + \\beta_1^T X_1 + \\beta_2^T X_2 ... = \\sum\\limits_\{i=0\}^n \\beta_i^T X_i\par
+\\end\{equation\}\par
+\par
+This is illustrated in a univariate case for a two-class problem in \\cref\{fig:LR_example\}.\par
+\par
+\\begin\{figure\}[th]\par
+\\centering\par
+\\includegraphics[width = 100mm]\{Figures/Background/ML/LR_Example.pdf\}\par
+\\caption[]\{A univariate logistic regression example showing two generated distributions in orange (Y=0) and blue (Y=1); the fitted logistic function is shown in black with maximum probability predicted in the region spanning the blue histogram (Y=1).\}\par
+\\label\{fig:LR_example\}\par
+\\end\{figure\}\par
+\par
+Optimal values for coefficient vector $\\beta_i$ are determined through maximum likelihood estimation. In practice, this is done by iteratively maximising the log-likelihood with respect to $\\beta$ using Newton's method or otherwise. See \\cite\{Franklin2005\} for a thorough derivation.\par
+\par
+\\subsubsection\{Support Vector Machines\}\par
+\par
+Support vector machines (SVM) have become a commonly used method for classification and regression capable of performing well on complex datasets \\cite\{Geron, Bishop2013, Suthaharan2016\}. SVMs can be separated into two distinct types: linear and nonlinear. As its name suggests, a linear SVM forms a linear decision boundary across the input parameter space separating classes. \par
+\par
+\\begin\{equation\}\par
+\\hat\{y\} = \par
+    \\begin\{cases\}\par
+        0\\ \\text\{if\}\\ \\bm\{w^T x\} + b < 0 \\\\   \par
+        1\\ \\text\{if\}\\ \\bm\{w^T x\} + b \\geq 0    \par
+    \\end\{cases\}\par
+\\label\{eq:Linear_SVM\}\par
+\\end\{equation\}\par
+\par
+$w$ = Gradient associated with the linear decision boundary\\\\\par
+$b$ = Constant offset of the decision boundary\par
+\par
+Values for $w$ and $b$ are determined through an optimisation procedure that seeks to obtain the optimal separation boundary between classes. This is accomplished by minimising an objective function which also allows for some misclassification through a \\textit\{slack variable\} $\\zeta$. The objective function is given by \par
+\par
+\\begin\{equation\}\par
+\\operatorname*\{minimise\}_\{w, b, \\zeta\}\\ \\frac\{1\}\{2\}w^T w + C\\sum\\limits_\{i=0\}^n \\zeta_i\par
+\\label\{eq:Linear_SVM_function\}\par
+\\end\{equation\}\par
+\par
+$C$ = A tunable hyperparameter allowing for a level of misclassification\par
+\par
+When a dataset is not linearly separable, it is still possible to utilise an SVM as a classification method through the use of a \\textit\{kernel\}. A kernel takes the original n-dimensional parameter space of the dataset and transforms it into a new m-dimensional space called a \\textit\{feature space\}, where m $>$ n \\cite\{Suthaharan2016\}. A kernel can take many forms, such as a linear, polynomial, or radial basis function (RBF) kernel; these kernels perform calculations based on the original data to derive more features that allow classes to become linearly separable. A comparison of a linear and nonlinear SVM is shown in \\cref\{fig:SVM_Example\}. \par
+\par
+\\begin\{figure\}[H]\par
+\\centering\par
+\\includegraphics[width=130mm]\{Figures/Background/ML/SVC_Example.pdf\}\par
+\\label\{fig:SVM_Example\}    \par
+\\caption\{SVM classification boundaries showing a linear SVM (A), and nonlinear SVM using a RBF kernel function (B). (A) shows the support vector boundary in a solid grey line with support vector points highlighted with a black circle.\}\par
+\\end\{figure\}\par
+\par
+\\subsubsection\{Artificial Neural Networks\}\par
+\par
+ An artificial neural network (ANN) is a technique loosely based on the functioning of a biological neuron. First introduced in 1943 \\cite\{McCulloch1943\}, ANNs are a simplified computational model of how a biological neuron might work in an animal brain.  ANNs vary widely in complexity and structure; with the addition of specially designed layers and functions, ANNs can accomplish increasingly complex tasks such as natural language processing, computer vision, and time series prediction. Like its biological analogue, a neuron can receive an input signal, perform some processing, and output the resultant value. This process is summarised in \\cref\{fig:Perceptron\}.\par
+ \par
+\\begin\{figure\}[H]\par
+\\begin\{center\}\par
+\\begin\{tikzpicture\}[shorten >=1pt,->,draw=black, node distance=\\layersep]\par
+    \\tikzstyle\{every pin edge\}=[<-,shorten <=1pt]\par
+    \\tikzstyle\{neuron\}=[circle,fill=black!25,minimum size=17pt,inner sep=0pt]\par
+    \\tikzstyle\{input neuron\}=[neuron, fill=orange!50];\par
+    \\tikzstyle\{hidden neuron\}=[neuron, fill=teal!50];\par
+    \\tikzstyle\{annot\} = [text width=4em, text centered]\par
+    \\node[] (b) at (2.5,-1.2 cm) \{$b$\};\par
+    \\node[circle, draw=black!80, minimum size=30pt] (H) at (2.5,-3 cm) \{$\\Sigma$\};\par
+    \\node[circle, draw=black!80, minimum size=30pt] (A) at (4.5,-3 cm) \{$f$\};\par
+    \\node[circle, draw=black!80, minimum size=30pt] (y) at (6.5,-3 cm) \{$y$\};\par
+    \\path (H) edge (A);\par
+    \\path (b) edge (H);\par
+    \\path (A) edge (y);\par
+    \par
+    % Draw the input layer nodes\par
+    \\foreach \\name / \\y in \{1,...,4\}\par
+    % This is the same as writing \\foreach \\name / \\y in \{1/1,2/2,3/3,4/4\}\par
+        \\node[] (\\name) at (0,-1.2*\\y) \{$x_\{\\y\}$\};\par
+        \par
+    \\foreach \\name / \\y in \{1,...,4\}\par
+        \\path (\\name) edge node[midway, above] \{$w_\{\\y\}$\} (H) ;\par
+    \par
+\\end\{tikzpicture\}\par
+\\end\{center\}\par
+\\caption[The perceptron]\{The perceptron showing input variables $x_i$ multiplied by their respective weights $w_i$, before being summed over all inputs and added to a bias term $b$, and then subjected to a nonlinear activation function $f$\}\par
+\\label\{fig:Perceptron\}\par
+\\end\{figure\}\par
+\par
+The perceptron equation for several input variables $n$ is given by \\cref\{eq:Perceptron\}\par
+\par
+\\begin\{equation\}\par
+    y = f\\left( \\sum\\limits_\{i=0\}^n x_i \\cdot w_i + b \\right)\par
+\\label\{eq:Perceptron\}\par
+\\end\{equation\}\par
+\par
+For a perceptron to succeed in its desired application, it must be 'trained'. Training in this sense refers to optimising the weights of a perceptron with respect to the desired metric. Often, metrics such as accuracy, sensitivity, or specificity are used for classification tasks. If the perceptron is used for regression, this metric would indicate the loss/fitness of a proposed function, for example, the means squared error.\par
+\par
+\\subsubsection\{The Multilayer Perceptron\}\par
+\\label\{sec:MLP\}\par
+\par
+A single perceptron is very similar to a single unit of logistic regression and can achieve simple binary classification tasks \\cite\{Geron\}. However, most classification tasks are substantially more complicated. When the output of a perceptron is used as the input of another perceptron, ANNs can model complex non-linear relationships; such structures are known as 'deep neural networks'. The term \\textit\{deep learning\} is associated with the research and development of these complex models. A typical multi-layer perceptron network is illustrated in \\cref\{fig: Neural Network\}.\par
+\par
+\\vspace\{2ex\}\par
+\\def\\layersep\{2cm\}\par
+\\begin\{figure\}[H]\par
+\\begin\{center\}\par
+\\begin\{tikzpicture\}[shorten >=1pt,->,draw=black, node distance=\\layersep]\par
+    \\tikzstyle\{every pin edge\}=[<-,shorten <=1pt]\par
+    \\tikzstyle\{neuron\}=[circle,fill=black!25,minimum size=17pt,inner sep=0pt]\par
+    \\tikzstyle\{input neuron\}=[neuron, fill=orange!50];\par
+    \\tikzstyle\{output neuron\}=[neuron, fill=purple!50];\par
+    \\tikzstyle\{hidden neuron\}=[neuron, fill=teal!50];\par
+    \\tikzstyle\{annot\} = [text width=4em, text centered]\par
+\par
+    % Draw the input layer nodes\par
+    \\foreach \\name / \\y in \{1,...,4\}\par
+    % This is the same as writing \\foreach \\name / \\y in \{1/1,2/2,3/3,4/4\}\par
+        \\node[input neuron, pin=left:$x_\{\\y\}$] (I-\\name) at (0,-\\y) \{\};\par
+\par
+    % Draw the hidden layer nodes\par
+    \\foreach \\lname in \{1,...,3\}\par
+        \\foreach \\name / \\y in \{1,...,5\}\par
+            \\path[yshift=0.5cm]\par
+                node[hidden neuron] (H-\\name-\\lname) at (\\lname*\\layersep-0.1,-\\y cm) \{\};\par
+\par
+    % Draw the output layer node\par
+    \\node[output neuron,pin=\{[pin edge=\{->\}]right:Output\}, right of=H-3-3] (O) \{\};\par
+\par
+    % Connect every node in the input layer with every node in the\par
+    % hidden layer.\par
+    \\foreach \\source in \{1,...,4\}\par
+        \\foreach \\dest in \{1,...,5\}\par
+            \\path (I-\\source) edge (H-\\dest-1);\par
+\par
+    % Connect every node in the hidden layer with the successive hidden layer\par
+    \\foreach \\lname/\\elname in \{1/2,2/3\}\par
+      \\foreach \\source in \{1,...,5\}\par
+        \\foreach \\endnode in \{1,...,5\}\par
+            \\path (H-\\source-\\lname) edge (H-\\endnode-\\elname);\par
+        \par
+    \\foreach \\source in \{1,...,5\}\par
+        \\path (H-\\source-3) edge (O);\par
+\par
+    % Annotate the layers\par
+    \\foreach \\lname in \{1,...,3\}\par
+    \{\par
+        \\node[annot,above of=H-1-\\lname, node distance=1cm] (h\\lname) \{Hidden layer \\lname\};\par
+    \}   \par
+    \\node[annot,left of=h1] \{Input layer\});\par
+    \\node[annot,right of=h3] \{Output layer\};\par
+    \par
+\\end\{tikzpicture\}\par
+\\end\{center\}\par
+\\caption[Multilayer perceptron neural network]\{A multilayer perceptron neural network with an input layer consisting of four input variables $x_0 \\dots x_4$, three hidden layers of five nodes each, and a single output layer.\}\par
+\\label\{fig: Neural Network\}\par
+\\end\{figure\}\par
+\par
+The use of successive layers of nodes allows an ANN to model significantly more complex relationships. Optimal choices for network weights must be determined through an optimisation procedure. \\textit\{Backpropagation\} \\cite\{Rumelhart2013\} is the standard method of determining effective weights for each node; it is made possible because all weights and bias terms can be related to the error of the network through a series of \\textit\{gradients\} -- a chain of partial differential equations. A \\textit\{forward pass\} is used to calculate the output of a network given an input, this output is compared to the actual output value, and an error is computed. With each weight and bias in the network being related to this error, the network adjusts each parameter accordingly in a \\textit\{backward pass\}. This process continues with batches of samples from a dataset until the network error converges. The 'trained' network can now be used to perform predictions on unlabelled data samples.\par
+\par
+There are many choices of activation functions and the number of layers and nodes in a neural network. Additionally, there are many parameters associated with the backpropagation algorithm itself which can be altered. A thorough description will not be given here but is covered in depth in other sources \\cite\{Geron, Bishop2013, Franklin2005\}. An additional process known as hyperparameter optimisation can be performed and will be covered in depth in \\cref\{Chapter_Pipeline\}. Neural networks form the focus of \\cref\{Chapter_Deep_Learning\} where an explanation of convolutional neural networks (CNN) shall be given.\par
+\par
+\\subsubsection\{Classification and Regression Trees (CART)\}\par
+\par
+A decision tree is an ML algorithm that constructs a tree-like structure consisting of branch nodes and leaf nodes. They can be used to perform classification or regression tasks by splitting the data set at each branch node utilising a set of criteria. Usually, the split is calculated as that which will maximise the entropy gained according to the Gini index \\cite\{Loh2008\}. The splitting generally continues until either: each leaf node leaves a single class, a maximum tree depth is reached, or a given performance metric has been achieved.\par
+\par
+\\begin\{figure\}[H]\par
+\\centering\par
+\\includegraphics[width = 100mm]\{Figures/Background/ML/Decision_Tree.pdf\}\par
+\\caption[A typical CART comprising branch nodes shown here by a logical decision operator, and leaf nodes consisting of an output value.]\{A typical CART comprising branch nodes shown here by a logical decision operator, and leaf nodes consisting of an output value.\}\par
+\\label\{fig:Decision_Tree\}\par
+\\end\{figure\}\par
+\par
+CARTs can be effective classifiers in simple data sets. Still, they suffer from overfitting due to their high variance -- a tendency to be sensitive to small changes in the data set and not generalise well. When the performance of a standard decision tree is cross-validated with other data, they tend to fall short. \par
+\par
+\\subsubsection\{Regularisation and pruning\}\par
+\par
+To mitigate the high variance of CARTs, a technique known as pruning can be employed to reduce the complexity of the tree, and the likelihood of overfitting \\cite\{Hutchison2011\}. Leaf nodes are pruned based on the misclassification error given by Eq.\\ref\{eq:Pruning\}:\par
+\par
+\\begin\{equation\}\\label\{eq:Pruning\}\par
+E(t) = 1 - [max(p(i|t))]\par
+\\end\{equation\}\par
+\par
+Where: \\newline\par
+$E$ = Classification error \\newline\par
+$t$ = A given tree structure \\newline\par
+$i$ = A given decision or class\par
+\par
+Essentially if the split does not result in any improvement or is deemed redundant: it is pruned. Regularisation is the act of limiting the complexity of a predicting model in any sense, limiting the depth of the tree is another standard method of restricting complexity in CARTS which directs the model towards a more general solution to the problem. This is typically achieved through the optimisation of an objective function:\par
+\par
+\\begin\{equation\}\par
+\\label\{eq:objective_function\}\par
+obj(\\theta) = L(\\theta) + \\Omega(\\theta)\par
+\\end\{equation\}\par
+\par
+Where: \\newline\par
+$obj$ = The objective function to be minimised or maximised\\newline\par
+$\\theta$ = The set of parameters used in the model\\newline\par
+$L$ = The error term associated with the model in the training stage\\newline\par
+$\\Omega$ = The regularisation term that regulates the model's complexity.\par
+\par
+%It should be noted that regularisation is achieved differently with different predicting models,\par
+\par
+\\subsubsection\{Bagging and Random Forest\}\par
+\par
+Bagging is a general ML technique that combines many weaker classifiers into an overall more capable 'ensemble' classifier. This is achieved by training each sub classifier on a subset of the samples in the data set. The decision of each sub classifier is factored into the overall decision by either voting or taking an average of the output. This reduces the variance of the classifier and can improve the performance significantly \\cite\{Loh2008\}. A random forest classifier seeks to expand upon this further by decreasing the correlation between the decisions of each sub-classifier. This is achieved by limiting the number of features given to each tree so that each tree effectively decides on different features. \par
+\par
+\\subsubsection\{Boosting\}\par
+\par
+Boosting, in contrast to bagging, is a technique designed to reduce the bias of a classifier \\cite\{Schapire2003\}. Bias is a measure of how well a classifier captures the necessary information needed to do its job \\cite\{Bishop2013\}, if bias is high, it can cause the classifier to miss important information and lead to underfitting. To avoid underfitting, a classifier is optimised using \\cref\{eq:objective_function\}. In the case of a CART this would be the structure of the tree itself; however due to the heuristic nature of a decision tree, optimisation can become difficult. To optimise a decision tree, boosting is performed. Boosting is achieved by first classifying the set of test points; the misclassified points are then weighted higher so that more focus is placed on classifying them in the next iteration. This process is repeated until the classifier can correctly identify the data set to the required standard. Each iteration is then weighted according to a learning rate $\\lambda$ and then used to give an overall decision.\par
+\par
+\\subsubsection\{Extreme Gradient Boosting (XGBoost)\}\par
+\par
+XGBoost is a highly optimised supervised learning method that builds upon gradient boosted decision trees \\cite\{Friedman2001\}. It is a highly successful algorithm, and one of the most commonly used ensemble methods used by many data science competition-winning teams \\cite\{Chen2016\}. It is an \\textit\{ensemble\} classifier, a method which is characterised by a meta-classifier, which uses the input of many sub classifiers known as \\textit\{weak learners\}. The weak learners, in this case, are decision tree classifiers that have been enhanced through the use of two ensemble techniques: \\textit\{bagging\} and \\textit\{boosting\}. Another built-in feature known as a \\textit\{regularised learning objective\} penalises an overly complex model allowing the classifier to generalise more effectively. \par
+\par
+\\subsection\{Evaluation of Classifier Performance\}\par
+\par
+Evaluating a predictive classifier is a crucial step in the process of development. The standard format for training a classifier is to have a training and testing set -- one to fit a classifier to and one to evaluate the performance of the fitted classifier. However, the performance achieved from this method is not descriptive of the entire data set and wastes some of the data. To overcome this, a technique known as \\textit\{cross-validation\} can be used. Cross-validation works simply by selecting a different training and testing set multiple times and then aggregating the results in the desired way. \par
+\par
+To gain a true indication of the performance of a classifier it is not sufficient to look at the accuracy; in the case of a binary classifier a confusion matrix is often employed to see exactly what predictions have been made. Shown in \\cref\{tab:Classification_Terms\} are terms used to refer to types of classification result:\par
+\par
+% \\begin\{table\}[!ht]\par
+% \\footnotesize\par
+%     \\centering\par
+%     \\caption[Median classification statistics]\{Median classification statistics\}\par
+%     \\vspace\{0.5cm\}\par
+% \\begin\{tabular\}\{lrrrrrrrr\}\par
+% \par
+% \{\} &   AUROC &    F1 &   MCC &  specificity &  sensitivity &   PPV &   NPV &  threshold \\\\\par
+% \par
+% ASMA      &  0.46 &  0.22 &  0.00 &         0.18 &         0.50 &  0.19 &  0.48 &    0.48 \\\\\par
+% ASMA+FTIR &  0.92 &  0.51 &  0.00 &         1.00 &         0.08 &  0.95 &  0.66 &    0.69 \\\\\par
+% FTIR      &  0.89 &  0.54 &  0.17 &         0.83 &         1.00 &  0.62 &  0.85 &    0.34 \\\\\par
+% \\bottomrule\par
+% \\end\{tabular\}\par
+% \\label\{tab:Median_Table\}\par
+% \\end\{table\}\par
+\par
+\\begin\{onehalfspacing\}\par
+\\begin\{table\}[H]\par
+\\caption\{Statistical classification terms derived from a confusion matrix.\}\par
+\\label\{tab:Classification_Terms\}\par
+\\centering\par
+\\begin\{tabular\}\{lcl\}\par
+\\toprule\par
+Statistic & Symbol & Description \\\\\par
+\\midrule\par
+Positives & $P$ & The number of positive cases \\\\\par
+Negatives & $N$ & The number of negative cases \\\\\par
+True Positives & $TP$ & Cases correctly predicted as positive \\\\\par
+True Negatives & $TN$ & Cases correctly predicted as negative \\\\\par
+False Positives & $FP$ & Cases incorrectly predicted as positive \\\\\par
+False Negatives & $FN$ & Cases incorrectly predicted as negative \\\\\par
+\\bottomrule\par
+\\end\{tabular\}\par
+\\end\{table\}\par
+\\end\{onehalfspacing\}\par
+\par
+A confusion matrix is a way of visualising predicted and actual values obtained from a classifier. It allows for a greater level of insight when diagnosing the cause of classification errors.\par
+\par
+\\begin\{figure\}[H]\par
+\\centering\par
+\\includegraphics[width = 120mm]\{Figures/Background/ML/Confusion_Matrix.pdf\}\par
+\\caption[Binary (A) and multiclass (B) confusion matrices showing classification results.]\{Binary (A) and multiclass (B) confusion matrices showing classification results.\}\par
+\\label\{fig:Confusion_Matrix\}\par
+\\end\{figure\}\par
+\par
+When evaluating the performance of a classifier, several metrics can be derived from those shown in \\cref\{tab:Classification_Terms\}. The use of these statistics is common in clinical sciences and bioinformatics and is the common language in which the performance of diagnostics tests are communicated \\cite\{Bradley1997, Powers2011\}. In a diagnostic test, sensitivity is a measure of the ability of a test to identify true positives; equivalently, the specificity of a diagnostic test is a measure of how well a test can identify true negatives. Sensitivity and specificity are inextricably linked. Thus, there is a trade-off between the performance of either score -- an increase in one score typically involves a decrease in the other. Similar metrics are the positive predictive value (PPV) and negative predictive value (NPV). These metrics measure the ratio of true positives/negatives to the total number of positives/negatives. Finally, the Matthews correlation coefficient (MCC) is a more holistic measure of the performance of a diagnostic test and considers all prediction outcomes. A summary of these metrics is given below.\par
+\par
+\\begin\{table\}[H]\par
+\\caption\{Classification statistics used in the evaluation of predictive models.\}\par
+\\centering\par
+\\begin\{tabular\}\{lc\}\par
+\\toprule\par
+Statistic &  \\\\\par
+\\midrule\par
+Accuracy & $\\frac\{(TP + TN)\}\{P + N\}$ \\\\\par
+Matthews correlation coefficient & $\\frac\{TP \\times TN - FP \\times FN\}\{\\sqrt\{(TP+FP)(TP+FN)(TN+FP)(TN+FN)\}\}$\\\\\par
+Specificity & $\\frac\{TN\}\{TN+FP\}$\\\\\par
+Sensitivity & $\\frac\{TP\}\{TP+FN\}$\\\\\par
+Positive predictive value & $\\frac\{TP\}\{TP+FP\}$\\\\\par
+Negative predictive value & $\\frac\{TN\}\{TN+FN\}$\\\\\par
+\\bottomrule\par
+\\end\{tabular\}\par
+\\label\{tab:classificationStats\}\par
+\\end\{table\}\par
+\par
+The majority of classifier algorithms output an estimate as a continuous value. In the case of logistic regression, this estimate can be directly interpreted as a probability; in other cases, this estimate is derived in a non-probabilistic way and must be used with caution. These continuous values must be dichotomised by taking a threshold over the value.\par
+\par
+\\subsubsection\{Receiver Operating Characteristic (ROC) analysis\}\par
+\par
+It is possible to estimate the classification power of a diagnostic test irrespective of the threshold by calculating a receiver operating characteristic (ROC) curve. A ROC curve can be employed to calculate the area under the receiver operating characteristic curve (AUROC) statistic, a widely accepted measure of classifier performance. A ROC curve is a plot of the true positive rate (TPR) (sensitivity) against the false positive rate (FPR) (1 - specificity) for several decision thresholds for a binary classifier; this can be extended to a multi-class problem by utilising a "one against all" approach.\par
+\par
+\\begin\{figure\}[th]\par
+\\centering\par
+\\includegraphics[width = \\linewidth]\{Figures/Background/ML/ROC_curves.pdf\}\par
+\\caption[A ROC curve showing a comparison between a number of classifiers for a number of thresholds]\{ROC curves showing a comparison between a number of classifiers with calculated AUROC scores.\}\par
+\\label\{fig:ROC_Curve\}\par
+\\end\{figure\}\par
+\par
+A value across the diagonal signifies a classifier that is equivalent to pure chance and effectively useless. A steep curve that approaches the top-left corner is a realistic, well-performing classifier that will have a high AUROC. An AUROC value of 1 signifies a flawless classifier that correctly identifies every instance; more importantly, it does not need to trade-off between specificity and sensitivity; a value of 0.5 is equivalent to a random guess signifying a completely useless classifier. A ROC curve is a collection of TPR and FPR values for several cut-off points. The curve represents the trade-off between obtaining more true positives and fewer false positives. It allows for a visual evaluation of the classifier's performance over the entire range of thresholds.\par
+\par
+\\subsubsection\{Precision Recall analysis\}\par
+\par
+The precision-recall (PR) curve is similar to the ROC curve; The precision is equivalent to the PPV, and recall is equivalent to the sensitivity score. The PR curve is formed in the same way as a ROC curve by calculating the precision and recall at several thresholds. When examining a highly imbalanced dataset, a PR curve can avoid overly optimistic estimates of classifier performance \\cite\{Saito2015\}. The PR curve is particularly useful as it considers the precision/PPV which is itself dependent upon the prevalence of positive cases in the data set. The area under the precision-recall curve (AUPRC) can be utilised as a summary statistic similar to the AUROC score. \par
+\par
+\\begin\{figure\}[H]\par
+\\centering\par
+\\includegraphics[width=\\linewidth]\{Figures/Background/ML/ROCPR_Imbalanced.pdf\}\par
+\\includegraphics[width=\\linewidth]\{Figures/Background/ML/ROCPR_Balanced.pdf\}\par
+\\caption\{Classifiers of varying utility evaluated on simulated imbalanced [A,B] and balanced [C,D] datasets.\}\par
+\\label\{fig:PRCurves\}\par
+\\end\{figure\}\par
+\par
+\\Cref\{fig:PRCurves\}[A-B] shows an evaluation of several classifiers of varying utility on a simulated imbalanced dataset, where the ratio of the positive to negative class is 1:10. The baseline score in \\cref\{fig:PRCurves\}[B] is set at 0.09 to reflect the imbalance and is calculated by:\par
+ \par
+\\begin\{equation\}\par
+    baseline = \\frac\{P\}\{(P+N)\}\par
+\\label\{eq:Baseline\}\par
+\\end\{equation\}\par
+\par
+\\Cref\{fig:PRCurves\}[C-D] shows a simulated dataset of equal class distribution where the baseline is set at 0.5.\par
+\par
+This baseline is then subtracted from the calculated AUPRC to give the final scores, where negative scores indicate a poor classifier. \\Cref\{fig:PRCurves\}[A,C] show ROC curves for these predictions but give no real insight into the consequences of class imbalance. Incorrect conclusions could be drawn from  \\Cref\{fig:PRCurves\}[B] if the baseline was not adjusted for class prevalence and set at 0.5. A consequence of this baseline adjustment is that when comparing biomarkers evaluated on cohorts with differing class distributions, the prevalence of the dataset must be taken into account.\par
+\par
+\\newpage\par
+\\putbib[Bibliographies/Bibliography]\par
+}
+ 
